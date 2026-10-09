@@ -39,7 +39,7 @@ const features = [
       </svg>
     ),
     title: 'Livré en 7 jours',
-    description: 'Vous me dites ce que vous faites. Je conçois, je développe, je mets en ligne. En moins d\'une semaine, vous avez un site qui travaille pour vous 24h/24.',
+    description: 'Vous remplissez un formulaire. Je conçois, je développe, je mets en ligne. En moins d\'une semaine, vous avez un site qui travaille pour vous 24h/24.',
   },
 ];
 
@@ -50,7 +50,7 @@ const faq = [
   },
   {
     q: 'Quel est le prix d\'un site web à Caen ?',
-    a: 'Tommy Studio fonctionne en abonnement à 49€/mois, sans frais de création. Ça inclut la création du site, l\'hébergement, le nom de domaine, la maintenance et les modifications illimitées. Sans engagement, résiliable à tout moment.',
+    a: 'Trois formules à prix fixe, payables une seule fois : Essentiel 99€, Standard 149€ et Complet 199€. L\'hébergement est inclus la première année, puis 39€/an. Une retouche est incluse après livraison, les suivantes sont à 15€.',
   },
   {
     q: 'Vous travaillez dans toute la Normandie ?',
@@ -107,7 +107,7 @@ export default function CaenContent() {
           >
             Vous cherchez un créateur de site web à Caen ? Tommy Studio conçoit des sites vitrines
             professionnels pour artisans, commerçants et indépendants dans le Calvados — livrés en
-            7 jours, à partir de 49€/mois.
+            7 jours, à partir de 99€ en paiement unique.
           </motion.p>
 
           <motion.div
@@ -117,7 +117,7 @@ export default function CaenContent() {
             className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
           >
             <Button href="/start-project" size="lg" className="cta-pulse">
-              Obtenir mon devis gratuit
+              Démarrer mon site
             </Button>
             <Button href="/portfolio" variant="secondary" size="lg">
               Voir les réalisations
@@ -129,7 +129,7 @@ export default function CaenContent() {
             transition={{ delay: 0.5 }}
             className="mt-4 text-xs text-muted/60"
           >
-            Sans engagement · Résiliable à tout moment · Réponse sous 24h
+            Paiement unique · Prix fixe · Réponse sous 24h
           </motion.p>
         </div>
       </section>
@@ -208,17 +208,17 @@ export default function CaenContent() {
             <div className="max-w-2xl mx-auto text-center">
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Tarif création de site web à Caen</span>
               <h2 className="mt-5 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-                49€/mois —
-                <span className="gradient-text"> création offerte</span>
+                Dès 99€ —
+                <span className="gradient-text"> paiement unique</span>
               </h2>
               <p className="mt-6 text-base leading-loose text-muted">
-                Création du site, hébergement, nom de domaine, maintenance et modifications illimitées — tout inclus dans l&apos;abonnement mensuel.
+                Trois formules à prix fixe : 99€, 149€ ou 199€, payables une seule fois. Hébergement la première année inclus, puis 39€/an.
               </p>
               <p className="mt-3 text-sm text-muted/60 italic">
-                Sans engagement — résiliable à tout moment.
+                Sans abonnement obligatoire — une retouche incluse après livraison.
               </p>
               <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-                <Button href="/start-project" size="lg">Démarrer pour 49€/mois</Button>
+                <Button href="/start-project" size="lg">Démarrer mon site</Button>
                 <Button href="/services" variant="secondary" size="lg">Voir le détail</Button>
               </div>
             </div>
@@ -268,9 +268,9 @@ export default function CaenContent() {
                 Dites-moi ce que vous faites. Je vous livre un site optimisé pour Google à Caen, pensé pour convertir — en moins de 7 jours, à prix fixe.
               </p>
               <div className="mt-12">
-                <Button href="/start-project" size="lg">Obtenir mon devis gratuit</Button>
+                <Button href="/start-project" size="lg">Démarrer mon site</Button>
               </div>
-              <p className="mt-5 text-xs text-muted/60">Sans engagement · Résiliable à tout moment · Réponse sous 24h</p>
+              <p className="mt-5 text-xs text-muted/60">Paiement unique · Prix fixe · Réponse sous 24h</p>
             </div>
           </AnimatedSection>
         </div>

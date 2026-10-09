@@ -17,7 +17,7 @@ const features = [
       </svg>
     ),
     title: 'SEO local inclus',
-    description: 'Votre site est structuré pour remonter sur Google quand un client cherche votre métier à Caen ou en Normandie. Balises, mots-clés locaux, vitesse de chargement — tout est optimisé.',
+    description: 'Votre site est structuré pour remonter sur Google quand un client cherche votre métier dans votre ville. Balises, mots-clés locaux, vitesse de chargement — tout est optimisé.',
   },
   {
     icon: (
@@ -44,7 +44,7 @@ const features = [
       </svg>
     ),
     title: 'Livré en 7 jours',
-    description: 'Vous me dites ce que vous faites. Je conçois, je développe, je mets en ligne. En moins d\'une semaine, vous avez un site qui travaille pour vous 24h/24.',
+    description: 'Vous remplissez un formulaire. Je conçois, je développe, je mets en ligne. En moins d\'une semaine, vous avez un site qui travaille pour vous 24h/24.',
   },
 ];
 
@@ -89,7 +89,7 @@ const reasons = [
       </svg>
     ),
     title: 'Peur de payer pour rien ?',
-    description: 'Le prix annoncé est le prix final. Pas de frais cachés, pas de modules en option. Si vous n\'êtes pas satisfait du résultat, je rembourse. Sans discussion.',
+    description: 'Le prix annoncé est le prix final. Pas de frais cachés, pas d\'abonnement obligatoire. Une retouche est incluse après la livraison.',
     stat: '0€',
     statLabel: 'frais cachés',
   },
@@ -138,7 +138,7 @@ export default function Home() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
                 </span>
-                Créateur de site web à Caen · Livraison en 7 jours
+                Site web pro dès 99€ · Paiement unique · Partout en France
               </span>
             </motion.div>
 
@@ -163,8 +163,8 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.2 }}
               className="mx-auto mt-10 max-w-2xl text-base leading-relaxed text-muted sm:text-lg lg:text-xl"
             >
-              Un site web professionnel livré en 7 jours — optimisé pour remonter sur Google,
-              pensé pour que vos visiteurs vous appellent plutôt qu&apos;un concurrent.
+              Un site web professionnel, en ligne en moins de 7 jours, à prix fixe dès 99€.
+              Pas de rendez-vous, pas d&apos;abonnement : vous remplissez un formulaire, je m&apos;occupe du reste.
             </motion.p>
 
             {/* CTA */}
@@ -175,7 +175,7 @@ export default function Home() {
               className="mt-14 flex flex-col items-center gap-5 sm:flex-row sm:justify-center"
             >
               <Button href="/start-project" size="lg" className="cta-pulse">
-                Obtenir mon devis gratuit
+                Démarrer mon site
               </Button>
               <Button href="/portfolio" variant="secondary" size="lg">
                 Voir les réalisations
@@ -189,7 +189,7 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.5 }}
               className="mt-5 text-xs text-muted/60 tracking-wide"
             >
-              Sans engagement · Devis gratuit · Réponse sous 24h
+              Paiement unique · 100% en ligne · Réponse sous 24h
             </motion.p>
 
             {/* Stats bar */}
@@ -245,8 +245,8 @@ export default function Home() {
             <div className="gradient-border rounded-2xl bg-surface-light p-6 sm:p-10 text-center max-w-3xl mx-auto">
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent">La réalité</span>
               <h2 className="mt-5 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
-                Un électricien à Caen est cherché sur Google
-                <span className="gradient-text"> 300 fois par mois.</span>
+                Sans site, vous êtes invisible
+                <span className="gradient-text"> pour ceux qui vous cherchent.</span>
               </h2>
               <p className="mt-6 text-base leading-loose text-muted">
                 Le premier résultat reçoit la moitié des appels. Le deuxième, une fraction. Les autres n&apos;existent pas.
@@ -264,7 +264,7 @@ export default function Home() {
 
         <div className="section-container">
           <SectionHeading
-            label="49€/mois · Création offerte · Sans engagement"
+            label="Dès 99€ · Paiement unique · Hébergement 1re année inclus"
             title="Un site qui ramène"
             titleAccent="des clients depuis Google"
             description="Pas un site vitrine générique. Un outil conçu pour remonter dans les résultats locaux et convaincre vos visiteurs de vous appeler — pas votre concurrent."
@@ -291,13 +291,13 @@ export default function Home() {
           <AnimatedSection delay={0.4}>
             <div className="mt-14 flex flex-col items-center gap-5 sm:flex-row sm:justify-center">
               <Button href="/start-project" size="lg" className="cta-pulse">
-                Obtenir mon devis gratuit
+                Démarrer mon site
               </Button>
               <Button href="/services" variant="secondary" size="lg">
                 Voir le détail & les tarifs
               </Button>
             </div>
-            <p className="mt-4 text-center text-xs text-muted/60">49€/mois · Création offerte · Sans engagement · Réponse sous 24h</p>
+            <p className="mt-4 text-center text-xs text-muted/60">Dès 99€ · Paiement unique · Hébergement 1re année inclus · Réponse sous 24h</p>
           </AnimatedSection>
         </div>
       </section>
@@ -314,15 +314,15 @@ export default function Home() {
             label="Le processus"
             title="Votre site en ligne"
             titleAccent="en 3 étapes"
-            description="Pas de réunion interminable, pas de dossier à remplir. Vous m'expliquez votre métier — je m'occupe du reste."
+            description="Pas de rendez-vous, pas de réunion. Vous remplissez un formulaire — je m'occupe du reste."
           />
 
           <div className="mt-10 sm:mt-14 grid gap-6 sm:grid-cols-3">
             {[
               {
                 step: '01',
-                title: 'Vous me dites ce que vous faites',
-                desc: 'Un échange de 15 minutes — votre métier, votre zone, vos clients. Pas de jargon, pas de questionnaire interminable.',
+                title: 'Vous choisissez votre formule',
+                desc: 'Un formulaire de 5 minutes : votre métier, vos services, vos coordonnées. Pas de jargon, pas de rendez-vous.',
               },
               {
                 step: '02',
@@ -542,10 +542,10 @@ export default function Home() {
                 <div className="mt-8 space-y-6 text-sm leading-loose text-muted sm:text-base">
                   <p>
                     Votre concurrent a déjà un site. Chaque jour sans présence sur Google, c&apos;est un client qui choisit quelqu&apos;un d&apos;autre.
-                    En tant que <strong className="text-foreground">créateur de site web à Caen</strong>, je construis ce qu&apos;il faut pour que vous soyez <strong className="text-foreground">visible avant lui sur Google</strong> — et convaincant dès la première visite.
+                    En tant que <strong className="text-foreground">créateur de site web</strong>, je construis ce qu&apos;il faut pour que vous soyez <strong className="text-foreground">visible avant lui sur Google</strong> — et convaincant dès la première visite.
                   </p>
                   <p>
-                    Un <strong className="text-foreground">site vitrine artisan</strong> livré en 7 jours, optimisé pour le <strong className="text-foreground">référencement local Normandie</strong> et partout en France. En tant qu&apos;<strong className="text-foreground">agence web Caen</strong> indépendante, je propose une alternative sérieuse aux grandes agences — un <strong className="text-foreground">site web pas cher à Caen</strong> sans compromis sur la qualité. Structure pensée pour Google, mots-clés de votre métier et de votre ville, vitesse de chargement irréprochable.
+                    Un <strong className="text-foreground">site vitrine artisan</strong> livré en moins de 7 jours, optimisé pour le <strong className="text-foreground">référencement local</strong>, partout en France. Je propose une alternative simple et abordable aux grandes agences — un <strong className="text-foreground">site web professionnel à prix fixe</strong> sans compromis sur la qualité. Structure pensée pour Google, mots-clés de votre métier et de votre ville, vitesse de chargement irréprochable.
                   </p>
                   <p>
                     Et côté conversion : numéro de téléphone visible dès le premier écran, preuves sociales mises en avant, design mobile-first. <strong className="text-foreground">Un visiteur qui arrive sur votre site doit savoir en 5 secondes pourquoi vous appeler.</strong>
@@ -587,11 +587,19 @@ export default function Home() {
                   },
                   {
                     q: 'Combien coûte la création d\'un site web ?',
-                    a: 'Tommy Studio fonctionne en abonnement à 49€/mois — sans frais de création. Ça inclut la création du site, l\'hébergement, le nom de domaine, la maintenance et les modifications illimitées. Sans engagement, résiliable à tout moment.',
+                    a: 'Trois formules à prix fixe, payables une seule fois : Essentiel 99€ (1 page), Standard 149€ (3 à 5 pages) et Complet 199€ (avec rendez-vous en ligne et blog). L\'hébergement est inclus la première année, puis 39€/an.',
                   },
                   {
                     q: 'En combien de temps est livré mon site ?',
                     a: 'En moins de 7 jours ouvrés. Je m\'engage sur un délai précis dès le début du projet, et je le respecte. Pas de "on verra" — vous savez exactement quand votre site sera en ligne.',
+                  },
+                  {
+                    q: 'Qui s\'occupe de l\'hébergement ?',
+                    a: 'Moi. Votre site est mis en ligne sur une infrastructure professionnelle, rapide et sécurisée. L\'hébergement est inclus la première année, puis il se renouvelle à 39€/an.',
+                  },
+                  {
+                    q: 'Puis-je modifier mon site après la livraison ?',
+                    a: 'Une retouche est incluse après la livraison. Les suivantes sont facturées 15€ chacune — sans abonnement ni engagement.',
                   },
                   {
                     q: 'Est-ce que mon site va vraiment remonter sur Google ?',
@@ -645,10 +653,10 @@ export default function Home() {
                   <h3 className="text-base font-extrabold text-foreground">Nos engagements</h3>
                   <ul className="mt-6 space-y-4">
                     {[
-                      { title: 'Sans engagement', desc: '49€/mois, résiliable à tout moment. Aucune contrainte.' },
+                      { title: 'Paiement unique', desc: '99€, 149€ ou 199€ — une seule fois. Hébergement la 1re année inclus.' },
                       { title: 'Livraison en < 7 jours', desc: 'On s\'engage sur un délai et on le respecte, toujours.' },
-                      { title: 'Satisfaction ou remboursement', desc: 'Si vous n\'êtes pas satisfait, on rembourse.' },
-                      { title: 'Support réactif', desc: 'Une vraie personne vous répond sous 2h en journée.' },
+                      { title: 'Une retouche incluse', desc: 'Après livraison, je corrige ce qui ne vous convient pas.' },
+                      { title: 'Support réactif', desc: 'Une vraie personne vous répond sous 24h ouvrées.' },
                     ].map((item) => (
                       <li key={item.title} className="flex items-start gap-3">
                         <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md bg-accent/10 text-accent">
@@ -712,12 +720,12 @@ export default function Home() {
                 </h2>
                 <div className="mt-8 flex justify-center">
                   <p className="max-w-xl text-center text-base leading-relaxed text-muted sm:text-lg">
-                    Dites-moi ce que vous faites. Je vous livre un site optimisé pour Google et pensé pour convertir — en moins de 7 jours, à prix fixe.
+                    Dites-moi ce que vous faites. Je vous livre un site optimisé pour Google et pensé pour convertir — en moins de 7 jours, dès 99€.
                   </p>
                 </div>
                 <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
                   <Button href="/start-project" size="lg">
-                    Obtenir mon devis gratuit
+                    Démarrer mon site
                   </Button>
                   <Button href="/portfolio" variant="secondary" size="lg">
                     Voir les réalisations
@@ -729,7 +737,7 @@ export default function Home() {
                     <svg className="h-3.5 w-3.5 text-accent/60" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
-                    Devis 100% gratuit
+                    Prix fixe annoncé
                   </span>
                   <span className="flex items-center gap-1.5">
                     <svg className="h-3.5 w-3.5 text-accent/60" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -741,13 +749,13 @@ export default function Home() {
                     <svg className="h-3.5 w-3.5 text-accent/60" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
-                    Sans engagement
+                    Paiement unique
                   </span>
                   <span className="flex items-center gap-1.5">
                     <svg className="h-3.5 w-3.5 text-accent/60" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
-                    Sans engagement
+                    Hébergement 1re année inclus
                   </span>
                 </div>
               </div>

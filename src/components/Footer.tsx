@@ -7,12 +7,12 @@ const footerLinks = {
   services: [
     { href: '/services', label: 'Création de site web' },
     { href: '/portfolio', label: 'Réalisations' },
-    { href: '/start-project', label: 'Devis gratuit' },
+    { href: '/start-project', label: 'Démarrer mon site' },
   ],
   company: [
     { href: '/', label: 'Accueil' },
     { href: '/portfolio', label: 'Portfolio' },
-    { href: '/start-project', label: 'Lancer un projet' },
+    { href: '/start-project', label: 'Commander un site' },
   ],
 };
 
@@ -41,12 +41,12 @@ export default function Footer() {
             </Link>
             <p className="mt-8 max-w-md text-sm leading-loose text-muted">
               Tommy Studio crée des sites web professionnels pour les artisans et indépendants
-              à Caen et en Normandie — livrés en 7 jours, au prix fixe annoncé.
+              partout en France — livrés en moins de 7 jours, au prix fixe annoncé.
             </p>
 
             {/* Engagements mini */}
             <div className="mt-8 flex flex-wrap gap-3">
-              {['49€/mois', 'Livraison < 7j', 'Sans engagement'].map((item) => (
+              {['Dès 99€', 'Paiement unique', 'Livraison < 7j'].map((item) => (
                 <span key={item} className="inline-flex items-center gap-1.5 rounded-full border border-border/40 bg-surface-elevated px-3 py-1 text-[11px] text-muted">
                   <svg className="h-2.5 w-2.5 text-accent flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -136,7 +136,7 @@ export default function Footer() {
                   href="/start-project"
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-colors hover:text-accent-light"
                 >
-                  Démarrer un projet
+                  Démarrer mon site
                   <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
                   </svg>
@@ -161,7 +161,7 @@ export default function Footer() {
           </div>
           <div className="flex items-center gap-6">
             <p className="text-[10px] tracking-wider uppercase text-muted/40">
-              Créateur de site web &middot; Caen, Normandie &middot; Artisans &amp; indépendants
+              Créateur de site web &middot; Artisans &amp; indépendants &middot; Partout en France
             </p>
           </div>
         </div>

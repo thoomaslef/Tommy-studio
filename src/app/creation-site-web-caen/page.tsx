@@ -31,16 +31,16 @@ const jsonLd = {
 };
 
 export const metadata: Metadata = {
-  title: 'Création de site web à Caen | Tommy Studio — 49€/mois, création offerte',
+  title: 'Création de site web à Caen | Tommy Studio — dès 99€, paiement unique',
   description:
-    'Créateur de site web à Caen. Tommy Studio réalise votre site vitrine professionnel en 7 jours, à 49€/mois, création offerte, avec SEO local inclus. Sans engagement.',
+    'Créateur de site web à Caen. Tommy Studio réalise votre site vitrine professionnel en 7 jours, dès 99€ en paiement unique, avec SEO local inclus.',
   alternates: {
     canonical: 'https://www.tommy-studio.pro/creation-site-web-caen',
   },
   openGraph: {
-    title: 'Création de site web à Caen | Tommy Studio — 49€/mois',
+    title: 'Création de site web à Caen | Tommy Studio — dès 99€',
     description:
-      'Créateur de site web à Caen. Tommy Studio réalise votre site vitrine professionnel en 7 jours, à 49€/mois, création offerte, avec SEO local inclus.',
+      'Créateur de site web à Caen. Tommy Studio réalise votre site vitrine professionnel en 7 jours, dès 99€ en paiement unique, avec SEO local inclus.',
     url: 'https://www.tommy-studio.pro/creation-site-web-caen',
     type: 'website',
     locale: 'fr_FR',

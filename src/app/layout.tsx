@@ -13,26 +13,21 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.tommy-studio.pro'),
   title: {
-    default: 'Création de site web à Caen | Tommy Studio — À partir de 49€/mois',
-    template: '%s | Tommy Studio — Caen',
+    default: 'Création de site web pour artisans et indépendants | Tommy Studio — Dès 99€',
+    template: '%s | Tommy Studio',
   },
   description:
-    'Tommy Studio crée des sites web professionnels pour artisans et indépendants à Caen et en Normandie. Livraison en 7 jours, à partir de 49€/mois, création offerte, SEO local inclus.',
+    'Tommy Studio crée votre site web professionnel à prix fixe dès 99€, partout en France. Paiement unique, hébergement la première année inclus, optimisé pour Google et pour mobile.',
   keywords: [
-    'créateur site web Caen',
-    'création site web Caen',
-    'web designer Caen',
-    'site internet artisan Caen',
-    'agence web Caen',
+    'création site web artisan',
+    'site web pas cher',
+    'site vitrine professionnel',
+    'site internet indépendant',
+    'créateur de site web',
+    'site web prix fixe',
     'Tommy Studio',
-    'création site web',
-    'site web professionnel',
-    'site web artisan',
+    'création site web Caen',
     'création site web Normandie',
-    'agence web Normandie',
-    'site web indépendant',
-    'site vitrine Caen',
-    'design web Caen',
   ],
   authors: [{ name: 'Tommy Studio', url: 'https://www.tommy-studio.pro' }],
   creator: 'Tommy Studio',
@@ -42,23 +37,23 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     url: 'https://www.tommy-studio.pro',
     siteName: 'Tommy Studio',
-    title: 'Créateur de site web à Caen pour artisans — Tommy Studio',
+    title: 'Votre site web professionnel dès 99€ — Tommy Studio',
     description:
-      'Tommy Studio crée votre site web professionnel à Caen en moins de 7 jours. Tarif fixe dès 49€/mois, optimisé Google, parfait sur mobile. Devis gratuit sous 24h.',
+      'Site web professionnel à prix fixe dès 99€, livré en moins de 7 jours, partout en France. Paiement unique, optimisé Google, parfait sur mobile.',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Tommy Studio — Créateur de site web à Caen, Normandie',
+        alt: 'Tommy Studio — Création de site web pour artisans et indépendants',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Créateur de site web à Caen — Tommy Studio',
+    title: 'Votre site web professionnel dès 99€ — Tommy Studio',
     description:
-      'Site web professionnel livré en 7 jours dès 49€/mois. Basé à Caen, pour artisans et indépendants. Devis gratuit sous 24h.',
+      'Site web professionnel à prix fixe dès 99€, livré en moins de 7 jours. Pour artisans et indépendants, partout en France.',
     images: ['/og-image.jpg'],
   },
   robots: {
@@ -83,15 +78,15 @@ export const metadata: Metadata = {
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
+  '@type': 'ProfessionalService',
   name: 'Tommy Studio',
   description:
-    'Créateur de site web professionnel à Caen pour artisans et indépendants. Livraison en 7 jours, tarif fixe dès 49€/mois.',
+    'Création de sites web professionnels pour artisans et indépendants, partout en France. Prix fixe dès 99€, paiement unique, livraison en moins de 7 jours.',
   url: 'https://www.tommy-studio.pro',
   telephone: '+33612941125',
   email: 'thomas@tommy-studio.pro',
   taxID: '10108233700011',
-  priceRange: '€€',
+  priceRange: '€',
   address: {
     '@type': 'PostalAddress',
     streetAddress: '7 boulevard Leroy',
@@ -99,50 +94,21 @@ const jsonLd = {
     postalCode: '14000',
     addressCountry: 'FR',
   },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 49.1829,
-    longitude: -0.3707,
-  },
-  areaServed: {
-    '@type': 'GeoCircle',
-    geoMidpoint: {
-      '@type': 'GeoCoordinates',
-      latitude: 49.1829,
-      longitude: -0.3707,
-    },
-    geoRadius: '100000',
-  },
-  openingHours: 'Mo-Fr 09:00-18:00',
+  areaServed: { '@type': 'Country', name: 'France' },
   sameAs: [],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
-    name: 'Services Tommy Studio',
+    name: 'Formules de création de site web',
     itemListElement: [
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'Création de site web sur-mesure',
-          description: 'Site web professionnel pour artisans et indépendants à Caen, livré en 7 jours, optimisé Google et parfait sur mobile.',
-        },
-        price: '49',
-        priceCurrency: 'EUR',
-        priceSpecification: {
-          '@type': 'UnitPriceSpecification',
-          price: '49',
-          priceCurrency: 'EUR',
-          unitCode: 'MON',
-        },
-      },
-    ],
-  },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    reviewCount: '50',
-    bestRating: '5',
-    worstRating: '1',
+      { name: 'Essentiel', price: '99', description: 'Site d\'une page avec formulaire de contact, hébergement la première année inclus.' },
+      { name: 'Standard', price: '149', description: 'Site de 3 à 5 pages avec galerie, carte et avis, hébergement la première année inclus.' },
+      { name: 'Complet', price: '199', description: 'Site Standard avec prise de rendez-vous en ligne et blog, hébergement la première année inclus.' },
+    ].map((plan) => ({
+      '@type': 'Offer',
+      price: plan.price,
+      priceCurrency: 'EUR',
+      itemOffered: { '@type': 'Service', name: `Site web ${plan.name}`, description: plan.description },
+    })),
   },
 };
 

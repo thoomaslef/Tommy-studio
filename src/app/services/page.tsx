@@ -6,37 +6,33 @@ const jsonLd = {
   '@type': 'Service',
   name: 'Création de site web',
   provider: {
-    '@type': 'LocalBusiness',
+    '@type': 'ProfessionalService',
     name: 'Tommy Studio',
     url: 'https://www.tommy-studio.pro',
   },
-  areaServed: { '@type': 'City', name: 'Caen' },
+  areaServed: { '@type': 'Country', name: 'France' },
   description:
-    'Création de sites web professionnels pour artisans et indépendants à Caen, livrés en 7 jours à partir de 49€/mois. Création offerte, sans engagement.',
+    'Création de sites web professionnels pour artisans et indépendants, à prix fixe dès 99€. Paiement unique, hébergement la première année inclus, livraison en moins de 7 jours.',
   offers: {
-    '@type': 'Offer',
-    price: '49',
+    '@type': 'AggregateOffer',
+    lowPrice: '99',
+    highPrice: '199',
     priceCurrency: 'EUR',
-    priceSpecification: {
-      '@type': 'UnitPriceSpecification',
-      price: '49',
-      priceCurrency: 'EUR',
-      unitCode: 'MON',
-    },
+    offerCount: 3,
   },
 };
 
 export const metadata: Metadata = {
-  title: 'Création de site web à Caen | 49€/mois — Tommy Studio',
+  title: 'Création de site web dès 99€ | Tarifs et formules — Tommy Studio',
   description:
-    'Site vitrine professionnel à 49€/mois, création offerte, livré en 7 jours avec SEO local inclus. Sans engagement — Tommy Studio, Caen.',
+    'Trois formules de site web à prix fixe : 99€, 149€ ou 199€. Paiement unique, hébergement la première année inclus, livraison en moins de 7 jours.',
   alternates: {
     canonical: 'https://www.tommy-studio.pro/services',
   },
   openGraph: {
-    title: 'Création de site web à Caen — 49€/mois | Tommy Studio',
+    title: 'Création de site web dès 99€ — Tommy Studio',
     description:
-      'Site web professionnel livré en 7 jours à 49€/mois, création offerte. Tommy Studio, créateur de sites web à Caen pour artisans et indépendants. Sans engagement.',
+      'Site web professionnel à prix fixe : Essentiel 99€, Standard 149€, Complet 199€. Paiement unique, partout en France.',
     url: 'https://www.tommy-studio.pro/services',
     type: 'website',
     locale: 'fr_FR',

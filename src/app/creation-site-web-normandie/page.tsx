@@ -28,14 +28,14 @@ const jsonLd = {
 export const metadata: Metadata = {
   title: 'Création de site web en Normandie | Tommy Studio — Caen, Rouen, Le Havre',
   description:
-    'Créateur de site web en Normandie basé à Caen. Sites professionnels pour artisans et indépendants dans tout le Calvados et la Normandie. Dès 49€/mois, création offerte, sans engagement.',
+    'Créateur de site web en Normandie basé à Caen. Sites professionnels pour artisans et indépendants dans tout le Calvados et la Normandie. Dès 99€, paiement unique, hébergement la première année inclus.',
   alternates: {
     canonical: 'https://www.tommy-studio.pro/creation-site-web-normandie',
   },
   openGraph: {
     title: 'Création de site web en Normandie | Tommy Studio',
     description:
-      'Créateur de site web en Normandie basé à Caen. Sites professionnels pour artisans. Dès 49€/mois, création offerte, sans engagement.',
+      'Créateur de site web en Normandie basé à Caen. Sites professionnels pour artisans. Dès 99€, paiement unique, hébergement la première année inclus.',
     url: 'https://www.tommy-studio.pro/creation-site-web-normandie',
     type: 'website',
     locale: 'fr_FR',

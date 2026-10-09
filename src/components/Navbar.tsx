@@ -96,7 +96,7 @@ export default function Navbar() {
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-accent-light to-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <span className="relative flex items-center gap-2">
-                  Lancer un projet
+                  Démarrer mon site
                   <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
@@ -187,7 +187,7 @@ export default function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className="flex items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-5 text-lg font-semibold text-white transition-all hover:bg-accent-light"
                 >
-                  Lancer un projet
+                  Démarrer mon site
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>

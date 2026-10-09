@@ -8,7 +8,12 @@ const serviceOptions = [
   'Création de site web',
 ];
 
-const budgetOptions = ['Abonnement 49€/mois (création offerte)', 'Je voudrais en savoir plus'];
+const budgetOptions = [
+  'Essentiel — 99€ (1 page)',
+  'Standard — 149€ (3 à 5 pages)',
+  'Complet — 199€ (rendez-vous en ligne + blog)',
+  'Je ne sais pas encore',
+];
 const timelineOptions = ['Dès que possible', '1 – 2 semaines', '1 mois', 'Flexible'];
 
 const trustPoints = [
@@ -19,7 +24,7 @@ const trustPoints = [
       </svg>
     ),
     title: 'Réponse personnelle sous 24h',
-    description: 'Pas un bot — une vraie personne analyse votre projet et vous propose une solution sur-mesure.',
+    description: 'Pas un bot — une vraie personne lit votre demande et vous explique la suite.',
   },
   {
     icon: (
@@ -45,8 +50,8 @@ const trustPoints = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
       </svg>
     ),
-    title: 'Satisfaction ou remboursement',
-    description: 'On est tellement confiants dans notre travail qu\'on offre une garantie satisfaction complète.',
+    title: 'Une retouche incluse',
+    description: 'Après la livraison, je corrige ce qui ne vous convient pas. Les retouches suivantes : 15€.',
   },
 ];
 
@@ -70,7 +75,7 @@ export default function StartProjectContent() {
     if (!email) errs.email = 'L\'email est requis';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = 'Entrez un email valide';
     if (!form.get('service')) errs.service = 'Veuillez sélectionner un service';
-    if (!form.get('description')?.toString().trim()) errs.description = 'Veuillez décrire votre projet';
+    if (!form.get('description')?.toString().trim()) errs.description = 'Veuillez décrire votre activité';
     return errs;
   };
 
@@ -119,7 +124,7 @@ export default function StartProjectContent() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
             </span>
-            Devis gratuit · Réponse garantie sous 24h
+            Dès 99€ · Paiement unique · Réponse sous 24h
           </motion.span>
           <motion.h1
             initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
@@ -127,7 +132,7 @@ export default function StartProjectContent() {
             transition={{ delay: 0.1 }}
             className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl"
           >
-            Obtenez votre devis
+            Lancez votre site
             <br />
             <span className="gradient-text glow-text">en 2 minutes</span>
           </motion.h1>
@@ -137,8 +142,8 @@ export default function StartProjectContent() {
             transition={{ delay: 0.2 }}
             className="mt-8 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >
-            Décrivez votre projet, on s&apos;occupe du reste. Prix fixe, délai garanti,
-            zéro engagement. On vous répond personnellement sous 24h.
+            Choisissez votre formule et décrivez votre activité. Prix fixe, paiement unique,
+            aucun rendez-vous. Je vous réponds personnellement sous 24h.
           </motion.p>
 
           {/* Trust strip */}
@@ -149,9 +154,9 @@ export default function StartProjectContent() {
             className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3"
           >
             {[
-              { icon: '✓', text: 'Devis 100% gratuit' },
-              { icon: '✓', text: 'Sans engagement' },
-              { icon: '✓', text: 'Sans engagement' },
+              { icon: '✓', text: 'Prix fixe dès 99€' },
+              { icon: '✓', text: 'Paiement unique' },
+              { icon: '✓', text: 'Aucun rendez-vous' },
               { icon: '✓', text: 'Livraison < 7 jours' },
             ].map((item) => (
               <span key={item.text} className="flex items-center gap-1.5 text-xs font-medium text-muted/70">
@@ -194,7 +199,7 @@ export default function StartProjectContent() {
                       transition={{ delay: 0.4 }}
                       className="text-2xl font-extrabold text-foreground"
                     >
-                      Votre devis est en route !
+                      Demande bien reçue !
                     </motion.h2>
                     <motion.p
                       initial={{ opacity: 0, y: 10 }}
@@ -202,7 +207,7 @@ export default function StartProjectContent() {
                       transition={{ delay: 0.5 }}
                       className="mt-4 max-w-md text-muted leading-relaxed"
                     >
-                      On analyse votre projet et on vous envoie une proposition sur-mesure avec un prix fixe sous 24h. En attendant, vérifiez votre boîte mail.
+                      Je lis votre demande et je vous réponds personnellement sous 24h avec la suite (paiement et envoi de vos photos). En attendant, surveillez votre boîte mail — et vos spams.
                     </motion.p>
 
                     <motion.div
@@ -226,8 +231,8 @@ export default function StartProjectContent() {
                     exit={{ opacity: 0, scale: 0.95 }}
                   >
                     <div className="mb-14">
-                      <h2 className="text-2xl font-extrabold text-foreground">Parlez-nous de votre projet</h2>
-                      <p className="mt-4 text-sm text-muted leading-relaxed">2 minutes suffisent · Devis gratuit · Réponse sous 24h</p>
+                      <h2 className="text-2xl font-extrabold text-foreground">Parlez-nous de votre activité</h2>
+                      <p className="mt-4 text-sm text-muted leading-relaxed">2 minutes suffisent · Prix fixe · Réponse sous 24h</p>
                     </div>
 
                     <div className="grid gap-12 sm:grid-cols-2">
@@ -343,13 +348,13 @@ export default function StartProjectContent() {
                       {/* Description */}
                       <div className="sm:col-span-2">
                         <label htmlFor="description" className={formFields.label}>
-                          Description du projet <span className="text-accent">*</span>
+                          Votre activité <span className="text-accent">*</span>
                         </label>
                         <textarea
                           id="description"
                           name="description"
                           rows={6}
-                          placeholder="Parlez-nous de votre projet, vos objectifs et vos besoins spécifiques..."
+                          placeholder="Votre métier, vos services, votre ville, vos couleurs ou sites que vous aimez... Plus vous détaillez, plus le site vous ressemblera."
                           onFocus={() => setFocused('description')}
                           onBlur={() => setFocused(null)}
                           className={`${formFields.input} resize-none ${errors.description ? formFields.error : formFields.normal} ${focused === 'description' ? 'shadow-lg shadow-accent/5' : ''}`}
@@ -373,7 +378,7 @@ export default function StartProjectContent() {
                         <span className="absolute inset-0 bg-gradient-to-r from-accent-light via-accent to-accent-dark opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                         <span className="absolute -inset-px rounded-xl bg-gradient-to-r from-accent-light to-accent-dark opacity-0 blur-sm transition-opacity duration-500 group-hover:opacity-40" />
                         <span className="relative flex items-center justify-center gap-3">
-                          {sending ? 'Envoi en cours…' : 'Obtenir mon devis gratuit'}
+                          {sending ? 'Envoi en cours…' : 'Démarrer mon site'}
                           {!sending && (
                             <svg className="h-5 w-5 transition-transform group-hover:translate-x-1.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
@@ -382,7 +387,7 @@ export default function StartProjectContent() {
                         </span>
                       </motion.button>
                       <p className="mt-4 text-center text-xs text-muted/60">
-                        Sans engagement · 100% gratuit · Réponse personnelle sous 24h
+                        Prix fixe · Paiement unique · Réponse personnelle sous 24h
                       </p>
                     </div>
                   </motion.form>
@@ -440,7 +445,7 @@ export default function StartProjectContent() {
                               </svg>
                             ),
                             title: 'Prix fixe, zéro surprise',
-                            desc: 'Le devis envoyé est le prix final. Aucun frais caché, aucun avenant.',
+                            desc: 'Le prix de la formule choisie est le prix final. Aucun frais caché.',
                           },
                           {
                             icon: (
@@ -448,8 +453,8 @@ export default function StartProjectContent() {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                               </svg>
                             ),
-                            title: 'Satisfaction ou remboursement',
-                            desc: 'Si le rendu ne correspond pas au brief validé, on rembourse intégralement.',
+                            title: 'Une retouche incluse',
+                            desc: 'Après la livraison, je corrige ce qui ne vous convient pas.',
                           },
                           {
                             icon: (
@@ -479,8 +484,8 @@ export default function StartProjectContent() {
                   <AnimatedSection delay={0.9} direction="right">
                     <div className="rounded-xl bg-accent/5 border border-accent/10 p-7 text-center">
                       <p className="text-xs font-medium text-foreground">Une question avant de vous lancer ?</p>
-                      <p className="mt-2 text-sm font-bold text-accent">contact@tommystudio.com</p>
-                      <p className="mt-1 text-[10px] text-muted">Réponse en moins de 2h en journée</p>
+                      <p className="mt-2 text-sm font-bold text-accent">thomas@tommy-studio.pro</p>
+                      <p className="mt-1 text-[10px] text-muted">Réponse sous 24h ouvrées</p>
                     </div>
                   </AnimatedSection>
                 </div>

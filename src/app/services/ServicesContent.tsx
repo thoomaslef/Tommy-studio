@@ -4,12 +4,58 @@ import { motion } from 'framer-motion';
 import Button from '@/components/Button';
 import AnimatedSection from '@/components/AnimatedSection';
 
+const plans = [
+  {
+    name: 'Essentiel',
+    price: '99€',
+    tagline: 'Pour exister en ligne',
+    highlight: false,
+    items: [
+      'Site d\'une page',
+      'Formulaire de contact',
+      'Optimisé mobile et Google',
+      'Adresse nom.tommy-studio.pro',
+      'Hébergement la 1re année inclus',
+      '1 retouche incluse',
+    ],
+  },
+  {
+    name: 'Standard',
+    price: '149€',
+    tagline: 'Recommandé',
+    highlight: true,
+    items: [
+      '3 à 5 pages',
+      'Galerie photos & réalisations',
+      'Carte Google Maps intégrée',
+      'Avis clients & témoignages',
+      'Formulaire de contact',
+      'Hébergement la 1re année inclus',
+      '1 retouche incluse',
+    ],
+  },
+  {
+    name: 'Complet',
+    price: '199€',
+    tagline: 'Pour aller plus loin',
+    highlight: false,
+    items: [
+      'Tout le pack Standard',
+      'Prise de rendez-vous en ligne',
+      'Blog & actualités',
+      'Page menu / catalogue',
+      'Hébergement la 1re année inclus',
+      '1 retouche incluse',
+    ],
+  },
+];
+
 const included = [
-  'Création du site offerte — 0€ de frais d\'entrée',
-  'Hébergement + nom de domaine inclus',
-  'Maintenance & mises à jour continues',
-  'Support client réactif — réponse sous 2h',
-  'Modifications illimitées sur demande',
+  'Paiement unique — aucun abonnement obligatoire',
+  'Hébergement la 1re année inclus, puis 39€/an',
+  '1 retouche incluse après livraison, puis 15€ la suivante',
+  'Support par email — réponse sous 24h ouvrées',
+  'Nom de domaine perso en option (vous l\'achetez, je vous guide)',
 ];
 
 const features = [
@@ -107,7 +153,7 @@ export default function ServicesContent() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
             </span>
-            49€/mois · Création offerte · Sans engagement
+            Dès 99€ · Paiement unique · Hébergement 1re année inclus
           </motion.span>
           <motion.h1
             initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
@@ -115,9 +161,9 @@ export default function ServicesContent() {
             transition={{ delay: 0.1 }}
             className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl"
           >
-            Création de site web à Caen
+            Un site web professionnel
             <br />
-            <span className="gradient-text glow-text">pour artisans et indépendants</span>
+            <span className="gradient-text glow-text">dès 99€, sans abonnement</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
@@ -125,88 +171,96 @@ export default function ServicesContent() {
             transition={{ delay: 0.2 }}
             className="mt-8 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >
-            Un site professionnel livré en 7 jours — optimisé pour remonter sur Google,
+            Un site professionnel en ligne en moins de 7 jours — optimisé pour Google,
             pensé pour que vos visiteurs vous appellent plutôt qu&apos;un concurrent.
           </motion.p>
         </div>
       </section>
 
-      {/* ===== SERVICE PRINCIPAL ===== */}
+      {/* ===== FORMULES ===== */}
       <section id="websites" className="relative section-spacing overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
         <div className="absolute -right-1/4 top-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-br from-violet-500/15 to-indigo-500/5 rounded-full blur-[120px] pointer-events-none opacity-50" />
 
         <div className="relative section-container">
-          <div className="grid items-center gap-16 lg:gap-24 lg:grid-cols-2">
-            {/* Content */}
-            <AnimatedSection direction="left">
-              <div className="mb-10 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/8 text-accent ring-1 ring-accent/15">
-                <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" />
-                </svg>
-              </div>
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Soyez visible, attirez des clients</span>
+          <AnimatedSection>
+            <div className="text-center max-w-2xl mx-auto mb-16">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Prix fixe · Paiement unique</span>
               <h2 className="mt-5 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-                Création de site web sur-mesure
+                Choisissez votre
+                <span className="gradient-text"> formule</span>
               </h2>
-              <p className="mt-8 text-base leading-loose text-muted">
-                Votre site web est votre meilleur commercial — disponible 24h/24, visible sur Google, accessible depuis n&apos;importe quel téléphone.
-                Je vous livre un site professionnel, rapide et pensé pour transformer vos visiteurs en clients. En 7 jours, clé en main.
+              <p className="mt-6 text-base leading-relaxed text-muted">
+                Vous payez une fois, vous recevez votre site. Pas de rendez-vous, pas d&apos;abonnement obligatoire.
               </p>
+            </div>
+          </AnimatedSection>
 
-              <div className="mt-12">
+          <div className="grid gap-6 lg:grid-cols-3">
+            {plans.map((plan, i) => (
+              <AnimatedSection key={plan.name} delay={i * 0.1}>
                 <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="inline-flex flex-col rounded-2xl border border-accent/20 bg-accent/5 px-8 py-5 glow"
+                  whileHover={{ y: -4 }}
+                  className={`relative flex h-full flex-col rounded-2xl p-8 sm:p-10 ${
+                    plan.highlight
+                      ? 'gradient-border bg-surface-light glow'
+                      : 'border border-border/30 bg-surface-light'
+                  }`}
                 >
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-black gradient-text">49€</span>
-                    <span className="text-lg font-semibold text-muted">/mois</span>
+                  <span className={`text-xs font-bold uppercase tracking-[0.2em] ${plan.highlight ? 'text-accent' : 'text-muted'}`}>
+                    {plan.tagline}
+                  </span>
+                  <h3 className="mt-4 text-xl font-extrabold text-foreground">{plan.name}</h3>
+                  <div className="mt-4 flex items-baseline gap-2">
+                    <span className="text-5xl font-black gradient-text">{plan.price}</span>
+                    <span className="text-sm font-semibold text-muted">une seule fois</span>
                   </div>
-                  <span className="mt-1 text-xs font-medium text-accent">Création du site offerte · 0€ de frais d&apos;entrée</span>
+
+                  <ul className="mt-8 flex-1 space-y-4">
+                    {plan.items.map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md bg-accent/10 text-accent ring-1 ring-accent/10">
+                          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                          </svg>
+                        </div>
+                        <span className="text-sm leading-relaxed text-muted">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-10">
+                    <Button href="/start-project" variant={plan.highlight ? 'primary' : 'secondary'} className="w-full">
+                      Choisir {plan.name}
+                    </Button>
+                  </div>
                 </motion.div>
-              </div>
-
-              <p className="mt-4 text-xs text-muted/60 italic">
-                Sans engagement — résiliable à tout moment.
-              </p>
-
-              <div className="mt-8">
-                <Button href="/start-project">Démarrer pour 49€/mois</Button>
-              </div>
-            </AnimatedSection>
-
-            {/* Included */}
-            <AnimatedSection delay={0.15} direction="right">
-              <div className="gradient-border rounded-2xl bg-surface-light p-10 sm:p-14">
-                <h3 className="mb-10 text-base font-bold text-foreground flex items-center gap-2">
-                  <svg className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Ce qui est inclus
-                </h3>
-                <ul className="space-y-7">
-                  {included.map((benefit, j) => (
-                    <motion.li
-                      key={benefit}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.3 + j * 0.08 }}
-                      className="flex items-start gap-3.5 group"
-                    >
-                      <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md bg-accent/10 text-accent ring-1 ring-accent/10 transition-all group-hover:bg-accent/20 group-hover:ring-accent/25">
-                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                        </svg>
-                      </div>
-                      <span className="text-sm leading-relaxed text-muted transition-colors group-hover:text-foreground">{benefit}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
-            </AnimatedSection>
+              </AnimatedSection>
+            ))}
           </div>
+
+          <AnimatedSection delay={0.2}>
+            <div className="mx-auto mt-14 max-w-2xl rounded-2xl border border-border/30 bg-surface-light p-8 sm:p-10">
+              <h3 className="mb-6 text-base font-bold text-foreground flex items-center gap-2">
+                <svg className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Dans toutes les formules
+              </h3>
+              <ul className="space-y-4">
+                {included.map((benefit) => (
+                  <li key={benefit} className="flex items-start gap-3.5">
+                    <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md bg-accent/10 text-accent ring-1 ring-accent/10">
+                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    </div>
+                    <span className="text-sm leading-relaxed text-muted">{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -225,7 +279,7 @@ export default function ServicesContent() {
                 <span className="gradient-text"> à votre site</span>
               </h2>
               <p className="mt-6 text-base leading-relaxed text-muted">
-                Chaque site est adapté à votre activité. Voici les fonctionnalités qu&apos;on peut ajouter selon vos besoins — discutons-en lors de votre devis.
+                Chaque site est adapté à votre activité. Voici les fonctionnalités disponibles selon la formule choisie — précisez vos besoins dans le formulaire.
               </p>
             </div>
           </AnimatedSection>
@@ -262,12 +316,12 @@ export default function ServicesContent() {
                 <span className="gradient-text"> est sur Google.</span>
               </h2>
               <p className="mt-8 text-base leading-relaxed text-muted sm:text-lg">
-                Dites-moi ce que vous faites. Je crée votre site, je le mets en ligne en 7 jours — et je m&apos;occupe de tout pour seulement 49€/mois.
+                Dites-moi ce que vous faites. Je crée votre site et je le mets en ligne en moins de 7 jours — dès 99€, une seule fois.
               </p>
               <div className="mt-12">
-                <Button href="/start-project" size="lg">Démarrer pour 49€/mois</Button>
+                <Button href="/start-project" size="lg">Démarrer mon site</Button>
               </div>
-              <p className="mt-5 text-xs text-muted/60">Sans engagement · Résiliable à tout moment · Réponse sous 24h</p>
+              <p className="mt-5 text-xs text-muted/60">Paiement unique · Prix fixe · Réponse sous 24h</p>
             </div>
           </AnimatedSection>
         </div>
