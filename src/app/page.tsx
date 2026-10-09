@@ -149,7 +149,7 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.1 }}
               className="mt-8 text-[2.5rem] font-extrabold tracking-tight leading-[1.1] text-foreground sm:text-6xl lg:text-7xl xl:text-[5rem]"
             >
-              Votre futur client cherche
+              Votre prochain client cherche
               <br />
               un artisan sur Google.
               <br />
