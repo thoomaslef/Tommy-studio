@@ -208,6 +208,7 @@ export default function StartProjectContent() {
                       className="mt-4 max-w-md text-muted leading-relaxed"
                     >
                       Je lis votre demande et je vous réponds personnellement sous 24h avec la suite (paiement et envoi de vos photos). En attendant, surveillez votre boîte mail — et vos spams.
+                      Vous avez déjà des photos, une vidéo ou un logo ? <a href="/envoi-fichiers" className="font-semibold text-accent underline">Envoyez-les ici</a>.
                     </motion.p>
 
                     <motion.div

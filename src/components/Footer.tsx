@@ -13,6 +13,7 @@ const footerLinks = {
     { href: '/', label: 'Accueil' },
     { href: '/portfolio', label: 'Portfolio' },
     { href: '/start-project', label: 'Commander un site' },
+    { href: '/envoi-fichiers', label: 'Envoyer mes fichiers' },
   ],
 };
 
