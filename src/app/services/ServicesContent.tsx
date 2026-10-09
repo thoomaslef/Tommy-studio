@@ -145,8 +145,8 @@ export default function ServicesContent() {
 
         <div className="relative section-container flex flex-col items-center text-center">
           <motion.span
-            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             className="mb-8 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-5 py-2 text-xs font-semibold tracking-wide text-accent badge-glow"
           >
             <span className="relative flex h-2 w-2">
@@ -156,8 +156,8 @@ export default function ServicesContent() {
             Dès 99€ · Paiement unique · Hébergement 1re année inclus
           </motion.span>
           <motion.h1
-            initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl"
           >
@@ -166,8 +166,8 @@ export default function ServicesContent() {
             <span className="gradient-text glow-text">dès 99€, sans abonnement</span>
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="mt-8 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >

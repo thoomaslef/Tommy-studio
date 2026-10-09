@@ -338,3 +338,20 @@ body {
     padding-bottom: 110px;
   }
 }
+
+/* Allègement mobile : Safari iOS peine avec les gros flous et les animations infinies */
+@media (max-width: 768px) {
+  .aurora-1,
+  .aurora-2,
+  .aurora-3 {
+    animation: none;
+  }
+
+  .glow-text {
+    text-shadow: none;
+  }
+
+  [class*='blur-['] {
+    display: none;
+  }
+}

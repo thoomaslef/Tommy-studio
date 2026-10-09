@@ -35,14 +35,12 @@ export default function AnimatedSection({
         y: d.y,
         x: d.x,
         scale: scale ? 0.95 : 1,
-        filter: 'blur(8px)',
       }}
       whileInView={{
         opacity: 1,
         y: 0,
         x: 0,
         scale: 1,
-        filter: 'blur(0px)',
       }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{

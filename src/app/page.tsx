@@ -129,8 +129,8 @@ export default function Home() {
           <div className="w-full max-w-4xl text-center flex flex-col items-center">
             {/* Badge */}
             <motion.div
-              initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
               <span className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-accent/20 bg-accent/5 px-6 py-2.5 text-xs font-semibold tracking-wide text-accent badge-glow">
@@ -144,8 +144,8 @@ export default function Home() {
 
             {/* Headline */}
             <motion.h1
-              initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
               className="mt-8 text-[2.5rem] font-extrabold tracking-tight leading-[1.1] text-foreground sm:text-6xl lg:text-7xl xl:text-[5rem]"
             >
@@ -158,8 +158,8 @@ export default function Home() {
 
             {/* Subtitle */}
             <motion.p
-              initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
               className="mx-auto mt-10 max-w-2xl text-base leading-relaxed text-muted sm:text-lg lg:text-xl"
             >
@@ -169,8 +169,8 @@ export default function Home() {
 
             {/* CTA */}
             <motion.div
-              initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.35 }}
               className="mt-14 flex flex-col items-center gap-5 sm:flex-row sm:justify-center"
             >
@@ -194,8 +194,8 @@ export default function Home() {
 
             {/* Stats bar */}
             <motion.div
-              initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.55 }}
               className="mt-16 w-full max-w-3xl"
             >
