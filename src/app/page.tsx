@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Button from '@/components/Button';
 import SectionHeading from '@/components/SectionHeading';
 import AnimatedSection from '@/components/AnimatedSection';
+import ProcessSteps from '@/components/ProcessSteps';
 
 /* =========== DATA =========== */
 
@@ -313,38 +314,12 @@ export default function Home() {
           <SectionHeading
             label="Le processus"
             title="Votre site en ligne"
-            titleAccent="en 3 étapes"
+            titleAccent="en 5 étapes"
             description="Pas de rendez-vous, pas de réunion. Vous remplissez un formulaire — je m'occupe du reste."
           />
 
-          <div className="mt-10 sm:mt-14 grid gap-6 sm:grid-cols-3">
-            {[
-              {
-                step: '01',
-                title: 'Vous choisissez votre formule',
-                desc: 'Un formulaire de 5 minutes : votre métier, vos services, vos coordonnées. Pas de jargon, pas de rendez-vous.',
-              },
-              {
-                step: '02',
-                title: 'Je conçois et je développe',
-                desc: 'Design, textes, SEO local, mise en ligne. Je gère tout. Vous n\'avez rien à faire pendant ce temps.',
-              },
-              {
-                step: '03',
-                title: 'Votre site est en ligne en 7 jours',
-                desc: 'Optimisé pour Google, parfait sur mobile, prêt à déclencher des appels. Vous commencez à recevoir des clients.',
-              },
-            ].map((item, i) => (
-              <AnimatedSection key={item.step} delay={i * 0.15}>
-                <div className="relative">
-                  <span className="text-6xl font-black gradient-text opacity-20 leading-none">{item.step}</span>
-                  <div className="mt-4">
-                    <h3 className="text-base font-bold text-foreground">{item.title}</h3>
-                    <p className="mt-3 text-sm leading-loose text-muted">{item.desc}</p>
-                  </div>
-                </div>
-              </AnimatedSection>
-            ))}
+          <div className="mt-10 sm:mt-14">
+            <ProcessSteps />
           </div>
         </div>
       </section>

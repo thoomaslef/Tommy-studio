@@ -112,6 +112,11 @@ export default function Footer() {
                   Politique de confidentialité
                 </Link>
               </li>
+              <li>
+                <Link href="/cgv" className="hover-underline text-sm text-muted transition-colors duration-300 hover:text-foreground">
+                  Conditions de vente
+                </Link>
+              </li>
             </ul>
           </div>
 

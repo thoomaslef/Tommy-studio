@@ -33,6 +33,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: 'https://www.tommy-studio.pro/start-project',
+      lastModified: new Date('2026-10-10'),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: 'https://www.tommy-studio.pro/cgv',
+      lastModified: new Date('2026-10-10'),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
       url: 'https://www.tommy-studio.pro/mentions-legales',
       lastModified: new Date('2026-04-14'),
       changeFrequency: 'yearly',

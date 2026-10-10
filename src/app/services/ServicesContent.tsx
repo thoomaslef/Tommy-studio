@@ -3,52 +3,15 @@
 import { motion } from 'framer-motion';
 import Button from '@/components/Button';
 import AnimatedSection from '@/components/AnimatedSection';
+import ProcessSteps from '@/components/ProcessSteps';
+import { PLANS, PLAN_IDS, formatEuro } from '@/lib/plans';
 
-const plans = [
-  {
-    name: 'Essentiel',
-    price: '99€',
-    tagline: 'Pour exister en ligne',
-    highlight: false,
-    items: [
-      'Site d\'une page',
-      'Formulaire de contact',
-      'Optimisé mobile et Google',
-      'Adresse nom.tommy-studio.pro',
-      'Hébergement la 1re année inclus',
-      '1 retouche incluse',
-    ],
-  },
-  {
-    name: 'Standard',
-    price: '149€',
-    tagline: 'Recommandé',
-    highlight: true,
-    items: [
-      '3 à 5 pages',
-      'Galerie photos & réalisations',
-      'Carte Google Maps intégrée',
-      'Avis clients & témoignages',
-      'Formulaire de contact',
-      'Hébergement la 1re année inclus',
-      '1 retouche incluse',
-    ],
-  },
-  {
-    name: 'Complet',
-    price: '199€',
-    tagline: 'Pour aller plus loin',
-    highlight: false,
-    items: [
-      'Tout le pack Standard',
-      'Prise de rendez-vous en ligne',
-      'Blog & actualités',
-      'Page menu / catalogue',
-      'Hébergement la 1re année inclus',
-      '1 retouche incluse',
-    ],
-  },
-];
+const plans = PLAN_IDS.map((id) => ({
+  ...PLANS[id],
+  highlight: id === 'standard',
+  price: formatEuro(PLANS[id].price),
+  items: PLANS[id].features,
+}));
 
 const included = [
   'Paiement unique — aucun abonnement obligatoire',
@@ -230,7 +193,7 @@ export default function ServicesContent() {
                   </ul>
 
                   <div className="mt-10">
-                    <Button href="/start-project" variant={plan.highlight ? 'primary' : 'secondary'} className="w-full">
+                    <Button href={`/start-project?formule=${plan.id}`} variant={plan.highlight ? 'primary' : 'secondary'} className="w-full">
                       Choisir {plan.name}
                     </Button>
                   </div>
@@ -261,6 +224,26 @@ export default function ServicesContent() {
               </ul>
             </div>
           </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ===== PROCESSUS ===== */}
+      <section className="relative section-spacing overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+        <div className="relative section-container">
+          <AnimatedSection>
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Le processus</span>
+              <h2 className="mt-5 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+                De la commande à la mise en ligne,
+                <span className="gradient-text"> étape par étape</span>
+              </h2>
+              <p className="mt-6 text-base leading-relaxed text-muted">
+                Tout se fait en ligne, sans rendez-vous. Vous savez toujours qui fait quoi et ce qui vient ensuite.
+              </p>
+            </div>
+          </AnimatedSection>
+          <ProcessSteps />
         </div>
       </section>
 
