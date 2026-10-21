@@ -139,3 +139,11 @@ Chaque lot est utilisable seul. Légende : 🤖 = je le fais seul · 👤 = acti
 - **Aperçus sans paiement** : certains visiteurs feront un aperçu sans payer. C'est normal ; le bandeau, la non-indexation et l'expiration limitent les abus.
 - **Support** : il restera quelques questions, surtout sur les noms de domaine.
 - **Juridique** : CGV, mentions et assurance à faire valider. Thomas reste responsable de ce qui est vendu.
+
+## 8. Évolution : d'autres métiers après le bâtiment
+
+Décision : on lance et on vend **uniquement le bâtiment** d'abord (objectif 3 ventes), mais le code est prêt à s'ouvrir.
+
+- Ajouter un métier proche du bâtiment (serrurier, vitrier, déménageur, nettoyage, services à domicile) = une entrée dans `src/site-engine/trades.ts` (services, accroches, palettes, type Google). Aucun changement de modèle.
+- Métiers avec d'autres besoins (restaurant, commerce, bien-être, coach…) : nouvelles sections à créer (carte/menu, réservation, horaires détaillés, tarifs), et regrouper les métiers par secteur dans le configurateur.
+- À éviter : les secteurs déjà couverts par une plateforme dominante (ex. coiffure avec Planity).
