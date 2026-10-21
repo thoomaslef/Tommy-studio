@@ -1,7 +1,8 @@
 # Cahier des charges — Tommy Studio en libre-service (bâtiment)
 
 > Document de travail. On coche les cases au fur et à mesure.
-> Dernière mise à jour : 21 octobre 2026.
+> Dernière mise à jour : 21 octobre 2026 — lots 1 (en partie) et 2 faits.
+> Variation des sites : 3 modèles × 12 palettes × 6 associations de polices × 3 formes × 3 en-têtes × 2 mises en page de services et de galerie × 4 ordres de sections, tirés de façon stable pour chaque entreprise.
 
 ## 1. Le principe en une phrase
 
@@ -54,23 +55,23 @@ Chaque lot est utilisable seul. Légende : 🤖 = je le fais seul · 👤 = acti
 - [ ] Prix : une formule unique ou plusieurs ? Proposition : un site d'une page complète à prix unique, plus des options.
 - [ ] Hébergement : passer Vercel en Pro (environ 20 $/mois, usage commercial autorisé), ou garder Hobby le temps du test.
 - [ ] Où sont gérés les DNS de tommy-studio.pro (Vercel, OVH, autre) ? Nécessaire pour les sous-domaines clients.
-- [ ] Accord pour créer les tables et le stockage dans le projet Supabase existant.
+- [x] Accord pour créer les tables et le stockage dans le projet Supabase existant.
 
 ### Lot 1 — Fondations données 🤖 (+ 👤 2 clés à coller dans Vercel)
-- [ ] Tables Supabase : `projects` (infos client, statut : brouillon / aperçu / payé / en ligne), `assets` (photos).
-- [ ] Bucket de stockage pour les photos, accès restreint.
+- [x] Tables Supabase (préfixées `site_`, séparées de l'autre application du projet) : `projects` (infos client, statut : brouillon / aperçu / payé / en ligne), `assets` (photos).
+- [x] Bucket de stockage pour les photos : lecture publique par adresse imprévisible, écriture seulement via le serveur.
 - [ ] Lien privé de reprise par projet (jeton secret, sans compte ni mot de passe).
-- [ ] Remplacer l'envoi de fichiers Cloudflare R2 par Supabase Storage.
+- [ ] Photos du configurateur via Supabase Storage (bucket `site-media`, créé). La page d'envoi de fichiers lourds (vidéos) reste à part pour l'instant.
 - [ ] Suppression automatique des projets non payés après 30 jours (RGPD et coût de stockage).
 
 ### Lot 2 — Modèles bâtiment 🤖
-- [ ] Modèle 1 « Classique » : en-tête avec téléphone et bouton « Devis gratuit », services, zone d'intervention, réalisations, avis, certifications, contact.
-- [ ] Modèle 2 « Moderne ».
-- [ ] Modèle 3 « Robuste » (optionnel).
-- [ ] Listes de services pré-remplies par métier.
-- [ ] Optimisation Google intégrée : balises, données structurées `LocalBusiness`, métier et ville dans les titres.
-- [ ] Version mobile soignée, avec bouton d'appel fixe.
-- [ ] Jeux de données d'exemple pour chaque métier, qui servent aussi de démos sur la vitrine.
+- [x] Modèle 1 « Classique » : en-tête avec téléphone et bouton « Devis gratuit », services, zone d'intervention, réalisations, avis, certifications, contact.
+- [x] Modèle 2 « Moderne ».
+- [x] Modèle 3 « Robuste » (optionnel).
+- [x] Listes de services pré-remplies par métier.
+- [x] Optimisation Google intégrée : balises, données structurées `LocalBusiness`, métier et ville dans les titres.
+- [x] Version mobile soignée, avec bouton d'appel fixe.
+- [x] Jeux de données d'exemple pour chaque métier, qui servent aussi de démos sur la vitrine.
 
 ### Lot 3 — Configurateur 🤖
 - [ ] Parcours en étapes : métier → entreprise → services → photos → style.

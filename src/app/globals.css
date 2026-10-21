@@ -355,3 +355,30 @@ body {
     display: none;
   }
 }
+
+/* ============ SITES CLIENTS (moteur de sites) ============ */
+.site-root {
+  background: var(--s-bg);
+  color: var(--s-text);
+  font-family: var(--s-font-body), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.site-root .s-heading {
+  font-family: var(--s-font-heading), system-ui, sans-serif;
+  font-weight: var(--s-heading-weight);
+  text-transform: var(--s-heading-transform);
+  letter-spacing: var(--s-heading-tracking);
+  line-height: 1.08;
+}
+.site-root .s-stripes {
+  background-image: repeating-linear-gradient(-45deg, currentColor 0 12px, transparent 12px 24px);
+  color: white;
+}
+.site-root .s-hazard {
+  background-image: repeating-linear-gradient(-45deg, var(--s-primary) 0 16px, var(--s-text) 16px 32px);
+}
+.site-root ::selection {
+  background: var(--s-primary);
+  color: var(--s-primary-ink);
+}
