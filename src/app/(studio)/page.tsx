@@ -31,7 +31,7 @@ const demos = [
 const faq = [
   { q: 'Combien ça coûte ?', a: `${formatEuro(SITE_PRICE)} une seule fois, à la publication. L’hébergement est compris la première année, puis ${formatEuro(HOSTING_RENEWAL_PRICE)} par an. Pas d’abonnement mensuel.` },
   { q: 'Je dois payer pour essayer ?', a: 'Non. Vous créez votre site et vous voyez l’aperçu gratuitement. Vous ne payez que si vous décidez de le publier.' },
-  { q: 'Combien de temps ça prend ?', a: 'Une dizaine de minutes pour remplir vos infos et ajouter vos photos. Après le paiement, votre site est mis en ligne sous 24 h.' },
+  { q: 'Combien de temps ça prend ?', a: 'Une dizaine de minutes pour remplir vos infos et ajouter vos photos. Dès le paiement confirmé, votre site est en ligne automatiquement.' },
   { q: 'Je n’ai pas encore de photos ou de logo.', a: 'Ce n’est pas bloquant : le site affiche des visuels aux couleurs de votre entreprise et le nom de votre société à la place du logo. Vous pourrez ajouter vos photos plus tard.' },
   { q: 'Puis-je utiliser mon propre nom de domaine ?', a: 'Oui. Votre site est d’abord en ligne sur votre-entreprise.tommy-studio.pro. Si vous avez ou achetez un nom de domaine (environ 10 € par an), on vous explique comment le brancher.' },
   { q: 'Mon site sera-t-il visible sur Google ?', a: 'Il est construit pour : votre métier, votre ville et vos communes sont bien indiqués à Google. Personne ne peut garantir une première place, mais c’est la base indispensable.' },

@@ -13,5 +13,5 @@ export default async function ConfiguratorPage({ params }: { params: Promise<{ t
   const project = await getProjectByToken(token);
   if (!project) notFound();
   const assets = (await listAssets(project.id)).map((a) => ({ id: a.id, kind: a.kind, position: a.position, url: publicMediaUrl(a.path) }));
-  return <Configurator token={token} initialDraft={project.data} initialAssets={assets} status={project.status} />;
+  return <Configurator token={token} initialDraft={project.data} initialAssets={assets} status={project.status} slug={project.slug} />;
 }

@@ -2,6 +2,7 @@ import 'server-only';
 import { createHash, randomBytes } from 'crypto';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { SiteDraft } from '@/site-engine/sanitize';
+import { RESERVED_SLUGS, slugify } from './live-site';
 
 export const SITE_MEDIA_BUCKET = 'site-media';
 
@@ -27,6 +28,7 @@ export type ProjectRow = {
   data: SiteDraft;
   contact_name: string | null;
   contact_email: string | null;
+  stripe_session_id: string | null;
   paid_at: string | null;
   publish_requested_at: string | null;
   published_at: string | null;
@@ -34,7 +36,7 @@ export type ProjectRow = {
   updated_at: string;
 };
 
-const PROJECT_COLUMNS = 'id, slug, status, plan, options, data, contact_name, contact_email, paid_at, publish_requested_at, published_at, created_at, updated_at';
+const PROJECT_COLUMNS = 'id, slug, status, plan, options, data, contact_name, contact_email, stripe_session_id, paid_at, publish_requested_at, published_at, created_at, updated_at';
 
 /** Le lien privé du client contient un jeton ; seule son empreinte est stockée. */
 export const hashToken = (token: string) => createHash('sha256').update(token).digest('hex');
@@ -166,4 +168,56 @@ export async function requestPublication(id: string, name: string, email: string
     .update({ contact_name: name, contact_email: email, publish_requested_at: new Date().toISOString() })
     .eq('id', id);
   if (error) throw error;
+}
+
+/** Adresses possibles, de la plus courte à la plus précise : « martin-plomberie », puis « martin-plomberie-caen », puis « -2 », « -3 »… */
+function slugCandidates(draft: SiteDraft) {
+  const base = slugify(draft.businessName ?? '') || 'artisan';
+  const withCity = slugify(`${base} ${draft.city ?? ''}`) || base;
+  const list = [base, withCity];
+  for (let i = 2; i < 30; i++) list.push(`${withCity.slice(0, 36)}-${i}`);
+  return [...new Set(list)].filter((s) => s.length >= 3 && !RESERVED_SLUGS.has(s));
+}
+
+type Payment = { sessionId: string; amountCents: number | null; email: string | null; name: string | null };
+
+/**
+ * Paiement confirmé : le projet passe directement en ligne avec une adresse unique.
+ * Idempotent : un webhook rejoué pour la même session renvoie le projet déjà publié.
+ */
+export async function publishPaidProject(id: string, payment: Payment): Promise<{ project: ProjectRow; alreadyDone: boolean } | null> {
+  const db = getSupabase();
+  if (!db) throw new Error('Supabase non configuré');
+  const { data: current, error: readError } = await db.from('site_projects').select(PROJECT_COLUMNS).eq('id', id).maybeSingle();
+  if (readError) throw readError;
+  const project = current as ProjectRow | null;
+  if (!project) return null;
+  if (project.stripe_session_id === payment.sessionId) return { project, alreadyDone: true };
+  if (project.status !== 'draft') return { project, alreadyDone: true };
+
+  const now = new Date().toISOString();
+  for (const slug of slugCandidates(project.data)) {
+    const { data, error } = await db
+      .from('site_projects')
+      .update({
+        status: 'live',
+        slug,
+        stripe_session_id: payment.sessionId,
+        amount_cents: payment.amountCents,
+        paid_at: now,
+        published_at: now,
+        contact_email: project.contact_email ?? payment.email,
+        contact_name: project.contact_name ?? payment.name,
+      })
+      .eq('id', id)
+      .eq('status', 'draft')
+      .select(PROJECT_COLUMNS);
+    if (error?.code === '23505' && error.message.includes('slug')) continue; // adresse déjà prise
+    if (error) throw error;
+    if (data?.length) return { project: data[0] as ProjectRow, alreadyDone: false };
+    // Un autre webhook est passé entre-temps
+    const { data: again } = await db.from('site_projects').select(PROJECT_COLUMNS).eq('id', id).maybeSingle();
+    return again ? { project: again as ProjectRow, alreadyDone: true } : null;
+  }
+  throw new Error('Aucune adresse disponible');
 }

@@ -1,7 +1,7 @@
 # Cahier des charges — Tommy Studio en libre-service (bâtiment)
 
 > Document de travail. On coche les cases au fur et à mesure.
-> Dernière mise à jour : 21 octobre 2026 — lots 1, 2, 3 et 4 faits (sauf anti-robots renforcé). Prochain : lot 5, paiement et mise en ligne.
+> Dernière mise à jour : 21 octobre 2026 — lots 1 à 5 faits (sauf anti-robots renforcé, sous-domaines et emails clients, qui attendent le passage des DNS chez Vercel).
 > Variation des sites : 3 modèles × 12 palettes × 6 associations de polices × 3 formes × 3 en-têtes × 2 mises en page de services et de galerie × 4 ordres de sections, tirés de façon stable pour chaque entreprise.
 
 ## 1. Le principe en une phrase
@@ -88,11 +88,12 @@ Chaque lot est utilisable seul. Légende : 🤖 = je le fais seul · 👤 = acti
 - [ ] Bouton « C'est parfait, je publie » qui mène au paiement.
 
 ### Lot 5 — Paiement et mise en ligne 🤖 (+ 👤 compte Stripe et clés)
-- [ ] Stripe Checkout lié au projet ; le prix est toujours calculé côté serveur.
-- [ ] Webhook de confirmation : statut « payé », puis publication automatique.
-- [ ] Sous-domaine `nom-entreprise.tommy-studio.pro` attribué automatiquement.
-- [ ] Email au client : adresse du site, lien de modification, tutos.
-- [ ] Email à Thomas : « nouveau site en ligne ».
+- [x] Lien de paiement Stripe (99 €, `plink_1UT2b8…`) ouvert avec l'identifiant du projet (`client_reference_id`) et l'email du client pré-rempli. Montant fixé chez Stripe, jamais par le navigateur.
+- [x] Webhook `/api/stripe/webhook` (signature vérifiée, rejeu sans effet, autres applis du compte Stripe ignorées) : le site passe directement « en ligne » avec une adresse unique.
+- [x] Adresse attribuée automatiquement (`nom-entreprise`, puis `nom-entreprise-ville`, puis `-2`…). En attendant les DNS : `www.tommy-studio.pro/s/nom-entreprise`. Le code des sous-domaines (`src/proxy.ts`) est prêt : passer `SUBDOMAINS_ENABLED` à `true` dans `src/lib/live-site.ts` une fois `*.tommy-studio.pro` branché.
+- [x] Page `/paiement/merci` : attend la confirmation et affiche l'adresse du site. Le configurateur affiche aussi l'adresse et publie les modifications aussitôt.
+- [ ] Email au client : adresse du site, lien de modification, tutos (nécessite le domaine vérifié chez Resend).
+- [x] Email à Thomas : « site vendu », avec alerte en cas de paiement sans projet ou de double paiement.
 
 ### Lot 6 — Autonomie du client 🤖
 - [ ] Tuto « Brancher mon nom de domaine ».
@@ -152,5 +153,5 @@ Décision : on lance et on vend **uniquement le bâtiment** d'abord (objectif 3 
 
 - Supprimé : ancienne offre à 3 formules (Services, commande en 5 étapes, page merci), pages Caen et Normandie, ancienne page d'envoi de fichiers (Cloudflare R2), API associées. Les anciennes adresses redirigent (308) vers `/creer`, `/#tarif` ou l'accueil.
 - Accueil réécrit autour du libre-service bâtiment, tarif unique dans `src/lib/offer.ts` (99 €, puis 39 €/an).
-- En attendant Stripe (lot 5) : le bouton « Publier » du configurateur envoie une demande à Thomas (`/api/projets/[jeton]/publier`), qui envoie le lien de paiement à la main et met le site en ligne.
+- Paiement automatique (lot 5) : le bouton « Payer et publier » envoie vers Stripe ; le site est en ligne dès le paiement confirmé. Le compte Stripe est partagé avec d'autres applications : leurs webhooks reçoivent aussi nos paiements et doivent les ignorer (métadonnée `app = tommy-studio-sites`).
 - CGV et politique de confidentialité réécrites pour ce parcours (sous-traitants : Vercel, Supabase, Resend, Stripe). À faire relire ; médiateur de la consommation et mention TVA toujours à compléter.

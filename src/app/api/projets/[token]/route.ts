@@ -6,7 +6,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ tok
   const project = await loadProject((await params).token);
   if (project instanceof Response) return project;
   const assets = await listAssets(project.id);
-  return json({ status: project.status, draft: project.data, assets: assets.map(assetView) });
+  return json({ status: project.status, slug: project.slug, draft: project.data, assets: assets.map(assetView) });
 }
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ token: string }> }) {

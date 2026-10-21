@@ -52,14 +52,14 @@ const sections = [
     body: (
       <p>
         Lorsque son site lui convient, le Client demande sa publication depuis l’aperçu, indique son nom et son email et accepte les CGV. Le paiement
-        s’effectue en totalité par un lien de paiement sécurisé envoyé par le Prestataire ou affiché à l’écran. La commande est ferme à réception du paiement.
+        s’effectue en totalité en ligne, par carte bancaire, sur la page de paiement sécurisée de Stripe. La commande est ferme à la confirmation du paiement.
         Les données bancaires sont traitées par le prestataire de paiement et ne sont jamais conservées par le Prestataire.
       </p>
     ),
   },
   {
     title: '5. Mise en ligne',
-    body: <p>Le site est mis en ligne dans un délai indicatif de 24 heures ouvrées après la réception du paiement. Le Client reçoit l’adresse de son site par email.</p>,
+    body: <p>Le site est mis en ligne automatiquement dès la confirmation du paiement, en général en quelques secondes. Son adresse est affichée au Client à l’écran puis lui est envoyée par email. En cas d’incident technique, la mise en ligne intervient au plus tard sous 48 heures ouvrées.</p>,
   },
   {
     title: '6. Contenus et modifications',

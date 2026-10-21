@@ -8,6 +8,7 @@ import { TRADES, TRADE_IDS } from '@/site-engine/trades';
 import type { SiteReview, SiteService, TemplateId, TradeId } from '@/site-engine/types';
 import { DRAFT_STORAGE_KEY } from '../CreerStart';
 import { HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
+import { liveSiteUrl } from '@/lib/live-site';
 import { uploadPhoto, type AssetView } from './photo-upload';
 
 const STEPS = ['Entreprise', 'Services', 'Photos', 'Style', 'Aperçu'] as const;
@@ -97,7 +98,7 @@ function PublishBox({ token, missing }: { token: string; missing: string[] }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [accept, setAccept] = useState(false);
-  const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [state, setState] = useState<'idle' | 'sending'>('idle');
   const [error, setError] = useState('');
 
   const send = async () => {
@@ -114,32 +115,20 @@ function PublishBox({ token, missing }: { token: string; missing: string[] }) {
         body: JSON.stringify({ name, email, acceptCgv: true }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Envoi impossible.');
-      setState('sent');
+      if (!res.ok || !data.paymentUrl) throw new Error(data.error || 'Paiement indisponible.');
+      window.location.href = data.paymentUrl;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Envoi impossible.');
+      setError(err instanceof Error ? err.message : 'Paiement indisponible.');
       setState('idle');
     }
   };
-
-  if (state === 'sent') {
-    return (
-      <div className="rounded-2xl border border-accent/30 bg-accent/10 p-6">
-        <p className="text-lg font-bold text-foreground">Demande bien reçue ✓</p>
-        <p className="mt-2 text-sm leading-relaxed text-muted">
-          Je vous envoie le lien de paiement sécurisé ({formatEuro(SITE_PRICE)}) par email sous 24 h, puis je mets votre site en ligne. Pensez à vérifier vos spams.
-          Vous pouvez encore modifier votre site d’ici là.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5 sm:p-6">
       <p className="text-lg font-bold text-foreground">Votre site vous plaît ? Publiez-le</p>
       <p className="mt-1 text-sm text-muted">
         <strong className="text-foreground">{formatEuro(SITE_PRICE)}</strong> une seule fois, hébergement inclus la première année, puis {formatEuro(HOSTING_RENEWAL_PRICE)}/an.
-        Je vous envoie le lien de paiement par email sous 24 h.
+        Paiement sécurisé par carte bancaire, votre site est en ligne aussitôt.
       </p>
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Votre nom" autoComplete="name" className={inputClass} />
@@ -152,7 +141,7 @@ function PublishBox({ token, missing }: { token: string; missing: string[] }) {
           <a href="/cgv" target="_blank" className="font-semibold text-accent underline">
             conditions générales de vente
           </a>
-          . Je demande la mise en ligne dès le paiement et je reconnais que, si je suis un consommateur, mon droit de rétractation prend fin une fois le site mis en ligne.
+          . Je demande la mise en ligne immédiate dès le paiement et je reconnais que, si je suis un consommateur, mon droit de rétractation prend fin une fois le site mis en ligne.
         </span>
       </label>
       {error && (
@@ -166,8 +155,20 @@ function PublishBox({ token, missing }: { token: string; missing: string[] }) {
         disabled={state === 'sending'}
         className="mt-5 w-full rounded-xl bg-accent px-6 py-4 text-sm font-bold text-white shadow-lg shadow-accent/20 disabled:opacity-60"
       >
-        {state === 'sending' ? 'Envoi…' : `Publier mon site — ${formatEuro(SITE_PRICE)}`}
+        {state === 'sending' ? 'Redirection vers le paiement…' : `Payer et publier mon site — ${formatEuro(SITE_PRICE)}`}
       </button>
+    </div>
+  );
+}
+
+function LiveBox({ url }: { url: string }) {
+  return (
+    <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5 sm:p-6">
+      <p className="text-lg font-bold text-foreground">Votre site est en ligne ✓</p>
+      <p className="mt-1 text-sm text-muted">Chaque modification enregistrée est visible aussitôt sur votre site.</p>
+      <a href={url} target="_blank" rel="noopener" className="mt-4 block break-all rounded-xl bg-background/60 px-4 py-3 text-sm font-bold text-accent underline">
+        {url}
+      </a>
     </div>
   );
 }
@@ -177,11 +178,13 @@ export default function Configurator({
   initialDraft,
   initialAssets,
   status,
+  slug,
 }: {
   token: string;
   initialDraft: SiteDraft;
   initialAssets: AssetView[];
   status: string;
+  slug: string | null;
 }) {
   const startTrade: TradeId = initialDraft.trade ?? 'multiservice';
   const [draft, setDraft] = useState<SiteDraft>(() => ({
@@ -301,6 +304,7 @@ export default function Configurator({
   const hasInsurance = !!draft.insurance;
   const insurer = (draft.insurance ?? '').replace(/^Assurance décennale\s*[—-]?\s*/i, '');
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/creer/${token}` : `/creer/${token}`;
+  const liveUrl = status === 'live' && slug ? liveSiteUrl(slug) : null;
 
   return (
     <section className="pt-28 pb-24 sm:pt-32">
@@ -315,7 +319,9 @@ export default function Configurator({
           </div>
           <p className="text-xs font-medium text-muted" aria-live="polite">
             {locked
-              ? 'Site verrouillé (paiement en cours)'
+              ? 'Site hors ligne : modifications désactivées'
+              : save === 'idle' && liveUrl
+                ? 'En ligne · vos modifications sont publiées aussitôt'
               : save === 'saving'
                 ? 'Enregistrement…'
                 : save === 'saved'
@@ -704,7 +710,7 @@ export default function Configurator({
                     </button>
                   </div>
                 </div>
-                <PublishBox token={token} missing={missing} />
+                {liveUrl ? <LiveBox url={liveUrl} /> : status === 'draft' && <PublishBox token={token} missing={missing} />}
               </>
             )}
 
