@@ -7,6 +7,7 @@ import { CERTIFICATIONS, MAX_PHOTOS, MAX_REVIEWS, MAX_SERVICES, draftToSiteData,
 import { TRADES, TRADE_IDS } from '@/site-engine/trades';
 import type { SiteReview, SiteService, TemplateId, TradeId } from '@/site-engine/types';
 import { DRAFT_STORAGE_KEY } from '../CreerStart';
+import { HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
 import { uploadPhoto, type AssetView } from './photo-upload';
 
 const STEPS = ['Entreprise', 'Services', 'Photos', 'Style', 'Aperçu'] as const;
@@ -88,6 +89,85 @@ function LivePreview({ token, version, compact = false }: { token: string; versi
         />
       </div>
       </div>
+    </div>
+  );
+}
+
+function PublishBox({ token, missing }: { token: string; missing: string[] }) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [accept, setAccept] = useState(false);
+  const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [error, setError] = useState('');
+
+  const send = async () => {
+    setError('');
+    if (missing.some((m) => m !== 'au moins une photo')) return setError(`Complétez d’abord : ${missing.join(', ')}.`);
+    if (!name.trim()) return setError('Indiquez votre nom.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return setError('Indiquez un email valide.');
+    if (!accept) return setError('Vous devez accepter les conditions générales de vente.');
+    setState('sending');
+    try {
+      const res = await fetch(`/api/projets/${token}/publier`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, acceptCgv: true }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Envoi impossible.');
+      setState('sent');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Envoi impossible.');
+      setState('idle');
+    }
+  };
+
+  if (state === 'sent') {
+    return (
+      <div className="rounded-2xl border border-accent/30 bg-accent/10 p-6">
+        <p className="text-lg font-bold text-foreground">Demande bien reçue ✓</p>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          Je vous envoie le lien de paiement sécurisé ({formatEuro(SITE_PRICE)}) par email sous 24 h, puis je mets votre site en ligne. Pensez à vérifier vos spams.
+          Vous pouvez encore modifier votre site d’ici là.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5 sm:p-6">
+      <p className="text-lg font-bold text-foreground">Votre site vous plaît ? Publiez-le</p>
+      <p className="mt-1 text-sm text-muted">
+        <strong className="text-foreground">{formatEuro(SITE_PRICE)}</strong> une seule fois, hébergement inclus la première année, puis {formatEuro(HOSTING_RENEWAL_PRICE)}/an.
+        Je vous envoie le lien de paiement par email sous 24 h.
+      </p>
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Votre nom" autoComplete="name" className={inputClass} />
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Votre email" autoComplete="email" className={inputClass} />
+      </div>
+      <label className="mt-4 flex cursor-pointer items-start gap-3 text-xs leading-relaxed text-muted">
+        <input type="checkbox" checked={accept} onChange={(e) => setAccept(e.target.checked)} className="mt-0.5 h-4 w-4 flex-shrink-0 accent-[#6366f1]" />
+        <span>
+          J’accepte les{' '}
+          <a href="/cgv" target="_blank" className="font-semibold text-accent underline">
+            conditions générales de vente
+          </a>
+          . Je demande la mise en ligne dès le paiement et je reconnais que, si je suis un consommateur, mon droit de rétractation prend fin une fois le site mis en ligne.
+        </span>
+      </label>
+      {error && (
+        <p role="alert" className="mt-3 text-sm text-red-400">
+          {error}
+        </p>
+      )}
+      <button
+        type="button"
+        onClick={send}
+        disabled={state === 'sending'}
+        className="mt-5 w-full rounded-xl bg-accent px-6 py-4 text-sm font-bold text-white shadow-lg shadow-accent/20 disabled:opacity-60"
+      >
+        {state === 'sending' ? 'Envoi…' : `Publier mon site — ${formatEuro(SITE_PRICE)}`}
+      </button>
     </div>
   );
 }
@@ -624,15 +704,7 @@ export default function Configurator({
                     </button>
                   </div>
                 </div>
-                <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5">
-                  <p className="font-bold text-foreground">Votre site vous plaît ?</p>
-                  <p className="mt-1 text-sm text-muted">
-                    La mise en ligne avec paiement sécurisé arrive très bientôt. Votre site est déjà sauvegardé : vous pourrez le publier depuis ce lien.
-                  </p>
-                  <button type="button" disabled className="mt-4 w-full cursor-not-allowed rounded-xl bg-accent/40 px-6 py-4 text-sm font-bold text-white">
-                    Publier mon site — bientôt disponible
-                  </button>
-                </div>
+                <PublishBox token={token} missing={missing} />
               </>
             )}
 

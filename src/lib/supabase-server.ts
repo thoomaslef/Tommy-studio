@@ -28,12 +28,13 @@ export type ProjectRow = {
   contact_name: string | null;
   contact_email: string | null;
   paid_at: string | null;
+  publish_requested_at: string | null;
   published_at: string | null;
   created_at: string;
   updated_at: string;
 };
 
-const PROJECT_COLUMNS = 'id, slug, status, plan, options, data, contact_name, contact_email, paid_at, published_at, created_at, updated_at';
+const PROJECT_COLUMNS = 'id, slug, status, plan, options, data, contact_name, contact_email, paid_at, publish_requested_at, published_at, created_at, updated_at';
 
 /** Le lien privé du client contient un jeton ; seule son empreinte est stockée. */
 export const hashToken = (token: string) => createHash('sha256').update(token).digest('hex');
@@ -154,4 +155,15 @@ export function publicMediaUrl(path: string) {
   const db = getSupabase();
   if (!db) return '';
   return db.storage.from(SITE_MEDIA_BUCKET).getPublicUrl(path).data.publicUrl;
+}
+
+/** Le client demande la publication : on garde ses coordonnées pour lui envoyer le paiement */
+export async function requestPublication(id: string, name: string, email: string) {
+  const db = getSupabase();
+  if (!db) throw new Error('Supabase non configuré');
+  const { error } = await db
+    .from('site_projects')
+    .update({ contact_name: name, contact_email: email, publish_requested_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw error;
 }

@@ -5,15 +5,14 @@ import { motion } from 'framer-motion';
 
 const footerLinks = {
   services: [
-    { href: '/services', label: 'Création de site web' },
-    { href: '/portfolio', label: 'Réalisations' },
-    { href: '/start-project', label: 'Démarrer mon site' },
+    { href: '/creer', label: 'Créer mon site' },
+    { href: '/modeles', label: 'Exemples de sites' },
+    { href: '/#tarif', label: 'Tarif' },
   ],
   company: [
     { href: '/', label: 'Accueil' },
-    { href: '/portfolio', label: 'Portfolio' },
-    { href: '/start-project', label: 'Commander un site' },
-    { href: '/envoi-fichiers', label: 'Envoyer mes fichiers' },
+    { href: '/#comment', label: 'Comment ça marche' },
+    { href: '/portfolio', label: 'Réalisations sur mesure' },
   ],
 };
 
@@ -41,13 +40,12 @@ export default function Footer() {
               </div>
             </Link>
             <p className="mt-8 max-w-md text-sm leading-loose text-muted">
-              Tommy Studio crée des sites web professionnels pour les artisans et indépendants
-              partout en France — livrés en moins de 7 jours, au prix fixe annoncé.
+              Tommy Studio permet aux artisans du bâtiment de créer leur site professionnel en quelques minutes, avec aperçu gratuit et un prix unique.
             </p>
 
             {/* Engagements mini */}
             <div className="mt-8 flex flex-wrap gap-3">
-              {['Dès 99€', 'Paiement unique', 'Livraison < 7j'].map((item) => (
+              {['99 € une fois', 'Aperçu gratuit', 'Sans abonnement'].map((item) => (
                 <span key={item} className="inline-flex items-center gap-1.5 rounded-full border border-border/40 bg-surface-elevated px-3 py-1 text-[11px] text-muted">
                   <svg className="h-2.5 w-2.5 text-accent flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -139,10 +137,10 @@ export default function Footer() {
               <li className="text-sm text-muted">Caen, Normandie</li>
               <li>
                 <Link
-                  href="/start-project"
+                  href="/creer"
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-colors hover:text-accent-light"
                 >
-                  Démarrer mon site
+                  Créer mon site
                   <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
                   </svg>
@@ -167,7 +165,7 @@ export default function Footer() {
           </div>
           <div className="flex items-center gap-6">
             <p className="text-[10px] tracking-wider uppercase text-muted/40">
-              Créateur de site web &middot; Artisans &amp; indépendants &middot; Partout en France
+              Sites pour artisans du bâtiment &middot; Partout en France
             </p>
           </div>
         </div>

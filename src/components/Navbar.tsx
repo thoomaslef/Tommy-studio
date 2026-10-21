@@ -7,9 +7,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
   { href: '/', label: 'Accueil' },
-  { href: '/services', label: 'Services' },
   { href: '/modeles', label: 'Exemples' },
-  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/#tarif', label: 'Tarif' },
+  { href: '/portfolio', label: 'Réalisations' },
 ];
 
 export default function Navbar() {
@@ -92,12 +92,12 @@ export default function Navbar() {
 
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Link
-                href="/start-project"
+                href="/creer"
                 className="ml-3 group relative inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3 text-sm font-semibold text-white overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-accent/30"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-accent-light to-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <span className="relative flex items-center gap-2">
-                  Démarrer mon site
+                  Créer mon site
                   <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
@@ -184,11 +184,11 @@ export default function Navbar() {
                 className="mt-4 w-full max-w-sm"
               >
                 <Link
-                  href="/start-project"
+                  href="/creer"
                   onClick={() => setIsOpen(false)}
                   className="flex items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-5 text-lg font-semibold text-white transition-all hover:bg-accent-light"
                 >
-                  Démarrer mon site
+                  Créer mon site
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import AnimatedSection from '@/components/AnimatedSection';
 import Button from '@/components/Button';
+import { SITE_PRICE, formatEuro } from '@/lib/offer';
 
 const projects = [
   {
@@ -43,7 +44,7 @@ export default function PortfolioContent() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
             </span>
-            Sites web livrés · Caen &amp; Normandie
+            Réalisations sur mesure
           </motion.span>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -51,9 +52,9 @@ export default function PortfolioContent() {
             transition={{ delay: 0.1 }}
             className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl"
           >
-            Sites web réalisés à Caen
+            Des sites créés
             <br />
-            <span className="gradient-text glow-text">et en Normandie</span>
+            <span className="gradient-text glow-text">sur mesure</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
@@ -61,8 +62,8 @@ export default function PortfolioContent() {
             transition={{ delay: 0.2 }}
             className="mt-8 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >
-            Sites web pour artisans, commerçants et indépendants — des projets concrets
-            livrés en moins de 7 jours pour des clients en Normandie et partout en France.
+            Avant de lancer la création en libre-service, j’ai réalisé ces sites sur mesure pour des artisans et indépendants.
+            Le même soin se retrouve dans chaque modèle Tommy Studio.
           </motion.p>
         </div>
       </section>
@@ -130,19 +131,18 @@ export default function PortfolioContent() {
           <AnimatedSection scale>
             <div className="gradient-border rounded-[2rem] bg-background p-12 sm:p-20">
               <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-                Votre success story
-                <span className="gradient-text"> commence ici</span>
+                À votre tour,
+                <span className="gradient-text"> en 10 minutes</span>
               </h2>
               <div className="mt-8 flex justify-center">
                 <p className="max-w-xl text-center text-base leading-relaxed text-muted sm:text-lg">
-                  Obtenez un devis gratuit en 2 minutes. Rejoignez les entrepreneurs
-                  qui ont transformé leur business avec Tommy Studio.
+                  Créez le site de votre entreprise, regardez l’aperçu gratuitement, et publiez-le seulement s’il vous plaît.
                 </p>
               </div>
               <div className="mt-12">
-                <Button href="/start-project" size="lg">Obtenir mon devis gratuit</Button>
+                <Button href="/creer" size="lg">Créer mon site</Button>
               </div>
-              <p className="mt-5 text-xs text-muted/60">Sans engagement · Réponse sous 24h</p>
+              <p className="mt-5 text-xs text-muted/60">Aperçu gratuit · {formatEuro(SITE_PRICE)} à la publication</p>
             </div>
           </AnimatedSection>
         </div>

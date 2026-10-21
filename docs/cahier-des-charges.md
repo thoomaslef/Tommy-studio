@@ -62,7 +62,7 @@ Chaque lot est utilisable seul. Légende : 🤖 = je le fais seul · 👤 = acti
 - [x] Bucket de stockage pour les photos : lecture publique par adresse imprévisible, écriture seulement via le serveur.
 - [x] Lien privé de reprise par projet (jeton secret, sans compte ni mot de passe).
 - [ ] Photos du configurateur via Supabase Storage (bucket `site-media`, créé). La page d'envoi de fichiers lourds (vidéos) reste à part pour l'instant.
-- [ ] Suppression automatique des projets non payés après 30 jours (RGPD et coût de stockage).
+- [ ] Suppression automatique des projets non publiés 12 mois après leur dernière modification (engagement pris dans la politique de confidentialité).
 
 ### Lot 2 — Modèles bâtiment 🤖
 - [x] Modèle 1 « Classique » : en-tête avec téléphone et bouton « Devis gratuit », services, zone d'intervention, réalisations, avis, certifications, contact.
@@ -147,3 +147,10 @@ Décision : on lance et on vend **uniquement le bâtiment** d'abord (objectif 3 
 - Ajouter un métier proche du bâtiment (serrurier, vitrier, déménageur, nettoyage, services à domicile) = une entrée dans `src/site-engine/trades.ts` (services, accroches, palettes, type Google). Aucun changement de modèle.
 - Métiers avec d'autres besoins (restaurant, commerce, bien-être, coach…) : nouvelles sections à créer (carte/menu, réservation, horaires détaillés, tarifs), et regrouper les métiers par secteur dans le configurateur.
 - À éviter : les secteurs déjà couverts par une plateforme dominante (ex. coiffure avec Planity).
+
+## 9. Site Tommy Studio remis en cohérence (21 octobre 2026)
+
+- Supprimé : ancienne offre à 3 formules (Services, commande en 5 étapes, page merci), pages Caen et Normandie, ancienne page d'envoi de fichiers (Cloudflare R2), API associées. Les anciennes adresses redirigent (308) vers `/creer`, `/#tarif` ou l'accueil.
+- Accueil réécrit autour du libre-service bâtiment, tarif unique dans `src/lib/offer.ts` (99 €, puis 39 €/an).
+- En attendant Stripe (lot 5) : le bouton « Publier » du configurateur envoie une demande à Thomas (`/api/projets/[jeton]/publier`), qui envoie le lien de paiement à la main et met le site en ligne.
+- CGV et politique de confidentialité réécrites pour ce parcours (sous-traitants : Vercel, Supabase, Resend, Stripe). À faire relire ; médiateur de la consommation et mention TVA toujours à compléter.

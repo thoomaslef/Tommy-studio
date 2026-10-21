@@ -1,25 +1,24 @@
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { SITE_PRICE, formatEuro } from '@/lib/offer';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.tommy-studio.pro'),
   title: {
-    default: 'Création de site web pour artisans et indépendants | Tommy Studio — Dès 99€',
+    default: 'Tommy Studio — Le site de votre entreprise du bâtiment en 10 minutes',
     template: '%s | Tommy Studio',
   },
-  description:
-    'Tommy Studio crée votre site web professionnel à prix fixe dès 99€, partout en France. Paiement unique, hébergement la première année inclus, optimisé pour Google et pour mobile.',
+  description: `Plombier, électricien, maçon, couvreur… Créez le site de votre entreprise en 10 minutes : aperçu gratuit, ${formatEuro(SITE_PRICE)} une seule fois à la publication, hébergement compris la première année.`,
   keywords: [
-    'création site web artisan',
-    'site web pas cher',
-    'site vitrine professionnel',
-    'site internet indépendant',
-    'créateur de site web',
-    'site web prix fixe',
+    'site internet artisan',
+    'site web artisan du bâtiment',
+    'créer site plombier',
+    'site internet électricien',
+    'site web couvreur',
+    'site vitrine maçon',
+    'site internet pas cher artisan',
     'Tommy Studio',
-    'création site web Caen',
-    'création site web Normandie',
   ],
   authors: [{ name: 'Tommy Studio', url: 'https://www.tommy-studio.pro' }],
   creator: 'Tommy Studio',
@@ -29,78 +28,41 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     url: 'https://www.tommy-studio.pro',
     siteName: 'Tommy Studio',
-    title: 'Votre site web professionnel dès 99€ — Tommy Studio',
-    description:
-      'Site web professionnel à prix fixe dès 99€, livré en moins de 7 jours, partout en France. Paiement unique, optimisé Google, parfait sur mobile.',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Tommy Studio — Création de site web pour artisans et indépendants',
-      },
-    ],
+    title: 'Le site de votre entreprise du bâtiment, prêt en 10 minutes',
+    description: `Aperçu gratuit, ${formatEuro(SITE_PRICE)} une seule fois à la publication. Pour plombiers, électriciens, maçons, couvreurs et tous les artisans du bâtiment.`,
+    images: [{ url: '/home/demo-plombier.webp', width: 1280, height: 800, alt: 'Exemple de site créé avec Tommy Studio' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Votre site web professionnel dès 99€ — Tommy Studio',
-    description:
-      'Site web professionnel à prix fixe dès 99€, livré en moins de 7 jours. Pour artisans et indépendants, partout en France.',
-    images: ['/og-image.jpg'],
+    title: 'Le site de votre entreprise du bâtiment, prêt en 10 minutes',
+    description: `Aperçu gratuit, ${formatEuro(SITE_PRICE)} une seule fois à la publication.`,
+    images: ['/home/demo-plombier.webp'],
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+    googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
-  alternates: {
-    canonical: 'https://www.tommy-studio.pro',
-    languages: {
-      'fr': 'https://www.tommy-studio.pro/',
-      'x-default': 'https://www.tommy-studio.pro/',
-    },
-  },
+  alternates: { canonical: 'https://www.tommy-studio.pro' },
 };
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
   name: 'Tommy Studio',
-  description:
-    'Création de sites web professionnels pour artisans et indépendants, partout en France. Prix fixe dès 99€, paiement unique, livraison en moins de 7 jours.',
+  description: 'Création de sites internet en libre-service pour les artisans du bâtiment : aperçu gratuit, prix unique à la publication.',
   url: 'https://www.tommy-studio.pro',
   telephone: '+33612941125',
   email: 'thomas@tommy-studio.pro',
   taxID: '10108233700011',
   priceRange: '€',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: '7 boulevard Leroy',
-    addressLocality: 'Caen',
-    postalCode: '14000',
-    addressCountry: 'FR',
-  },
+  address: { '@type': 'PostalAddress', streetAddress: '7 boulevard Leroy', addressLocality: 'Caen', postalCode: '14000', addressCountry: 'FR' },
   areaServed: { '@type': 'Country', name: 'France' },
-  sameAs: [],
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Formules de création de site web',
-    itemListElement: [
-      { name: 'Essentiel', price: '99', description: 'Site d\'une page avec formulaire de contact, hébergement la première année inclus.' },
-      { name: 'Standard', price: '149', description: 'Site de 3 à 5 pages avec galerie, carte et avis, hébergement la première année inclus.' },
-      { name: 'Complet', price: '199', description: 'Site Standard avec prise de rendez-vous en ligne et blog, hébergement la première année inclus.' },
-    ].map((plan) => ({
-      '@type': 'Offer',
-      price: plan.price,
-      priceCurrency: 'EUR',
-      itemOffered: { '@type': 'Service', name: `Site web ${plan.name}`, description: plan.description },
-    })),
+  makesOffer: {
+    '@type': 'Offer',
+    price: String(SITE_PRICE),
+    priceCurrency: 'EUR',
+    itemOffered: { '@type': 'Service', name: 'Site internet pour artisan du bâtiment', description: 'Site d’une page, optimisé mobile et Google, hébergement compris la première année.' },
   },
 };
 
