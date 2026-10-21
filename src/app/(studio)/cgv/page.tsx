@@ -43,7 +43,7 @@ const sections = [
           La publication du site coûte <strong>{formatEuro(SITE_PRICE)}</strong>, payés une seule fois. Ce prix comprend l’hébergement pendant les douze mois
           qui suivent la mise en ligne. L’hébergement se renouvelle ensuite pour <strong>{formatEuro(HOSTING_RENEWAL_PRICE)} par an</strong>.
         </p>
-        <p>Les prix sont indiqués en euros et correspondent au montant total à payer. Un nom de domaine personnalisé, s’il est souhaité, est acheté et payé par le Client auprès du fournisseur de son choix.</p>
+        <p>Les prix sont indiqués en euros et correspondent au montant total à payer. TVA non applicable, article 293 B du Code général des impôts. Un nom de domaine personnalisé, s’il est souhaité, est acheté et payé par le Client auprès du fournisseur de son choix.</p>
       </>
     ),
   },
@@ -53,7 +53,7 @@ const sections = [
       <p>
         Lorsque son site lui convient, le Client demande sa publication depuis l’aperçu, indique son nom et son email et accepte les CGV. Le paiement
         s’effectue en totalité en ligne, par carte bancaire, sur la page de paiement sécurisée de Stripe. La commande est ferme à la confirmation du paiement.
-        Les données bancaires sont traitées par le prestataire de paiement et ne sont jamais conservées par le Prestataire.
+        Les données bancaires sont traitées par le prestataire de paiement et ne sont jamais conservées par le Prestataire. Une facture acquittée est envoyée par email au Client après le paiement ; le Client professionnel peut y faire figurer la raison sociale et le numéro de TVA de son entreprise.
       </p>
     ),
   },
