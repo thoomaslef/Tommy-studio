@@ -1,7 +1,7 @@
 # Cahier des charges — Tommy Studio en libre-service (bâtiment)
 
 > Document de travail. On coche les cases au fur et à mesure.
-> Dernière mise à jour : 21 octobre 2026 — lots 1 (en partie) et 2 faits.
+> Dernière mise à jour : 21 octobre 2026 — lots 1, 2, 3 et 4 faits (sauf anti-robots renforcé). Prochain : lot 5, paiement et mise en ligne.
 > Variation des sites : 3 modèles × 12 palettes × 6 associations de polices × 3 formes × 3 en-têtes × 2 mises en page de services et de galerie × 4 ordres de sections, tirés de façon stable pour chaque entreprise.
 
 ## 1. Le principe en une phrase
@@ -60,7 +60,7 @@ Chaque lot est utilisable seul. Légende : 🤖 = je le fais seul · 👤 = acti
 ### Lot 1 — Fondations données 🤖 (+ 👤 2 clés à coller dans Vercel)
 - [x] Tables Supabase (préfixées `site_`, séparées de l'autre application du projet) : `projects` (infos client, statut : brouillon / aperçu / payé / en ligne), `assets` (photos).
 - [x] Bucket de stockage pour les photos : lecture publique par adresse imprévisible, écriture seulement via le serveur.
-- [ ] Lien privé de reprise par projet (jeton secret, sans compte ni mot de passe).
+- [x] Lien privé de reprise par projet (jeton secret, sans compte ni mot de passe).
 - [ ] Photos du configurateur via Supabase Storage (bucket `site-media`, créé). La page d'envoi de fichiers lourds (vidéos) reste à part pour l'instant.
 - [ ] Suppression automatique des projets non payés après 30 jours (RGPD et coût de stockage).
 
@@ -74,15 +74,17 @@ Chaque lot est utilisable seul. Légende : 🤖 = je le fais seul · 👤 = acti
 - [x] Jeux de données d'exemple pour chaque métier, qui servent aussi de démos sur la vitrine.
 
 ### Lot 3 — Configurateur 🤖
-- [ ] Parcours en étapes : métier → entreprise → services → photos → style.
-- [ ] Envoi des photos avec compression automatique (photos de téléphone souvent très lourdes).
-- [ ] Sauvegarde automatique du brouillon à chaque étape.
-- [ ] Anti-robots (Cloudflare Turnstile, gratuit) et limites (nombre de photos, taille).
+- [x] Parcours en étapes : métier → entreprise → services → photos → style.
+- [x] Envoi des photos avec compression automatique (photos de téléphone souvent très lourdes).
+- [x] Sauvegarde automatique du brouillon à chaque étape.
+- [x] Limites : 12 photos, 15 Mo par fichier, formats JPEG/PNG/WebP, champs nettoyés côté serveur. Champ piège anti-robots.
+- [ ] Anti-robots renforcé (Cloudflare Turnstile, gratuit) avant l'ouverture publique.
+- [ ] Nettoyage des fichiers envoyés mais jamais confirmés (à faire avec le lot 8).
 
 ### Lot 4 — Aperçu 🤖
-- [ ] Page `/apercu/[jeton]` : le site complet avec un bandeau « Aperçu — non publié », non indexé par Google.
-- [ ] Bascule vue mobile / vue ordinateur.
-- [ ] Bouton « Modifier » qui renvoie à l'étape voulue.
+- [x] Page `/apercu/[jeton]` : le site complet avec un bandeau « Aperçu — non publié », non indexé par Google.
+- [x] Bascule vue mobile / vue ordinateur.
+- [x] Bouton « Modifier » qui renvoie à l'étape voulue.
 - [ ] Bouton « C'est parfait, je publie » qui mène au paiement.
 
 ### Lot 5 — Paiement et mise en ligne 🤖 (+ 👤 compte Stripe et clés)

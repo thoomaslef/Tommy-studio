@@ -1,7 +1,7 @@
 import 'server-only';
 import { createHash, randomBytes } from 'crypto';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import type { SiteData } from '@/site-engine/types';
+import type { SiteDraft } from '@/site-engine/sanitize';
 
 export const SITE_MEDIA_BUCKET = 'site-media';
 
@@ -24,7 +24,7 @@ export type ProjectRow = {
   status: ProjectStatus;
   plan: string | null;
   options: string[];
-  data: Partial<SiteData>;
+  data: SiteDraft;
   contact_name: string | null;
   contact_email: string | null;
   paid_at: string | null;
@@ -40,7 +40,7 @@ export const hashToken = (token: string) => createHash('sha256').update(token).d
 
 export const isTokenFormat = (token: string) => /^[A-Za-z0-9_-]{32,64}$/.test(token);
 
-export async function createProject(initial: Partial<SiteData> = {}) {
+export async function createProject(initial: SiteDraft = {}) {
   const db = getSupabase();
   if (!db) throw new Error('Supabase non configuré');
   const token = randomBytes(24).toString('base64url');
@@ -69,17 +69,75 @@ export async function getLiveProjectBySlug(slug: string): Promise<ProjectRow | n
   return (data as ProjectRow) ?? null;
 }
 
-export async function updateProjectData(id: string, patch: Partial<SiteData>) {
+/** Remplace le brouillon (déjà nettoyé) ; refusé une fois le projet payé ou hors ligne */
+export async function saveDraft(id: string, draft: SiteDraft) {
   const db = getSupabase();
   if (!db) throw new Error('Supabase non configuré');
-  const { data: current, error: readError } = await db.from('site_projects').select('data, status').eq('id', id).single();
-  if (readError) throw readError;
-  if (current.status !== 'draft' && current.status !== 'live') throw new Error('Projet non modifiable');
-  const { error } = await db
-    .from('site_projects')
-    .update({ data: { ...(current.data as object), ...patch } })
-    .eq('id', id);
+  const { data, error } = await db.from('site_projects').update({ data: draft }).eq('id', id).in('status', ['draft', 'live']).select('id');
   if (error) throw error;
+  if (!data?.length) throw new Error('Projet non modifiable');
+}
+
+export type AssetRow = { id: string; path: string; kind: 'photo' | 'logo'; position: number; width: number | null; height: number | null };
+
+export async function listAssets(projectId: string): Promise<AssetRow[]> {
+  const db = getSupabase();
+  if (!db) return [];
+  const { data, error } = await db
+    .from('site_assets')
+    .select('id, path, kind, position, width, height')
+    .eq('project_id', projectId)
+    .order('position', { ascending: true })
+    .order('created_at', { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as AssetRow[];
+}
+
+/** Enregistre une photo après vérification qu'elle existe bien dans le stockage */
+export async function registerAsset(projectId: string, path: string, kind: 'photo' | 'logo', meta: { width?: number; height?: number }) {
+  const db = getSupabase();
+  if (!db) throw new Error('Supabase non configuré');
+  if (!path.startsWith(`${projectId}/`)) throw new Error('Chemin invalide');
+  const folder = projectId;
+  const name = path.slice(folder.length + 1);
+  const { data: found, error: listError } = await db.storage.from(SITE_MEDIA_BUCKET).list(folder, { search: name, limit: 1 });
+  if (listError) throw listError;
+  const file = found?.find((f) => f.name === name);
+  if (!file) throw new Error('Fichier introuvable');
+  const size = (file.metadata as { size?: number } | null)?.size ?? null;
+
+  if (kind === 'logo') {
+    // Un seul logo : on remplace l'ancien
+    const old = (await listAssets(projectId)).filter((a) => a.kind === 'logo');
+    for (const a of old) await deleteAsset(projectId, a.id);
+  }
+  const position = kind === 'logo' ? 0 : (await listAssets(projectId)).filter((a) => a.kind === 'photo').length;
+  const { data, error } = await db
+    .from('site_assets')
+    .insert({ project_id: projectId, path, kind, position, width: meta.width ?? null, height: meta.height ?? null, size_bytes: size })
+    .select('id, path, kind, position, width, height')
+    .single();
+  if (error) throw error;
+  return data as AssetRow;
+}
+
+export async function deleteAsset(projectId: string, assetId: string) {
+  const db = getSupabase();
+  if (!db) throw new Error('Supabase non configuré');
+  const { data, error } = await db.from('site_assets').delete().eq('id', assetId).eq('project_id', projectId).select('path');
+  if (error) throw error;
+  const paths = (data ?? []).map((d) => d.path as string);
+  if (paths.length) await db.storage.from(SITE_MEDIA_BUCKET).remove(paths);
+}
+
+/** Réordonne les photos selon la liste d'identifiants reçue */
+export async function reorderPhotos(projectId: string, ids: string[]) {
+  const db = getSupabase();
+  if (!db) throw new Error('Supabase non configuré');
+  for (const [position, id] of ids.entries()) {
+    const { error } = await db.from('site_assets').update({ position }).eq('id', id).eq('project_id', projectId).eq('kind', 'photo');
+    if (error) throw error;
+  }
 }
 
 /** URL d'envoi signée : le navigateur envoie la photo directement à Supabase. */
