@@ -1,0 +1,138 @@
+# Cahier des charges — Tommy Studio en libre-service (bâtiment)
+
+> Document de travail. On coche les cases au fur et à mesure.
+> Dernière mise à jour : 21 octobre 2026.
+
+## 1. Le principe en une phrase
+
+Un artisan du bâtiment arrive sur tommy-studio.pro, remplit ses infos, envoie ses photos, **voit immédiatement l'aperçu de son site**, le modifie jusqu'à ce qu'il lui plaise, **paie seulement à ce moment-là**, et son site est mis en ligne automatiquement. Thomas n'intervient pas, sauf exception.
+
+## 2. Parcours client
+
+1. **Choix du métier** : plombier, électricien, maçon, couvreur, menuisier, peintre, carreleur, paysagiste, chauffagiste, plaquiste, multiservice…
+2. **Infos de l'entreprise** : nom, ville, zone d'intervention (communes ou rayon en km), téléphone, email, horaires, SIRET, certifications (RGE, Qualibat…), assurance décennale (oui/non, assureur).
+3. **Services** : une liste pré-remplie selon le métier, à cocher et compléter, avec les prix si le client veut les afficher.
+4. **Photos** : logo, réalisations, éventuellement avant/après, photo de l'équipe.
+5. **Style** : choix parmi 2 ou 3 modèles et une couleur principale.
+6. **Aperçu** : le site complet s'affiche (vue mobile et vue ordinateur), avec un bandeau « Aperçu — non publié ». Le client peut revenir modifier n'importe quelle étape. Un lien privé lui permet de reprendre plus tard.
+7. **Paiement** : quand tout lui convient, il paie via Stripe.
+8. **Mise en ligne automatique** : son site est en ligne sur `son-entreprise.tommy-studio.pro`. Il reçoit un email avec son adresse et les tutos.
+9. **Options en autonomie** (tutos sur le site) :
+   - brancher son propre nom de domaine ;
+   - télécharger son site (fichier ZIP) et l'héberger lui-même ;
+   - créer sa fiche Google Business, avec ses infos pré-rédigées à copier-coller.
+
+## 3. Ce qui sera automatique, et ce qui ne pourra pas l'être
+
+| Élément | Automatique ? | Détail |
+|---|---|---|
+| Création du site à partir des infos | Oui | Modèles conçus pour le bâtiment, remplis avec les données du client. Pas de travail manuel. |
+| Aperçu avant paiement | Oui | Rendu instantané à partir des mêmes modèles. |
+| Rédaction des textes | Oui, en option | Rédaction par l'IA (API Claude) à partir des infos du client. Coût de quelques centimes par site, à confirmer. |
+| Paiement | Oui | Stripe Checkout + confirmation automatique (webhook). |
+| Mise en ligne sur `nom.tommy-studio.pro` | Oui | Tous les sites clients sont servis par le site Tommy Studio lui-même. Pas de déploiement par client. |
+| Nom de domaine perso du client | Partiellement | Tuto pas à pas. Automatisable plus tard via l'API Vercel. |
+| Hébergement par le client lui-même | Oui | Export ZIP + tuto (Netlify Drop, hébergeur au choix). |
+| Fiche Google Business | **Non** | Google exige que le propriétaire vérifie lui-même son entreprise (courrier, appel ou vidéo), et l'accès à son API est soumis à validation. On fournit donc un tuto et une fiche pré-remplie à copier. |
+| Support client | Non | Une page d'aide et une FAQ réduisent les questions, mais il en restera quelques-unes pour Thomas. |
+
+## 4. Architecture technique (simple)
+
+- **Site Next.js existant** (ce dépôt), hébergé sur Vercel.
+- **Supabase** (déjà connecté) : base de données (projets clients, statuts, paiements) et stockage des photos. Remplace Cloudflare R2.
+- **Modèles de sites** : composants React qui reçoivent les données du client. Un seul moteur sert à l'aperçu, au site publié et à l'export ZIP.
+- **Sites clients** : servis sur des sous-domaines `*.tommy-studio.pro`. Le site reconnaît le sous-domaine et affiche le bon client.
+- **Stripe** : paiement et confirmation.
+- **Resend** : emails aux clients (lien de reprise, confirmation, mise en ligne).
+- **Page `/admin`** protégée : liste des projets et intervention si besoin.
+
+## 5. Les lots, dans l'ordre
+
+Chaque lot est utilisable seul. Légende : 🤖 = je le fais seul · 👤 = action de Thomas nécessaire.
+
+### Lot 0 — Décisions (👤 Thomas)
+- [ ] Prix : une formule unique ou plusieurs ? Proposition : un site d'une page complète à prix unique, plus des options.
+- [ ] Hébergement : passer Vercel en Pro (environ 20 $/mois, usage commercial autorisé), ou garder Hobby le temps du test.
+- [ ] Où sont gérés les DNS de tommy-studio.pro (Vercel, OVH, autre) ? Nécessaire pour les sous-domaines clients.
+- [ ] Accord pour créer les tables et le stockage dans le projet Supabase existant.
+
+### Lot 1 — Fondations données 🤖 (+ 👤 2 clés à coller dans Vercel)
+- [ ] Tables Supabase : `projects` (infos client, statut : brouillon / aperçu / payé / en ligne), `assets` (photos).
+- [ ] Bucket de stockage pour les photos, accès restreint.
+- [ ] Lien privé de reprise par projet (jeton secret, sans compte ni mot de passe).
+- [ ] Remplacer l'envoi de fichiers Cloudflare R2 par Supabase Storage.
+- [ ] Suppression automatique des projets non payés après 30 jours (RGPD et coût de stockage).
+
+### Lot 2 — Modèles bâtiment 🤖
+- [ ] Modèle 1 « Classique » : en-tête avec téléphone et bouton « Devis gratuit », services, zone d'intervention, réalisations, avis, certifications, contact.
+- [ ] Modèle 2 « Moderne ».
+- [ ] Modèle 3 « Robuste » (optionnel).
+- [ ] Listes de services pré-remplies par métier.
+- [ ] Optimisation Google intégrée : balises, données structurées `LocalBusiness`, métier et ville dans les titres.
+- [ ] Version mobile soignée, avec bouton d'appel fixe.
+- [ ] Jeux de données d'exemple pour chaque métier, qui servent aussi de démos sur la vitrine.
+
+### Lot 3 — Configurateur 🤖
+- [ ] Parcours en étapes : métier → entreprise → services → photos → style.
+- [ ] Envoi des photos avec compression automatique (photos de téléphone souvent très lourdes).
+- [ ] Sauvegarde automatique du brouillon à chaque étape.
+- [ ] Anti-robots (Cloudflare Turnstile, gratuit) et limites (nombre de photos, taille).
+
+### Lot 4 — Aperçu 🤖
+- [ ] Page `/apercu/[jeton]` : le site complet avec un bandeau « Aperçu — non publié », non indexé par Google.
+- [ ] Bascule vue mobile / vue ordinateur.
+- [ ] Bouton « Modifier » qui renvoie à l'étape voulue.
+- [ ] Bouton « C'est parfait, je publie » qui mène au paiement.
+
+### Lot 5 — Paiement et mise en ligne 🤖 (+ 👤 compte Stripe et clés)
+- [ ] Stripe Checkout lié au projet ; le prix est toujours calculé côté serveur.
+- [ ] Webhook de confirmation : statut « payé », puis publication automatique.
+- [ ] Sous-domaine `nom-entreprise.tommy-studio.pro` attribué automatiquement.
+- [ ] Email au client : adresse du site, lien de modification, tutos.
+- [ ] Email à Thomas : « nouveau site en ligne ».
+
+### Lot 6 — Autonomie du client 🤖
+- [ ] Tuto « Brancher mon nom de domaine ».
+- [ ] Export ZIP du site + tuto « Héberger mon site moi-même ».
+- [ ] Tuto « Créer ma fiche Google Business », avec description, catégories et horaires déjà rédigés à copier.
+- [ ] Modifications après publication : le client modifie ses infos depuis son lien privé. Gratuit ou payant, à décider.
+
+### Lot 7 — Textes par l'IA 🤖 (+ 👤 clé API Anthropic)
+- [ ] Bouton « Rédigez mes textes » : présentation et descriptions des services rédigées à partir des infos du client.
+- [ ] Le client relit et corrige dans l'aperçu.
+- [ ] Plafond d'utilisation par projet pour maîtriser le coût.
+
+### Lot 8 — Admin et suivi 🤖
+- [ ] Page `/admin` protégée : liste des projets, statut, accès à l'aperçu.
+- [ ] Relance automatique par email des aperçus non payés (après 2 jours, puis 7 jours).
+- [ ] Mise hors ligne d'un site (impayé, abus).
+
+### Lot 9 — Lancement 👤🤖
+- [ ] Vitrine repensée pour le bâtiment : démos par métier, « Créez votre site en 10 minutes ».
+- [ ] CGV mises à jour (aperçu gratuit, paiement à la publication, modifications), à faire relire. 👤
+- [ ] Politique de confidentialité mise à jour (photos, durée de conservation).
+- [ ] Domaine d'envoi vérifié dans Resend, pour écrire aux clients depuis @tommy-studio.pro. 👤
+- [ ] Tests de bout en bout sur téléphone.
+- [ ] Premiers clients : objectif 3 ventes en 4 à 6 semaines.
+
+## 6. Coûts de fonctionnement estimés
+
+À vérifier sur les sites officiels, les offres changent souvent.
+
+| Poste | Coût | Remarque |
+|---|---|---|
+| Développement | 0 € | Fait avec Claude Code. |
+| Vercel | 0 € (Hobby) ou ~20 $/mois (Pro) | Hobby est réservé à un usage non commercial. |
+| Supabase | 0 € au départ | L'offre gratuite a des limites de stockage et peut mettre en pause un projet inactif. |
+| Stripe | ~1,5 % + 0,25 € par paiement (carte européenne) | Pas d'abonnement. |
+| Resend | 0 € au départ | Quota mensuel gratuit. |
+| API Claude (textes) | Quelques centimes par site | Seulement si le lot 7 est activé. |
+| Nom de domaine tommy-studio.pro | Déjà payé | — |
+
+## 7. Risques et limites
+
+- **Trouver des clients** reste le vrai défi : l'automatisation réduit le temps passé par site, pas le besoin de se faire connaître.
+- **Qualité perçue** : un site généré doit avoir l'air fait sur mesure. Les modèles doivent être très soignés, et les photos du client comptent beaucoup.
+- **Aperçus sans paiement** : certains visiteurs feront un aperçu sans payer. C'est normal ; le bandeau, la non-indexation et l'expiration limitent les abus.
+- **Support** : il restera quelques questions, surtout sur les noms de domaine.
+- **Juridique** : CGV, mentions et assurance à faire valider. Thomas reste responsable de ce qui est vendu.
