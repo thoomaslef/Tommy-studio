@@ -14,10 +14,11 @@ import { uploadPhoto, type AssetView } from './photo-upload';
 
 const STEPS = ['Entreprise', 'Services', 'Photos', 'Style', 'Aperçu'] as const;
 
-const TEMPLATES: { id: TemplateId; name: string; desc: string }[] = [
-  { id: 'classique', name: 'Classique', desc: 'Clair et rassurant. Idéal pour inspirer confiance.' },
-  { id: 'moderne', name: 'Moderne', desc: 'Grande typographie, blocs de couleur, très actuel.' },
-  { id: 'robuste', name: 'Robuste', desc: 'Style chantier : majuscules, contrastes forts.' },
+// Vignette : capture d'une démo réalisée avec ce modèle (public/modeles)
+const TEMPLATES: { id: TemplateId; name: string; desc: string; thumb: string }[] = [
+  { id: 'classique', name: 'Classique', desc: 'Clair et rassurant. Idéal pour inspirer confiance.', thumb: '/modeles/plomberie-durand.webp' },
+  { id: 'moderne', name: 'Moderne', desc: 'Grande typographie, blocs de couleur, très actuel.', thumb: '/modeles/martin-electricite.webp' },
+  { id: 'robuste', name: 'Robuste', desc: 'Style chantier : majuscules, contrastes forts.', thumb: '/modeles/toitures-leroy.webp' },
 ];
 
 const inputClass =
@@ -233,6 +234,7 @@ export default function Configurator({
   const [zoneText, setZoneText] = useState((initialDraft.zone ?? []).join(', '));
   const [uploads, setUploads] = useState<{ name: string; pct: number; error?: string }[]>([]);
   const [copied, setCopied] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const firstRender = useRef(true);
   const top = useRef<HTMLDivElement>(null);
   const locked = status !== 'draft' && status !== 'live';
@@ -275,7 +277,8 @@ export default function Configurator({
 
   // Textes proposés automatiquement, affichés en exemple dans les champs facultatifs
   const auto = useMemo(() => {
-    const d = resolveDesign(draftToSiteData(projectId, { ...draft, tagline: undefined, about: undefined }, []));
+    // Ce que choisirait « Automatique » : sans la palette éventuellement choisie à la main
+    const d = resolveDesign(draftToSiteData(projectId, { ...draft, tagline: undefined, about: undefined, style: { ...draft.style, template: draft.style?.template ?? 'classique', palette: undefined } }, []));
     return { tagline: d.tagline, about: d.about, palette: d.palette.name };
   }, [draft, projectId]);
 
@@ -658,7 +661,7 @@ export default function Configurator({
               <>
                 <div>
                   <h2 className="text-lg font-bold text-foreground">Modèle</h2>
-                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
                     {TEMPLATES.map((t) => {
                       const on = draft.style?.template === t.id;
                       return (
@@ -667,10 +670,12 @@ export default function Configurator({
                           type="button"
                           aria-pressed={on}
                           onClick={() => set('style', { ...(draft.style ?? { template: t.id }), template: t.id })}
-                          className={`rounded-2xl border p-4 text-left ${on ? 'border-accent bg-accent/10' : 'border-border/50 hover:border-accent/40'}`}
+                          className={`rounded-2xl border p-3 text-left ${on ? 'border-accent bg-accent/10' : 'border-border/50 hover:border-accent/40'}`}
                         >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={t.thumb} alt="" loading="lazy" className="mb-3 aspect-[3/4] w-full rounded-xl border border-border/40 object-cover object-top" />
                           <p className="font-bold text-foreground">{t.name}</p>
-                          <p className="mt-1 text-xs text-muted">{t.desc}</p>
+                          <p className="mt-1 hidden text-xs text-muted sm:block">{t.desc}</p>
                         </button>
                       );
                     })}
@@ -790,6 +795,30 @@ export default function Configurator({
           )}
         </div>
       </div>
+
+      {/* Aperçu sur téléphone : bouton flottant et aperçu plein écran, à toutes les étapes de saisie */}
+      {step < 4 && (
+        <button
+          type="button"
+          onClick={() => setShowPreview(true)}
+          className="fixed bottom-5 right-4 z-40 flex items-center gap-2 rounded-full bg-accent-dark px-5 py-3.5 text-sm font-bold text-white shadow-xl shadow-black/40 lg:hidden"
+        >
+          <Icon name="sun" className="h-4 w-4" /> Voir mon site
+        </button>
+      )}
+      {showPreview && (
+        <div role="dialog" aria-modal="true" aria-label="Aperçu de votre site" className="fixed inset-0 z-[70] flex flex-col bg-background/95 p-4 backdrop-blur lg:hidden">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-sm font-bold text-foreground">Aperçu de votre site</p>
+            <button type="button" onClick={() => setShowPreview(false)} className="rounded-xl border border-border/50 px-4 py-2 text-sm font-semibold text-foreground">
+              Fermer
+            </button>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <LivePreview previewId={projectId} version={version} />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
