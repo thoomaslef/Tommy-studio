@@ -17,7 +17,7 @@ const readSavedToken = () => {
   }
 };
 
-export default function CreerStart() {
+export default function CreerStart({ suggested }: { suggested?: TradeId }) {
   const router = useRouter();
   const [loading, setLoading] = useState<TradeId | null>(null);
   const [error, setError] = useState('');
@@ -62,9 +62,23 @@ export default function CreerStart() {
         {resume && (
           <div className="mx-auto mt-10 flex max-w-2xl flex-col items-center justify-between gap-3 rounded-2xl border border-accent/25 bg-accent/5 px-5 py-4 text-sm sm:flex-row">
             <span className="text-foreground">Vous avez déjà commencé un site sur cet appareil.</span>
-            <a href={`/creer/${resume}`} className="rounded-xl bg-accent px-5 py-2.5 font-bold text-white">
+            <a href={`/creer/${resume}`} className="rounded-xl bg-accent-dark px-5 py-2.5 font-bold text-white">
               Reprendre mon site
             </a>
+          </div>
+        )}
+
+        {suggested && (
+          <div className="mx-auto mt-10 max-w-md text-center">
+            <button
+              type="button"
+              disabled={!!loading}
+              onClick={() => start(suggested)}
+              className="w-full rounded-xl bg-accent-dark px-6 py-4 text-base font-bold text-white shadow-lg shadow-accent/20 disabled:opacity-60"
+            >
+              {loading === suggested ? 'Création…' : `Commencer mon site de ${TRADES[suggested].label.toLowerCase()}`}
+            </button>
+            <p className="mt-2 text-xs text-muted">ou choisissez un autre métier ci-dessous</p>
           </div>
         )}
 
@@ -95,7 +109,7 @@ export default function CreerStart() {
           })}
         </div>
         {error && <p role="alert" className="mt-6 text-center text-sm text-red-400">{error}</p>}
-        <p className="mt-10 text-center text-xs text-muted/70">Gratuit jusqu’à la publication · Aucun compte à créer · Vos infos sont sauvegardées automatiquement</p>
+        <p className="mt-10 text-center text-xs text-muted">Gratuit jusqu’à la publication · Aucun compte à créer · Vos infos sont sauvegardées automatiquement</p>
       </div>
     </section>
   );

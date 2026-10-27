@@ -29,7 +29,7 @@ export default function Button({
 
   const variants = {
     primary:
-      'relative bg-accent text-white font-bold overflow-hidden group shadow-lg shadow-accent/20 hover:shadow-2xl hover:shadow-accent/40',
+      'relative bg-accent-dark text-white font-bold overflow-hidden group shadow-lg shadow-accent/20 hover:shadow-2xl hover:shadow-accent/40',
     secondary:
       'border border-border/70 text-foreground font-medium group hover:border-accent/50 hover:bg-accent/8 hover:text-foreground',
     ghost:

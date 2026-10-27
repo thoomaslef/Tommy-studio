@@ -286,4 +286,4 @@ export const TRADES: Record<TradeId, Trade> = {
 
 export const TRADE_IDS = Object.keys(TRADES) as TradeId[];
 
-export const isTradeId = (v: unknown): v is TradeId => typeof v === 'string' && v in TRADES;
+export const isTradeId = (v: unknown): v is TradeId => typeof v === 'string' && Object.hasOwn(TRADES, v);

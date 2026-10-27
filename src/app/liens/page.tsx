@@ -1,11 +1,15 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import type { ReactNode } from 'react';
+import { pageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = {
+  ...pageMetadata({
+    description: 'Tous les projets de Thomas Lefevre : Tommy Studio, Tommy Prospector et KUBB: Kings.',
+    path: '/liens',
+    shareTitle: 'Thomas Lefevre — mes projets',
+  }),
   title: 'Thomas Lefevre — mes projets',
-  description: 'Tous les projets de Thomas Lefevre : Tommy Studio, Tommy Prospector et KUBB: Kings.',
-  alternates: { canonical: '/liens' },
 };
 
 type Project = { name: string; text: string; href: string; icon: ReactNode };

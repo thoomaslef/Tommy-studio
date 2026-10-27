@@ -20,7 +20,7 @@ export default function SiteRenderer({ data, mode }: { data: SiteData; mode: Sit
       {/* Couleur de fond du navigateur (rebond iOS, zones hors page) */}
       <style>{`body{background:${design.palette.bg}}`}</style>
       {mode === 'live' && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />}
-      <SiteBanner mode={mode} />
+      <SiteBanner mode={mode} trade={data.trade} />
       <div className="relative">
         <Template data={data} design={design} />
       </div>

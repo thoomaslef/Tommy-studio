@@ -41,6 +41,7 @@ export function Photo({
         src={photo.url}
         alt={photo.alt || `${TRADES[data.trade].activity} — ${data.businessName}`}
         loading={index > 1 ? 'lazy' : 'eager'}
+        fetchPriority={index === 0 ? 'high' : undefined}
         className={`h-full w-full object-cover ${className}`}
       />
     );
@@ -99,14 +100,21 @@ export function Btn({
   );
 }
 
-export function SiteBanner({ mode }: { mode: SiteMode }) {
+export function SiteBanner({ mode, trade }: { mode: SiteMode; trade: SiteData['trade'] }) {
   if (mode === 'live') return null;
+  if (mode === 'preview') {
+    return <div className="bg-neutral-900 px-4 py-2 text-center text-xs font-semibold text-white">Aperçu de votre site — non publié</div>;
+  }
   return (
-    <div className="bg-neutral-900 px-4 py-2 text-center text-xs font-semibold text-white">
-      {mode === 'preview'
-        ? 'Aperçu de votre site — non publié'
-        : 'Site de démonstration — entreprise fictive créée par Tommy Studio'}
-    </div>
+    <a
+      href={`/creer?metier=${trade}`}
+      className="sticky top-0 z-[60] flex flex-wrap items-center justify-center gap-x-2 gap-y-1 bg-neutral-900 px-4 py-3 text-center text-xs font-semibold text-white"
+    >
+      <span className="text-white/70">Démo (entreprise fictive) ·</span>
+      <span>
+        Ce site vous plaît ? <span className="underline underline-offset-2">Créez le vôtre en 10 min, 99 € →</span>
+      </span>
+    </a>
   );
 }
 

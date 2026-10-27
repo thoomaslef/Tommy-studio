@@ -21,7 +21,7 @@ const TEMPLATES: { id: TemplateId; name: string; desc: string }[] = [
 ];
 
 const inputClass =
-  'w-full rounded-xl border border-border/50 bg-background/50 px-4 py-3 text-sm text-foreground placeholder-muted/50 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20';
+  'w-full rounded-xl border border-border/50 bg-background/50 px-4 py-3 text-base text-foreground placeholder-muted/70 outline-none sm:text-sm transition focus:border-accent focus:ring-2 focus:ring-accent/20';
 
 function Field({ label, hint, children, required }: { label: string; hint?: string; children: ReactNode; required?: boolean }) {
   return (
@@ -70,7 +70,7 @@ function LivePreview({ previewId, version, compact = false }: { previewId: strin
               key={d}
               type="button"
               onClick={() => setDevice(d)}
-              className={`rounded-lg px-3 py-1.5 ${device === d ? 'bg-accent text-white' : 'text-muted'}`}
+              className={`rounded-lg px-3 py-1.5 ${device === d ? 'bg-accent-dark text-white' : 'text-muted'}`}
             >
               {d === 'mobile' ? 'Téléphone' : 'Ordinateur'}
             </button>
@@ -180,7 +180,7 @@ function PublishBox({ token, missing, defaultEmail, businessName }: { token: str
         type="button"
         onClick={send}
         disabled={state === 'sending'}
-        className="mt-5 w-full rounded-xl bg-accent px-6 py-4 text-sm font-bold text-white shadow-lg shadow-accent/20 disabled:opacity-60"
+        className="mt-5 w-full rounded-xl bg-accent-dark px-6 py-4 text-sm font-bold text-white shadow-lg shadow-accent/20 disabled:opacity-60"
       >
         {state === 'sending' ? 'Redirection vers le paiement…' : `Payer et publier mon site — ${formatEuro(SITE_PRICE)}`}
       </button>
@@ -368,7 +368,7 @@ export default function Configurator({
             <li key={s}>
               <button type="button" onClick={() => goTo(i)} className="block w-full text-left">
                 <span className={`block h-1.5 rounded-full ${i <= step ? 'bg-accent' : 'bg-border/50'}`} />
-                <span className={`mt-2 hidden text-[11px] font-medium sm:block ${i === step ? 'text-foreground' : 'text-muted/70'}`}>{s}</span>
+                <span className={`mt-2 hidden text-[11px] font-medium sm:block ${i === step ? 'text-foreground' : 'text-muted'}`}>{s}</span>
               </button>
             </li>
           ))}
@@ -630,7 +630,7 @@ export default function Configurator({
                       <div key={p.id} className="group relative aspect-square overflow-hidden rounded-xl border border-border/40">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={p.url} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
-                        {i === 0 && <span className="absolute left-2 top-2 rounded-md bg-accent px-2 py-1 text-[10px] font-bold text-white">Photo principale</span>}
+                        {i === 0 && <span className="absolute left-2 top-2 rounded-md bg-accent-dark px-2 py-1 text-[10px] font-bold text-white">Photo principale</span>}
                         <div className="absolute inset-x-0 bottom-0 flex gap-1 bg-black/60 p-1.5">
                           {i > 0 && (
                             <button type="button" onClick={() => makeFirst(p.id)} className="flex-1 rounded-md bg-white/15 py-1 text-[10px] font-semibold text-white">
@@ -765,7 +765,7 @@ export default function Configurator({
                 <span />
               )}
               {step < STEPS.length - 1 && (
-                <button type="button" onClick={() => goTo(step + 1)} className="rounded-xl bg-accent px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-accent/20">
+                <button type="button" onClick={() => goTo(step + 1)} className="rounded-xl bg-accent-dark px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-accent/20">
                   {step === STEPS.length - 2 ? 'Voir mon site' : 'Continuer'}
                 </button>
               )}

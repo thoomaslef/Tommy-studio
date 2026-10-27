@@ -5,6 +5,13 @@ import Button from '@/components/Button';
 import SectionHeading from '@/components/SectionHeading';
 import AnimatedSection from '@/components/AnimatedSection';
 import { HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
+import { pageMetadata } from '@/lib/seo';
+
+export const metadata = pageMetadata({
+  description: `Création de site internet pour artisans du bâtiment : plombier, électricien, maçon, couvreur… Votre site pro en 10 minutes, aperçu gratuit, ${formatEuro(SITE_PRICE)} la première année hébergement compris.`,
+  path: '/',
+  shareTitle: 'Le site de votre entreprise du bâtiment, prêt en 10 minutes',
+});
 
 const steps = [
   { title: 'Choisissez votre métier', text: 'Plombier, électricien, maçon, couvreur, peintre, paysagiste… Vos services sont déjà pré-remplis.' },
@@ -49,7 +56,7 @@ export default function Home() {
         <div className="relative section-container grid items-center gap-14 pt-32 pb-20 sm:pt-40 lg:grid-cols-2 lg:gap-10">
           <div className="text-center lg:text-left">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-5 py-2 text-xs font-semibold tracking-wide text-accent">
-              Pour les artisans du bâtiment
+              Création de site internet pour artisans du bâtiment
             </span>
             <h1 className="mt-8 text-[2.6rem] font-extrabold leading-[1.08] tracking-tight text-foreground sm:text-6xl">
               Le site de votre entreprise,
@@ -57,8 +64,8 @@ export default function Home() {
               <span className="gradient-text">prêt en 10 minutes.</span>
             </h1>
             <p className="mx-auto mt-7 max-w-xl text-base leading-relaxed text-muted sm:text-lg lg:mx-0">
-              Entrez vos infos, ajoutez vos photos : votre site se construit sous vos yeux. Aucun rendez-vous, aucun engagement.
-              Vous ne payez que s’il vous plaît.
+              Un site internet professionnel et pas cher pour votre entreprise : entrez vos infos, ajoutez vos photos, votre site se construit sous vos
+              yeux. Aucun rendez-vous, aucun engagement. Vous ne payez que s’il vous plaît.
             </p>
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
               <Button href="/creer" size="lg" className="cta-pulse">
@@ -68,7 +75,7 @@ export default function Home() {
                 Voir des exemples
               </Button>
             </div>
-            <p className="mt-5 text-xs tracking-wide text-muted/70">
+            <p className="mt-5 text-xs tracking-wide text-muted">
               Aperçu gratuit · {formatEuro(SITE_PRICE)} la 1re année, hébergement compris · puis {formatEuro(HOSTING_RENEWAL_PRICE)}/an
             </p>
           </div>
@@ -173,7 +180,7 @@ export default function Home() {
                   <p>Hébergement compris la 1re année</p>
                   <p>Puis {formatEuro(HOSTING_RENEWAL_PRICE)} par an, sans engagement</p>
                   <p>Création et aperçu gratuits</p>
-                  <p className="text-xs text-muted/70">Réservé aux professionnels (SIRET demandé)</p>
+                  <p className="text-xs text-muted">Réservé aux professionnels (SIRET demandé)</p>
                 </div>
                 <div className="mt-10">
                   <Button href="/creer" size="lg" className="w-full justify-center">

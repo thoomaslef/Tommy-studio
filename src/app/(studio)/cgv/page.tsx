@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import LegalPage from '@/components/LegalPage';
 import { HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Conditions générales de vente',
   description: 'Conditions générales de vente du service de création de sites internet Tommy Studio.',
-  alternates: { canonical: 'https://www.tommy-studio.pro/cgv' },
-};
+  path: '/cgv',
+});
 
 const sections = [
   {

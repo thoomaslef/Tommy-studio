@@ -23,27 +23,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'Tommy Studio', url: 'https://www.tommy-studio.pro' }],
   creator: 'Tommy Studio',
   publisher: 'Tommy Studio',
-  openGraph: {
-    type: 'website',
-    locale: 'fr_FR',
-    url: 'https://www.tommy-studio.pro',
-    siteName: 'Tommy Studio',
-    title: 'Le site de votre entreprise du bâtiment, prêt en 10 minutes',
-    description: `Aperçu gratuit, ${formatEuro(SITE_PRICE)} à la publication, hébergement compris la 1re année. Pour plombiers, électriciens, maçons, couvreurs et tous les artisans du bâtiment.`,
-    images: [{ url: '/home/demo-plombier.webp', width: 1280, height: 800, alt: 'Exemple de site créé avec Tommy Studio' }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Le site de votre entreprise du bâtiment, prêt en 10 minutes',
-    description: `Aperçu gratuit, ${formatEuro(SITE_PRICE)} à la publication, hébergement compris la 1re année.`,
-    images: ['/home/demo-plombier.webp'],
-  },
   robots: {
     index: true,
     follow: true,
     googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
-  alternates: { canonical: 'https://www.tommy-studio.pro' },
 };
 
 const jsonLd = {

@@ -1,13 +1,18 @@
 import type { MetadataRoute } from 'next';
 
+const SITE = 'https://www.tommy-studio.pro';
+const UPDATED = new Date('2026-10-27');
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    { url: 'https://www.tommy-studio.pro/', lastModified: new Date('2026-10-21'), changeFrequency: 'weekly', priority: 1.0 },
-    { url: 'https://www.tommy-studio.pro/creer', lastModified: new Date('2026-10-21'), changeFrequency: 'monthly', priority: 0.9 },
-    { url: 'https://www.tommy-studio.pro/modeles', lastModified: new Date('2026-10-21'), changeFrequency: 'monthly', priority: 0.8 },
-    { url: 'https://www.tommy-studio.pro/portfolio', lastModified: new Date('2026-10-21'), changeFrequency: 'monthly', priority: 0.6 },
-    { url: 'https://www.tommy-studio.pro/cgv', lastModified: new Date('2026-10-21'), changeFrequency: 'yearly', priority: 0.3 },
-    { url: 'https://www.tommy-studio.pro/mentions-legales', lastModified: new Date('2026-10-21'), changeFrequency: 'yearly', priority: 0.3 },
-    { url: 'https://www.tommy-studio.pro/politique-de-confidentialite', lastModified: new Date('2026-10-21'), changeFrequency: 'yearly', priority: 0.3 },
+  const pages: [string, MetadataRoute.Sitemap[number]['changeFrequency'], number][] = [
+    ['/', 'weekly', 1.0],
+    ['/creer', 'monthly', 0.9],
+    ['/modeles', 'monthly', 0.8],
+    ['/portfolio', 'monthly', 0.5],
+    ['/liens', 'monthly', 0.4],
+    ['/cgv', 'yearly', 0.3],
+    ['/mentions-legales', 'yearly', 0.3],
+    ['/politique-de-confidentialite', 'yearly', 0.3],
   ];
+  return pages.map(([path, changeFrequency, priority]) => ({ url: `${SITE}${path}`, lastModified: UPDATED, changeFrequency, priority }));
 }

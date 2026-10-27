@@ -38,14 +38,15 @@ export async function GET(request: Request) {
     const live = projects.filter((p) => p.status === 'live').length;
     const date = new Date().toISOString().slice(0, 10);
     const backup = JSON.stringify({ exported_at: new Date().toISOString(), site_projects: projects, site_assets: assets });
-    await notifyOwner(
+    const sent = await notifyOwner(
       `Sauvegarde Tommy Studio — ${date} (${live} site${live > 1 ? 's' : ''} en ligne)`,
       `<p>Sauvegarde automatique des sites Tommy Studio : ${projects.length} projet(s) dont ${live} en ligne, ${assets.length} photo(s) référencée(s).</p>
        <p>Le fichier joint permet de tout restaurer en cas de problème sur la base (les photos restent dans le stockage Supabase). Gardez ces emails, par exemple dans un libellé Gmail « Sauvegardes ».</p>
        <p style="color:#6b6b8a;font-size:12px;">Envoyé seulement les jours où quelque chose a changé. ${esc(date)}</p>`,
       [{ filename: `tommy-studio-sauvegarde-${date}.json`, content: Buffer.from(backup).toString('base64') }],
     );
-    return Response.json({ sent: true, projects: projects.length, assets: assets.length });
+    if (!sent) return new Response('Envoi de la sauvegarde impossible', { status: 502 });
+    return Response.json({ sent, projects: projects.length, assets: assets.length });
   } catch (error) {
     console.error('sauvegarde', error);
     await notifyOwner('⚠ Sauvegarde Tommy Studio en échec', `<p>${esc(error instanceof Error ? error.message : String(error))}</p>`);

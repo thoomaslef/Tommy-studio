@@ -93,7 +93,7 @@ export default function Navbar() {
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Link
                 href="/creer"
-                className="ml-3 group relative inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3 text-sm font-semibold text-white overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-accent/30"
+                className="ml-3 group relative inline-flex items-center gap-2 rounded-full bg-accent-dark px-7 py-3 text-sm font-semibold text-white overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-accent/30"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-accent-light to-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <span className="relative flex items-center gap-2">
@@ -186,7 +186,7 @@ export default function Navbar() {
                 <Link
                   href="/creer"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-5 text-lg font-semibold text-white transition-all hover:bg-accent-light"
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-accent-dark px-6 py-5 text-lg font-semibold text-white transition-all hover:bg-accent-light"
                 >
                   Créer mon site
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">

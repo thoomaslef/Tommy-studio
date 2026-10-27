@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Mentions Légales — Tommy Studio',
-  description: 'Mentions légales du site tommy-studio.pro — éditeur, hébergeur, propriété intellectuelle.',
-  robots: { index: false, follow: false },
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'Mentions légales',
+  description: 'Mentions légales du site tommy-studio.pro : éditeur, hébergeur, propriété intellectuelle.',
+  path: '/mentions-legales',
+});
 
 export default function MentionsLegalesPage() {
   return (
@@ -87,7 +88,7 @@ export default function MentionsLegalesPage() {
             </div>
           </section>
 
-          <p className="text-xs text-muted/50 pt-8 border-t border-border/30">Dernière mise à jour : octobre 2026</p>
+          <p className="text-xs text-muted pt-8 border-t border-border/30">Dernière mise à jour : octobre 2026</p>
         </div>
       </div>
     </div>

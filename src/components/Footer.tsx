@@ -155,15 +155,15 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="flex flex-col items-center gap-1 md:items-start">
-            <p className="text-xs text-muted/60">
+            <p className="text-xs text-muted">
               &copy; {new Date().getFullYear()} Tommy Studio. Tous droits réservés.
             </p>
-            <p className="text-[10px] text-muted/40">
+            <p className="text-[10px] text-muted">
               SIRET : 10108233700011 &middot; Caen, Normandie
             </p>
           </div>
           <div className="flex items-center gap-6">
-            <p className="text-[10px] tracking-wider uppercase text-muted/40">
+            <p className="text-[10px] tracking-wider uppercase text-muted">
               Sites pour artisans du bâtiment &middot; Partout en France
             </p>
           </div>

@@ -11,8 +11,8 @@
   --color-surface-elevated: #141420;
   --color-border: #1a1a2e;
   --color-border-light: #25253d;
-  --color-muted: #6b6b8a;
-  --color-muted-light: #8b8ba8;
+  --color-muted: #8b8ba8;
+  --color-muted-light: #a5a5bf;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

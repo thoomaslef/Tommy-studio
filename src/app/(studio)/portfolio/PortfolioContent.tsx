@@ -142,7 +142,7 @@ export default function PortfolioContent() {
               <div className="mt-12">
                 <Button href="/creer" size="lg">Créer mon site</Button>
               </div>
-              <p className="mt-5 text-xs text-muted/60">Aperçu gratuit · {formatEuro(SITE_PRICE)} à la publication</p>
+              <p className="mt-5 text-xs text-muted">Aperçu gratuit · {formatEuro(SITE_PRICE)} à la publication</p>
             </div>
           </AnimatedSection>
         </div>

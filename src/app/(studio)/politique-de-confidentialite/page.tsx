@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import LegalPage from '@/components/LegalPage';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Politique de confidentialité',
   description: 'Protection des données personnelles sur tommy-studio.pro, conformément au RGPD.',
-  alternates: { canonical: 'https://www.tommy-studio.pro/politique-de-confidentialite' },
-};
+  path: '/politique-de-confidentialite',
+});
 
 const sections = [
   {
