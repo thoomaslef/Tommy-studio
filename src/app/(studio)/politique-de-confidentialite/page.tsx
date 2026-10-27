@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const sections = [
   {
     title: '1. Responsable du traitement',
-    body: <p>Thomas Lefevre, entrepreneur individuel (Tommy Studio) — SIRET 10108233700011 — Caen, France — thomas@tommy-studio.pro.</p>,
+    body: <p>Thomas Lefevre, entrepreneur individuel (Tommy Studio) — SIRET 10108233700011 — 7 boulevard Leroy, 14000 Caen, France — thomas@tommy-studio.pro.</p>,
   },
   {
     title: '2. Données collectées',

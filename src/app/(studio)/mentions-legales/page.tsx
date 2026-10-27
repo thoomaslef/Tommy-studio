@@ -30,7 +30,7 @@ export default function MentionsLegalesPage() {
                 <p><strong className="text-foreground">Nom :</strong> Thomas Lefevre</p>
                 <p><strong className="text-foreground">Forme juridique :</strong> Entrepreneur individuel</p>
                 <p><strong className="text-foreground">SIRET :</strong> 10108233700011</p>
-                <p><strong className="text-foreground">Adresse :</strong> Caen, Normandie, France</p>
+                <p><strong className="text-foreground">Adresse :</strong> 7 boulevard Leroy, 14000 Caen, France</p>
                 <p><strong className="text-foreground">E-mail :</strong> <a href="mailto:thomas@tommy-studio.pro" className="text-accent hover:text-accent-light transition-colors">thomas@tommy-studio.pro</a></p>
                 <p><strong className="text-foreground">Téléphone :</strong> <a href="tel:+33612941125" className="text-accent hover:text-accent-light transition-colors">+33 6 12 94 11 25</a></p>
               </div>
@@ -83,11 +83,11 @@ export default function MentionsLegalesPage() {
             <div className="mt-4 gradient-border rounded-2xl bg-surface-light p-6 space-y-2 text-sm text-muted">
               <p>📧 <a href="mailto:thomas@tommy-studio.pro" className="text-accent hover:text-accent-light transition-colors">thomas@tommy-studio.pro</a></p>
               <p>📞 <a href="tel:+33612941125" className="text-accent hover:text-accent-light transition-colors">+33 6 12 94 11 25</a></p>
-              <p>📍 Caen, Normandie, France</p>
+              <p>📍 7 boulevard Leroy, 14000 Caen</p>
             </div>
           </section>
 
-          <p className="text-xs text-muted/50 pt-8 border-t border-border/30">Dernière mise à jour : avril 2025</p>
+          <p className="text-xs text-muted/50 pt-8 border-t border-border/30">Dernière mise à jour : octobre 2026</p>
         </div>
       </div>
     </div>

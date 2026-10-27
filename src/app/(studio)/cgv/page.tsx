@@ -15,7 +15,7 @@ const sections = [
       <p>
         Les présentes conditions générales de vente (« CGV ») encadrent l’utilisation du service Tommy Studio, qui permet de créer en ligne le site
         internet d’une entreprise, de le prévisualiser gratuitement puis de le faire publier et héberger. Le service est fourni par Thomas Lefevre,
-        entrepreneur individuel exerçant sous le nom Tommy Studio (SIRET 10108233700011, Caen, France — thomas@tommy-studio.pro — +33 6 12 94 11 25),
+        entrepreneur individuel exerçant sous le nom Tommy Studio (SIRET 10108233700011, 7 boulevard Leroy, 14000 Caen, France — thomas@tommy-studio.pro — +33 6 12 94 11 25),
         ci-après « le Prestataire ». Toute demande de publication implique l’acceptation sans réserve des CGV.
       </p>
     ),
