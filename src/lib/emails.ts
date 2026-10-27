@@ -31,4 +31,5 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
   }
 }
 
-export const notifyOwner = (subject: string, html: string) => sendEmail({ to: OWNER_EMAIL, subject, html });
+export const notifyOwner = (subject: string, html: string, attachments?: { filename: string; content: string }[]) =>
+  sendEmail({ to: OWNER_EMAIL, subject, html, attachments });
