@@ -21,7 +21,18 @@ const sections = [
     ),
   },
   {
-    title: '2. Le service',
+    title: '2. Service réservé aux professionnels',
+    body: (
+      <p>
+        Le service est exclusivement destiné aux professionnels (artisans, entrepreneurs individuels, sociétés) qui commandent un site pour les besoins de
+        leur activité. Le Client indique son numéro SIRET et confirme, au moment de la commande, agir dans le cadre de son activité professionnelle. Le
+        service n’est pas proposé aux consommateurs : les dispositions du Code de la consommation qui leur sont propres, notamment le droit de rétractation et
+        la médiation de la consommation, ne s’appliquent donc pas.
+      </p>
+    ),
+  },
+  {
+    title: '3. Le service',
     body: (
       <>
         <p>
@@ -36,7 +47,7 @@ const sections = [
     ),
   },
   {
-    title: '3. Prix',
+    title: '4. Prix',
     body: (
       <>
         <p>
@@ -48,21 +59,21 @@ const sections = [
     ),
   },
   {
-    title: '4. Commande et paiement',
+    title: '5. Commande et paiement',
     body: (
       <p>
-        Lorsque son site lui convient, le Client demande sa publication depuis l’aperçu, indique son nom et son email et accepte les CGV. Le paiement
+        Lorsque son site lui convient, le Client demande sa publication depuis l’aperçu, indique son nom, son email et le SIRET de son entreprise, et accepte les CGV. Le paiement
         s’effectue en totalité en ligne, par carte bancaire, sur la page de paiement sécurisée de Stripe. La commande est ferme à la confirmation du paiement.
         Les données bancaires sont traitées par le prestataire de paiement et ne sont jamais conservées par le Prestataire. Une facture acquittée est envoyée par email au Client après le paiement ; le Client professionnel peut y faire figurer la raison sociale et le numéro de TVA de son entreprise.
       </p>
     ),
   },
   {
-    title: '5. Mise en ligne',
+    title: '6. Mise en ligne',
     body: <p>Le site est mis en ligne automatiquement dès la confirmation du paiement, en général en quelques secondes. Son adresse est affichée au Client à l’écran puis lui est envoyée par email. En cas d’incident technique, la mise en ligne intervient au plus tard sous 48 heures ouvrées.</p>,
   },
   {
-    title: '6. Contenus et modifications',
+    title: '7. Contenus et modifications',
     body: (
       <>
         <p>
@@ -77,7 +88,7 @@ const sections = [
     ),
   },
   {
-    title: '7. Hébergement et renouvellement',
+    title: '8. Hébergement et renouvellement',
     body: (
       <p>
         L’hébergement est renouvelé chaque année au tarif indiqué à l’article 3, après information du Client. À défaut de renouvellement, le site est mis hors
@@ -86,7 +97,7 @@ const sections = [
     ),
   },
   {
-    title: '8. Propriété intellectuelle',
+    title: '9. Propriété intellectuelle',
     body: (
       <p>
         Le Client reste propriétaire de ses contenus (textes, photos, logo). Les modèles, mises en page et éléments graphiques fournis par Tommy Studio
@@ -95,17 +106,16 @@ const sections = [
     ),
   },
   {
-    title: '9. Droit de rétractation',
+    title: '10. Exécution immédiate',
     body: (
       <p>
-        Le Client consommateur dispose en principe d’un délai de 14 jours pour se rétracter d’un contrat conclu à distance. En demandant la publication, il
-        demande expressément l’exécution immédiate du service et reconnaît perdre son droit de rétractation une fois le site mis en ligne. Le droit de
-        rétractation ne s’applique pas aux clients professionnels, sauf disposition légale contraire.
+        Le Client demande la mise en ligne immédiate de son site dès le paiement. Le service étant réservé aux professionnels, aucun délai de rétractation ne
+        s’applique. Tant que le site n’est pas publié, le Client peut abandonner sa création à tout moment, sans frais.
       </p>
     ),
   },
   {
-    title: '10. Responsabilité',
+    title: '11. Responsabilité',
     body: (
       <p>
         Le Prestataire est tenu à une obligation de moyens. Il ne garantit ni un positionnement précis dans les moteurs de recherche ni un volume de clients,
@@ -115,7 +125,7 @@ const sections = [
     ),
   },
   {
-    title: '11. Données personnelles',
+    title: '12. Données personnelles',
     body: (
       <p>
         Les données sont traitées conformément à notre{' '}
@@ -127,20 +137,19 @@ const sections = [
     ),
   },
   {
-    title: '12. Réclamations et médiation',
+    title: '13. Réclamations',
     body: (
       <p>
-        Toute réclamation peut être adressée à thomas@tommy-studio.pro. Conformément au Code de la consommation, le Client consommateur peut recourir
-        gratuitement à un médiateur de la consommation en cas de litige non résolu.
+        Toute réclamation peut être adressée à thomas@tommy-studio.pro. Le Prestataire s’engage à y répondre sous 7 jours et à rechercher une solution
+        amiable avant toute action.
       </p>
     ),
   },
   {
-    title: '13. Droit applicable',
+    title: '14. Droit applicable',
     body: (
       <p>
-        Les CGV sont soumises au droit français. À défaut de résolution amiable, les tribunaux compétents de Caen sont seuls compétents, sous réserve des
-        règles protectrices applicables aux consommateurs.
+        Les CGV sont soumises au droit français. À défaut de résolution amiable, tout litige relève de la compétence exclusive des tribunaux de Caen.
       </p>
     ),
   },

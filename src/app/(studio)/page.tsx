@@ -30,6 +30,7 @@ const demos = [
 
 const faq = [
   { q: 'Combien ça coûte ?', a: `${formatEuro(SITE_PRICE)} une seule fois, à la publication. L’hébergement est compris la première année, puis ${formatEuro(HOSTING_RENEWAL_PRICE)} par an. Pas d’abonnement mensuel.` },
+  { q: 'C’est pour qui ?', a: 'Pour les professionnels : artisans, entrepreneurs et sociétés du bâtiment. Votre numéro SIRET vous sera demandé avant la publication.' },
   { q: 'Je dois payer pour essayer ?', a: 'Non. Vous créez votre site et vous voyez l’aperçu gratuitement. Vous ne payez que si vous décidez de le publier.' },
   { q: 'Combien de temps ça prend ?', a: 'Une dizaine de minutes pour remplir vos infos et ajouter vos photos. Dès le paiement confirmé, votre site est en ligne automatiquement.' },
   { q: 'Je n’ai pas encore de photos ou de logo.', a: 'Ce n’est pas bloquant : le site affiche des visuels aux couleurs de votre entreprise et le nom de votre société à la place du logo. Vous pourrez ajouter vos photos plus tard.' },
@@ -172,6 +173,7 @@ export default function Home() {
                   <p>Hébergement compris la 1re année</p>
                   <p>Puis {formatEuro(HOSTING_RENEWAL_PRICE)} par an</p>
                   <p>Création et aperçu gratuits</p>
+                  <p className="text-xs text-muted/70">Réservé aux professionnels (SIRET demandé)</p>
                 </div>
                 <div className="mt-10">
                   <Button href="/creer" size="lg" className="w-full justify-center">

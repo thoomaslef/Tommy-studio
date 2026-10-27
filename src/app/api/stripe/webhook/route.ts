@@ -84,7 +84,7 @@ export async function POST(request: Request) {
         `💶 Site vendu — ${d.businessName ?? 'Sans nom'} (${trade}, ${d.city ?? '?'})`,
         `<p><strong>${esc(d.businessName ?? '')}</strong> vient de payer ${amount}. Le site est en ligne :</p>
          <p><a href="${url}" style="color:#6366f1;font-weight:bold;">${url}</a></p>
-         <p>Client : ${esc(project.contact_name ?? '')} — <a href="mailto:${esc(project.contact_email ?? '')}">${esc(project.contact_email ?? '')}</a></p>
+         <p>Client : ${esc(project.contact_name ?? '')} — <a href="mailto:${esc(project.contact_email ?? '')}">${esc(project.contact_email ?? '')}</a> — SIRET ${esc(d.siret ?? '?')}</p>
          <p style="color:#9090b0;font-size:12px;">Pensez à lui envoyer l’adresse de son site (les emails automatiques aux clients arriveront avec la vérification du domaine).</p>`,
       );
     } else if (alreadyDone && project.stripe_session_id !== session.id) {

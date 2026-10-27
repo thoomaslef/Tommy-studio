@@ -1,4 +1,5 @@
 import { STRIPE_PAYMENT_LINK } from '@/lib/offer';
+import { isValidSiret } from '@/lib/siret';
 import { requestPublication } from '@/lib/supabase-server';
 import { json, loadProject, readJson } from '@/lib/projects-api';
 
@@ -22,7 +23,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
   if (body?.acceptCgv !== true) return json({ error: 'Vous devez accepter les conditions générales de vente.' }, 400);
 
   const d = project.data;
-  const missing = [!d.businessName && 'nom', !d.city && 'ville', !d.phone && 'téléphone'].filter(Boolean);
+  const missing = [!d.businessName && 'nom', !d.city && 'ville', !d.phone && 'téléphone', !isValidSiret(d.siret) && 'SIRET (service réservé aux professionnels)'].filter(Boolean);
   if (missing.length) return json({ error: `Complétez d’abord : ${missing.join(', ')}.` }, 400);
 
   try {

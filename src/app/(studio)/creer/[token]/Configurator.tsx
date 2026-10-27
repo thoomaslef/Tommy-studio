@@ -9,6 +9,7 @@ import type { SiteReview, SiteService, TemplateId, TradeId } from '@/site-engine
 import { DRAFT_STORAGE_KEY } from '../CreerStart';
 import { HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
 import { liveSiteUrl } from '@/lib/live-site';
+import { isValidSiret, siretDigits } from '@/lib/siret';
 import { uploadPhoto, type AssetView } from './photo-upload';
 
 const STEPS = ['Entreprise', 'Services', 'Photos', 'Style', 'Aperçu'] as const;
@@ -141,7 +142,7 @@ function PublishBox({ token, missing }: { token: string; missing: string[] }) {
           <a href="/cgv" target="_blank" className="font-semibold text-accent underline">
             conditions générales de vente
           </a>
-          . Je demande la mise en ligne immédiate dès le paiement et je reconnais que, si je suis un consommateur, mon droit de rétractation prend fin une fois le site mis en ligne.
+          . Je commande pour les besoins de mon activité professionnelle et je demande la mise en ligne immédiate dès le paiement.
         </span>
       </label>
       {error && (
@@ -255,10 +256,13 @@ export default function Configurator({
     requestAnimationFrame(() => top.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   };
 
+  // On signale l'erreur une fois les 14 chiffres saisis, pas pendant la frappe
+  const siretError = siretDigits(draft.siret ?? '').length >= 14 && !isValidSiret(draft.siret);
   const missing = [
     !draft.businessName && 'le nom de votre entreprise',
     !draft.city && 'votre ville',
     !draft.phone && 'votre téléphone',
+    !isValidSiret(draft.siret) && 'votre SIRET',
     photos.length === 0 && 'au moins une photo',
   ].filter(Boolean) as string[];
 
@@ -407,8 +411,17 @@ export default function Configurator({
                       className={inputClass}
                     />
                   </Field>
-                  <Field label="SIRET" hint="Affiché dans les mentions légales.">
-                    <input value={draft.siret ?? ''} onChange={(e) => set('siret', e.target.value)} className={inputClass} />
+                  <Field label="SIRET" required hint="Le service est réservé aux professionnels. Affiché dans les mentions légales de votre site.">
+                    <input
+                      inputMode="numeric"
+                      autoComplete="off"
+                      value={draft.siret ?? ''}
+                      onChange={(e) => set('siret', e.target.value)}
+                      placeholder="14 chiffres"
+                      aria-invalid={siretError}
+                      className={inputClass}
+                    />
+                    {siretError && <p className="mt-1.5 text-xs text-red-400">Ce numéro ne ressemble pas à un SIRET (14 chiffres). Vérifiez-le sur votre avis de situation ou annuaire-entreprises.data.gouv.fr.</p>}
                   </Field>
                 </div>
                 <div className="space-y-3">
