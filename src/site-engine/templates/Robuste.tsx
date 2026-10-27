@@ -3,8 +3,9 @@ import { navItems, stats, whyPoints } from '../content';
 import type { Design } from '../design';
 import { Icon } from '../icons';
 import { fullRows, LegalNotice, MobileCallBar, Photo, Stars, quoteHref, telHref, zoneLabel } from '../parts';
+import QuoteForm from '../QuoteForm';
 import { TRADES } from '../trades';
-import type { SiteData } from '../types';
+import type { SiteData, SiteMode } from '../types';
 
 type Props = { data: SiteData; design: Design };
 
@@ -215,7 +216,7 @@ function Reviews({ data }: Props) {
   );
 }
 
-export default function Robuste({ data, design }: Props) {
+export default function Robuste({ data, design, mode }: Props & { mode: SiteMode }) {
   const trade = TRADES[data.trade];
   const sections = { services: Services, why: Why, gallery: Gallery, reviews: Reviews };
   const keyStats = stats(data);
@@ -310,6 +311,8 @@ export default function Robuste({ data, design }: Props) {
           </p>
         )}
       </section>
+
+      <QuoteForm data={data} mode={mode} />
 
       <footer className="bg-(--s-text) text-(--s-bg)">
         <div className="s-hazard h-2" />

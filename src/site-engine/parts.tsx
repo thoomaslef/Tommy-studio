@@ -12,10 +12,8 @@ export const fullRows = <T,>(items: T[], cols: number, max: number) => {
 
 export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, '')}`;
 
-export const quoteHref = (d: SiteData) =>
-  d.email
-    ? `mailto:${d.email}?subject=${encodeURIComponent(`Demande de devis — ${d.businessName}`)}`
-    : telHref(d.phone);
+/** « Devis gratuit » : formulaire de la page si l'artisan reçoit les emails, sinon appel */
+export const quoteHref = (d: SiteData) => (d.email ? '#devis' : telHref(d.phone));
 
 export const yearsOfExperience = (d: SiteData) =>
   d.foundedYear ? Math.max(1, new Date().getFullYear() - d.foundedYear) : null;

@@ -22,7 +22,7 @@ export default function SiteRenderer({ data, mode }: { data: SiteData; mode: Sit
       {mode === 'live' && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />}
       <SiteBanner mode={mode} trade={data.trade} />
       <div className="relative">
-        <Template data={data} design={design} />
+        <Template data={data} design={design} mode={mode} />
       </div>
     </div>
   );

@@ -3,8 +3,9 @@ import { navItems, stats, whyPoints } from '../content';
 import type { Design } from '../design';
 import { Icon } from '../icons';
 import { Btn, fullRows, LegalNotice, MobileCallBar, Photo, Stars, quoteHref, telHref, zoneLabel } from '../parts';
+import QuoteForm from '../QuoteForm';
 import { TRADES } from '../trades';
-import type { SiteData } from '../types';
+import type { SiteData, SiteMode } from '../types';
 
 type Props = { data: SiteData; design: Design };
 
@@ -252,7 +253,7 @@ function Reviews({ data }: Props) {
   );
 }
 
-export default function Moderne({ data, design }: Props) {
+export default function Moderne({ data, design, mode }: Props & { mode: SiteMode }) {
   const trade = TRADES[data.trade];
   const sections = { services: Services, why: Process, gallery: Gallery, reviews: Reviews };
   const keyStats = stats(data);
@@ -340,6 +341,8 @@ export default function Moderne({ data, design }: Props) {
           </div>
         </div>
       </section>
+
+      <QuoteForm data={data} mode={mode} />
 
       <footer className="mx-auto max-w-6xl px-5 pb-10 text-sm text-(--s-muted)">
         <div className="flex flex-col justify-between gap-2 border-t border-(--s-border) pt-8 sm:flex-row">

@@ -21,6 +21,13 @@ const sections = [
         <li>Les photos et le logo que vous ajoutez.</li>
         <li>Votre nom et votre email lorsque vous demandez la publication de votre site.</li>
         <li>Les informations de paiement, traitées directement par le prestataire de paiement : nous n’avons jamais accès à vos données bancaires.</li>
+        <li>
+          Pour limiter les abus, une empreinte non réversible de votre adresse IP lors de la création d’un site ou de l’envoi d’une demande de devis.
+        </li>
+        <li>
+          Demandes de devis envoyées depuis un site d’artisan : elles sont transmises par email à l’artisan concerné, qui est responsable de leur
+          traitement. Tommy Studio ne conserve pas leur contenu, seulement la date de la demande.
+        </li>
       </ul>
     ),
   },

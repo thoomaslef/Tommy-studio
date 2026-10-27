@@ -3,8 +3,9 @@ import { navItems, stats, whyPoints } from '../content';
 import type { Design } from '../design';
 import { Icon } from '../icons';
 import { Btn, fullRows, LegalNotice, MobileCallBar, Photo, SectionTitle, Stars, quoteHref, telHref, zoneLabel } from '../parts';
+import QuoteForm from '../QuoteForm';
 import { TRADES } from '../trades';
-import type { SiteData } from '../types';
+import type { SiteData, SiteMode } from '../types';
 
 type Props = { data: SiteData; design: Design };
 
@@ -210,7 +211,7 @@ function Reviews({ data }: Props) {
   );
 }
 
-export default function Classique({ data, design }: Props) {
+export default function Classique({ data, design, mode }: Props & { mode: SiteMode }) {
   const trade = TRADES[data.trade];
   const sections = { services: Services, why: Why, gallery: Gallery, reviews: Reviews };
   const keyStats = stats(data);
@@ -316,6 +317,8 @@ export default function Classique({ data, design }: Props) {
           </div>
         </div>
       </section>
+
+      <QuoteForm data={data} mode={mode} />
 
       <footer className="border-t border-(--s-border) bg-(--s-surface)">
         <div className="mx-auto max-w-6xl px-5 py-10 text-sm text-(--s-muted)">
