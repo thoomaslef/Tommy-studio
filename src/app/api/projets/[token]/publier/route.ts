@@ -1,6 +1,7 @@
 import { STRIPE_PAYMENT_LINK } from '@/lib/offer';
 import { isValidSiret } from '@/lib/siret';
-import { ensureEditToken, requestPublication } from '@/lib/supabase-server';
+import { checkSiret } from '@/lib/siret-check';
+import { ensureEditToken, requestPublication, saveSiretCheck } from '@/lib/supabase-server';
 import { json, loadProject, readJson } from '@/lib/projects-api';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,7 +27,15 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
   const missing = [!d.businessName && 'nom', !d.city && 'ville', !d.phone && 'téléphone', !isValidSiret(d.siret) && 'SIRET (service réservé aux professionnels)'].filter(Boolean);
   if (missing.length) return json({ error: `Complétez d’abord : ${missing.join(', ')}.` }, 400);
 
+  // Le SIRET doit exister et l'établissement être en activité (service réservé aux professionnels)
+  const siret = await checkSiret(d.siret!);
+  if (siret.status === 'unknown') {
+    return json({ error: 'Ce SIRET n’existe pas dans le répertoire des entreprises. Vérifiez-le sur annuaire-entreprises.data.gouv.fr.' }, 400);
+  }
+  if (siret.status === 'closed') return json({ error: 'Ce SIRET correspond à un établissement fermé. Indiquez le SIRET de votre établissement actuel.' }, 400);
+
   try {
+    await saveSiretCheck(project.id, siret);
     await requestPublication(project.id, name, email);
     await ensureEditToken(project.id, token);
     const url = new URL(STRIPE_PAYMENT_LINK);

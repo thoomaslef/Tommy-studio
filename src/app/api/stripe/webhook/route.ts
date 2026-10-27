@@ -86,6 +86,7 @@ export async function POST(request: Request) {
         `<p><strong>${esc(d.businessName ?? '')}</strong> vient de payer ${amount}. Le site est en ligne :</p>
          <p><a href="${url}" style="color:#4f46e5;font-weight:bold;">${url}</a></p>
          <p>Client : ${esc(project.contact_name ?? '')} — <a href="mailto:${esc(project.contact_email ?? '')}">${esc(project.contact_email ?? '')}</a> — SIRET ${esc(d.siret ?? '?')}</p>
+         <p>Registre des entreprises : ${siretLine(project)}</p>
          <p>${clientNotified ? '✅ Le client a reçu l’adresse de son site et son lien de modification.' : '⚠ <strong>L’email au client n’a pas pu partir</strong> : envoyez-lui l’adresse de son site à la main.'}</p>`,
       );
     } else if (alreadyDone && project.stripe_session_id !== session.id) {
@@ -129,4 +130,11 @@ async function emailClient(project: ProjectRow, url: string, origin: string) {
       <p>Une question ? Répondez simplement à cet email, ou appelez-moi au ${CONTACT_PHONE}.</p>
       <p>Thomas — Tommy Studio<br/><span style="color:#6b6b8a;font-size:12px;">${CONTACT_EMAIL}</span></p>`,
   });
+}
+
+function siretLine(project: ProjectRow) {
+  const c = project.siret_check;
+  if (!c || c.status === 'unverified') return '⚠ SIRET non vérifié (registre indisponible au moment de la commande) : à contrôler.';
+  const label = { active: '✅ établissement actif', closed: '⚠ établissement fermé', unknown: '⚠ SIRET introuvable' }[c.status];
+  return `${label} — ${esc(c.name ?? '?')}${c.city ? `, ${esc(c.city)}` : ''}`;
 }

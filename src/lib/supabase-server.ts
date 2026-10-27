@@ -4,6 +4,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { MAX_PHOTOS, type SiteDraft } from '@/site-engine/sanitize';
 import { RESERVED_SLUGS, slugify } from './live-site';
 import { encryptToken } from './token-crypto';
+import type { SiretCheck } from './siret-check';
 
 export const SITE_MEDIA_BUCKET = 'site-media';
 
@@ -30,6 +31,8 @@ export type ProjectRow = {
   contact_name: string | null;
   contact_email: string | null;
   stripe_session_id: string | null;
+  siret_check: SiretCheck | null;
+  hosting_until: string | null;
   paid_at: string | null;
   publish_requested_at: string | null;
   published_at: string | null;
@@ -37,7 +40,7 @@ export type ProjectRow = {
   updated_at: string;
 };
 
-const PROJECT_COLUMNS = 'id, slug, status, plan, options, data, contact_name, contact_email, stripe_session_id, paid_at, publish_requested_at, published_at, created_at, updated_at';
+const PROJECT_COLUMNS = 'id, slug, status, plan, options, data, contact_name, contact_email, stripe_session_id, siret_check, hosting_until, paid_at, publish_requested_at, published_at, created_at, updated_at';
 
 /** Le lien privé du client contient un jeton ; seule son empreinte est stockée. */
 export const hashToken = (token: string) => createHash('sha256').update(token).digest('hex');
@@ -188,6 +191,13 @@ export function publicMediaUrl(path: string) {
   const db = getSupabase();
   if (!db) return '';
   return db.storage.from(SITE_MEDIA_BUCKET).getPublicUrl(path).data.publicUrl;
+}
+
+export async function saveSiretCheck(id: string, check: SiretCheck) {
+  const db = getSupabase();
+  if (!db) throw new Error('Supabase non configuré');
+  const { error } = await db.from('site_projects').update({ siret_check: check }).eq('id', id);
+  if (error) throw error;
 }
 
 /** Copie chiffrée du lien privé, pour les projets créés avant son enregistrement */

@@ -439,8 +439,13 @@ export default function Configurator({
                       className={inputClass}
                     />
                   </Field>
-                  <Field label="SIRET" required hint="Le service est réservé aux professionnels. Affiché dans les mentions légales de votre site.">
+                  <Field
+                    label="SIRET"
+                    required
+                    hint={status === 'draft' ? 'Le service est réservé aux professionnels. Affiché dans les mentions légales de votre site.' : 'Vérifié à la commande, il ne peut plus être modifié. Écrivez-nous en cas d’erreur.'}
+                  >
                     <input
+                      disabled={status !== 'draft'}
                       inputMode="numeric"
                       autoComplete="off"
                       value={draft.siret ?? ''}

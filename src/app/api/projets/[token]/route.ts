@@ -16,7 +16,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ to
   if (!body || typeof body.draft !== 'object') return json({ error: 'Requête invalide.' }, 400);
 
   try {
-    await saveDraft(project.id, sanitizeDraft(body.draft));
+    const draft = sanitizeDraft(body.draft);
+    // Une fois le site payé, le SIRET ne change plus (il a été vérifié à la commande)
+    if (project.status !== 'draft') draft.siret = project.data.siret;
+    await saveDraft(project.id, draft);
     return json({ ok: true });
   } catch (error) {
     console.error('saveDraft', error);
