@@ -1,6 +1,24 @@
 import type { NextConfig } from "next";
 
+const securityHeaders = [
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  // L'aperçu du configurateur est affiché en iframe sur le même domaine : seules nos propres pages peuvent nous encadrer
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
+];
+
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+  async headers() {
+    return [
+      { source: '/:path*', headers: securityHeaders },
+      // Pages portant le lien privé dans l'adresse : jamais transmis aux sites externes (Stripe, Google…)
+      { source: '/creer/:token', headers: [{ key: 'Referrer-Policy', value: 'no-referrer' }] },
+      { source: '/apercu/:id', headers: [{ key: 'Referrer-Policy', value: 'no-referrer' }] },
+    ];
+  },
   // Anciennes pages de l'offre précédente : on renvoie vers leur équivalent actuel
   async redirects() {
     return [

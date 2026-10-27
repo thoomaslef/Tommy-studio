@@ -1,6 +1,5 @@
-'use client';
-
 import Link from 'next/link';
+import { TRADES, TRADE_IDS } from '@/site-engine/trades';
 
 const footerLinks = {
   services: [
@@ -149,8 +148,21 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Pages par métier */}
+        <nav aria-label="Sites internet par métier" className="mt-10 text-xs leading-loose text-muted">
+          <span className="font-semibold text-foreground/70">Site internet pour : </span>
+          {TRADE_IDS.map((id, i) => (
+            <span key={id}>
+              <Link href={`/site-internet/${id}`} className="hover:text-foreground">
+                {TRADES[id].label.toLowerCase()}
+              </Link>
+              {i < TRADE_IDS.length - 1 ? ' · ' : ''}
+            </span>
+          ))}
+        </nav>
+
         {/* Divider */}
-        <div className="mt-10 border-t border-border/50" />
+        <div className="mt-6 border-t border-border/50" />
 
         {/* Bottom bar */}
         <div className="mt-6 flex flex-col items-center justify-between gap-4 md:flex-row">

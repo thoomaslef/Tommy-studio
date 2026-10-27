@@ -1,5 +1,5 @@
-import { createHmac, timingSafeEqual } from 'crypto';
 import { TRADES } from '@/site-engine/trades';
+import { verifySignature } from '@/lib/stripe-signature';
 import { STRIPE_PAYMENT_LINK_ID, STRIPE_RENEWAL_LINK_ID } from '@/lib/offer';
 import { liveSiteUrl } from '@/lib/live-site';
 import { getEditTokenEnc, publishPaidProject, renewHosting, type ProjectRow } from '@/lib/supabase-server';
@@ -7,27 +7,8 @@ import { decryptToken } from '@/lib/token-crypto';
 import { esc, notifyOwner, sendEmail } from '@/lib/emails';
 import { CONTACT_EMAIL, CONTACT_PHONE } from '@/lib/contact';
 
-const TOLERANCE_SECONDS = 300;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/** Vérifie l'en-tête Stripe-Signature (t=…,v1=…) : HMAC SHA-256 de « t.corps » */
-function verifySignature(payload: string, header: string | null, secret: string) {
-  if (!header) return false;
-  let timestamp = '';
-  const signatures: string[] = [];
-  for (const part of header.split(',')) {
-    const [key, value] = part.split('=');
-    if (key === 't') timestamp = value;
-    if (key === 'v1' && value) signatures.push(value);
-  }
-  const t = Number(timestamp);
-  if (!t || Math.abs(Date.now() / 1000 - t) > TOLERANCE_SECONDS) return false;
-  const expected = Buffer.from(createHmac('sha256', secret).update(`${timestamp}.${payload}`).digest('hex'));
-  return signatures.some((s) => {
-    const given = Buffer.from(s);
-    return given.length === expected.length && timingSafeEqual(given, expected);
-  });
-}
 
 type CheckoutSession = {
   id: string;
