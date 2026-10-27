@@ -5,3 +5,7 @@ export const formatEuro = (amount: number) => `${amount} €`;
 /** Lien de paiement Stripe (99 €) ; le webhook met le site en ligne dès le paiement confirmé */
 export const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/8x25kD2tVdV483D9SybV600';
 export const STRIPE_PAYMENT_LINK_ID = 'plink_1UT2b8ETk8EYU5vthkpp1izl';
+
+/** Lien de paiement du renouvellement annuel (39 €) : prolonge l'hébergement d'un an */
+export const STRIPE_RENEWAL_LINK = 'https://buy.stripe.com/aFa28r4C33gq83Dc0GbV601';
+export const STRIPE_RENEWAL_LINK_ID = 'plink_1UVK6WETk8EYU5vtJ8Ezj87M';

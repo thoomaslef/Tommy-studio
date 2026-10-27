@@ -285,6 +285,7 @@ export async function publishPaidProject(id: string, payment: Payment): Promise<
         amount_cents: payment.amountCents,
         paid_at: now,
         published_at: now,
+        hosting_until: addYear(now),
         contact_email: project.contact_email ?? payment.email,
         contact_name: project.contact_name ?? payment.name,
       })
@@ -293,10 +294,65 @@ export async function publishPaidProject(id: string, payment: Payment): Promise<
       .select(PROJECT_COLUMNS);
     if (error?.code === '23505' && error.message.includes('slug')) continue; // adresse déjà prise
     if (error) throw error;
-    if (data?.length) return { project: data[0] as ProjectRow, alreadyDone: false };
+    if (data?.length) {
+      await recordPayment(payment.sessionId, id, 'publication', payment.amountCents);
+      return { project: data[0] as ProjectRow, alreadyDone: false };
+    }
     // Un autre webhook est passé entre-temps
     const { data: again } = await db.from('site_projects').select(PROJECT_COLUMNS).eq('id', id).maybeSingle();
     return again ? { project: again as ProjectRow, alreadyDone: true } : null;
   }
   throw new Error('Aucune adresse disponible');
+}
+
+const addYear = (iso: string) => {
+  const d = new Date(iso);
+  d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString();
+};
+
+/** Enregistre un paiement ; renvoie false si cette session a déjà été traitée */
+async function recordPayment(sessionId: string, projectId: string, kind: 'publication' | 'renouvellement', amountCents: number | null) {
+  const db = getSupabase()!;
+  const { error } = await db.from('site_payments').insert({ stripe_session_id: sessionId, project_id: projectId, kind, amount_cents: amountCents });
+  if (error?.code === '23505') return false;
+  if (error) throw error;
+  return true;
+}
+
+/**
+ * Renouvellement payé : l'hébergement est prolongé d'un an à partir de l'échéance (ou d'aujourd'hui si elle est passée),
+ * et un site mis hors ligne pour non-renouvellement repart en ligne.
+ */
+export async function renewHosting(id: string, payment: Payment): Promise<{ project: ProjectRow; alreadyDone: boolean } | null> {
+  const db = getSupabase();
+  if (!db) throw new Error('Supabase non configuré');
+  const { data: current, error: readError } = await db.from('site_projects').select(PROJECT_COLUMNS).eq('id', id).maybeSingle();
+  if (readError) throw readError;
+  const project = current as ProjectRow | null;
+  if (!project || !project.slug || (project.status !== 'live' && project.status !== 'offline')) return project ? { project, alreadyDone: true } : null;
+  if (!(await recordPayment(payment.sessionId, id, 'renouvellement', payment.amountCents))) return { project, alreadyDone: true };
+
+  const base = project.hosting_until && new Date(project.hosting_until) > new Date() ? project.hosting_until : new Date().toISOString();
+  const { data, error } = await db
+    .from('site_projects')
+    .update({ status: 'live', hosting_until: addYear(base), offline_at: null, last_reminder_at: null })
+    .eq('id', id)
+    .select(PROJECT_COLUMNS)
+    .single();
+  if (error) {
+    // Paiement non appliqué : on l'oublie pour que Stripe puisse renvoyer l'événement
+    await db.from('site_payments').delete().eq('stripe_session_id', payment.sessionId);
+    throw error;
+  }
+  return { project: data as ProjectRow, alreadyDone: false };
+}
+
+/** Lien de paiement du renouvellement pour ce site */
+export function renewalUrl(project: Pick<ProjectRow, 'id' | 'contact_email'>, link: string) {
+  const url = new URL(link);
+  url.searchParams.set('client_reference_id', project.id);
+  if (project.contact_email) url.searchParams.set('prefilled_email', project.contact_email);
+  url.searchParams.set('locale', 'fr');
+  return url.toString();
 }

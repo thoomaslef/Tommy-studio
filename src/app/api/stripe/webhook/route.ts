@@ -1,8 +1,8 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 import { TRADES } from '@/site-engine/trades';
-import { STRIPE_PAYMENT_LINK_ID } from '@/lib/offer';
+import { STRIPE_PAYMENT_LINK_ID, STRIPE_RENEWAL_LINK_ID } from '@/lib/offer';
 import { liveSiteUrl } from '@/lib/live-site';
-import { getEditTokenEnc, publishPaidProject, type ProjectRow } from '@/lib/supabase-server';
+import { getEditTokenEnc, publishPaidProject, renewHosting, type ProjectRow } from '@/lib/supabase-server';
 import { decryptToken } from '@/lib/token-crypto';
 import { esc, notifyOwner, sendEmail } from '@/lib/emails';
 import { CONTACT_EMAIL, CONTACT_PHONE } from '@/lib/contact';
@@ -52,8 +52,9 @@ export async function POST(request: Request) {
     return Response.json({ ignored: true });
   }
   const session = event.data.object;
-  // Le compte Stripe sert aussi à d'autres applications : on ne traite que notre lien de paiement
-  if (session.payment_link !== STRIPE_PAYMENT_LINK_ID) return Response.json({ ignored: true });
+  // Le compte Stripe sert aussi à d'autres applications : on ne traite que nos liens de paiement
+  const renewal = session.payment_link === STRIPE_RENEWAL_LINK_ID;
+  if (session.payment_link !== STRIPE_PAYMENT_LINK_ID && !renewal) return Response.json({ ignored: true });
   if (session.payment_status !== 'paid') return Response.json({ pending: true });
 
   const projectId = session.client_reference_id;
@@ -62,6 +63,8 @@ export async function POST(request: Request) {
     await notifyOwner(`⚠ Paiement reçu sans site associé`, `<p>Session Stripe ${esc(session.id)} — client ${esc(session.customer_details?.email ?? '?')}. À traiter à la main.</p>`);
     return Response.json({ received: true });
   }
+
+  if (renewal) return handleRenewal(projectId, session);
 
   try {
     const result = await publishPaidProject(projectId, {
@@ -137,4 +140,40 @@ function siretLine(project: ProjectRow) {
   if (!c || c.status === 'unverified') return '⚠ SIRET non vérifié (registre indisponible au moment de la commande) : à contrôler.';
   const label = { active: '✅ établissement actif', closed: '⚠ établissement fermé', unknown: '⚠ SIRET introuvable' }[c.status];
   return `${label} — ${esc(c.name ?? '?')}${c.city ? `, ${esc(c.city)}` : ''}`;
+}
+
+/** Renouvellement annuel payé : hébergement prolongé d'un an, confirmation au client et à Thomas */
+async function handleRenewal(projectId: string, session: CheckoutSession) {
+  try {
+    const result = await renewHosting(projectId, {
+      sessionId: session.id,
+      amountCents: session.amount_total,
+      email: session.customer_details?.email ?? null,
+      name: session.customer_details?.name ?? null,
+    });
+    if (!result) {
+      await notifyOwner('⚠ Renouvellement reçu pour un site introuvable', `<p>Projet ${esc(projectId)}, session ${esc(session.id)}. À rembourser ou traiter à la main.</p>`);
+      return Response.json({ received: true });
+    }
+    const { project, alreadyDone } = result;
+    if (alreadyDone) return Response.json({ received: true });
+    const url = liveSiteUrl(project.slug!);
+    const until = new Date(project.hosting_until!).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    const to = project.contact_email ?? session.customer_details?.email;
+    if (to) {
+      await sendEmail({
+        to,
+        subject: `Hébergement renouvelé — ${project.data.businessName ?? 'votre site'}`,
+        html: `<p>Bonjour,</p>
+          <p>Merci ! L’hébergement de votre site <a href="${url}" style="color:#4f46e5;">${url.replace('https://', '')}</a> est renouvelé jusqu’au <strong>${until}</strong>.</p>
+          <p>Votre facture vous est envoyée séparément par Stripe.</p>
+          <p>Thomas — Tommy Studio<br/><span style="color:#6b6b8a;font-size:12px;">${CONTACT_EMAIL} · ${CONTACT_PHONE}</span></p>`,
+      });
+    }
+    await notifyOwner(`🔁 Renouvellement — ${project.data.businessName ?? projectId}`, `<p>${esc(project.data.businessName ?? '')} a renouvelé son hébergement jusqu’au ${until}.</p><p><a href="${url}">${url}</a></p>`);
+    return Response.json({ received: true });
+  } catch (error) {
+    console.error('stripe webhook renouvellement', error);
+    return new Response('Erreur serveur', { status: 500 });
+  }
 }
