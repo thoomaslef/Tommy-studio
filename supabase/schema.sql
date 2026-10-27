@@ -19,10 +19,16 @@ create table public.site_projects (
   published_at timestamptz,
   last_reminder_at timestamptz,
   publish_requested_at timestamptz,
+  ip_hash text,                                 -- empreinte HMAC de l'IP de création (limite anti-abus)
+  hosting_until timestamptz,                    -- fin de la période d'hébergement payée
+  offline_at timestamptz,                       -- date de mise hors ligne (non-renouvellement)
+  siret_check jsonb,                            -- résultat de la vérification du SIRET
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 create index site_projects_status_created_idx on public.site_projects (status, created_at);
+create index site_projects_ip_created_idx on public.site_projects (ip_hash, created_at);
+create index site_projects_hosting_idx on public.site_projects (status, hosting_until);
 
 create table public.site_assets (
   id uuid primary key default gen_random_uuid(),
@@ -52,7 +58,7 @@ create trigger site_projects_updated_at before update on public.site_projects
 alter table public.site_projects enable row level security;
 alter table public.site_assets enable row level security;
 
--- Stockage des photos : bucket public, 5 Mo max (le navigateur compresse avant l'envoi)
+-- Stockage des photos : bucket public, 4 Mo max (le navigateur compresse avant l'envoi)
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('site-media', 'site-media', true, 5242880, array['image/jpeg', 'image/png', 'image/webp'])
+values ('site-media', 'site-media', true, 4194304, array['image/jpeg', 'image/png', 'image/webp'])
 on conflict (id) do update set file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;

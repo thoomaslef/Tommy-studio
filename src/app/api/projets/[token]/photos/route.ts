@@ -1,5 +1,6 @@
 import { MAX_PHOTOS } from '@/site-engine/sanitize';
-import { createPhotoUpload, listAssets } from '@/lib/supabase-server';
+import { countProjectFiles, createPhotoUpload, listAssets } from '@/lib/supabase-server';
+import { MAX_FILES_PER_PROJECT } from '@/lib/rate-limit';
 import { json, loadProject, readJson } from '@/lib/projects-api';
 
 const EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' } as const;
@@ -19,6 +20,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
   if (kind === 'photo' && photos.length >= MAX_PHOTOS) return json({ error: `${MAX_PHOTOS} photos maximum.` }, 400);
 
   try {
+    // Les envois jamais confirmés comptent aussi : un robot ne peut pas remplir le stockage
+    if ((await countProjectFiles(project.id)) >= MAX_FILES_PER_PROJECT) {
+      return json({ error: 'Trop d’envois pour ce site. Supprimez des photos avant d’en ajouter.' }, 429);
+    }
     const upload = await createPhotoUpload(project.id, EXT[type]);
     return json({ path: upload.path, uploadUrl: upload.signedUrl });
   } catch (error) {

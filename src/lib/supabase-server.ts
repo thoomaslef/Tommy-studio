@@ -1,7 +1,7 @@
 import 'server-only';
 import { createHash, randomBytes } from 'crypto';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import type { SiteDraft } from '@/site-engine/sanitize';
+import { MAX_PHOTOS, type SiteDraft } from '@/site-engine/sanitize';
 import { RESERVED_SLUGS, slugify } from './live-site';
 import { encryptToken } from './token-crypto';
 
@@ -44,13 +44,23 @@ export const hashToken = (token: string) => createHash('sha256').update(token).d
 
 export const isTokenFormat = (token: string) => /^[A-Za-z0-9_-]{32,64}$/.test(token);
 
-export async function createProject(initial: SiteDraft = {}) {
+/** Nombre de projets créés depuis cette adresse IP pendant la période donnée */
+export async function countRecentProjects(ipHash: string, sinceMs: number) {
+  const db = getSupabase();
+  if (!db) return 0;
+  const since = new Date(Date.now() - sinceMs).toISOString();
+  const { count, error } = await db.from('site_projects').select('id', { count: 'exact', head: true }).eq('ip_hash', ipHash).gte('created_at', since);
+  if (error) throw error;
+  return count ?? 0;
+}
+
+export async function createProject(initial: SiteDraft = {}, ipHash: string | null = null) {
   const db = getSupabase();
   if (!db) throw new Error('Supabase non configuré');
   const token = randomBytes(24).toString('base64url');
   const { data, error } = await db
     .from('site_projects')
-    .insert({ token_hash: hashToken(token), edit_token_enc: encryptToken(token), data: initial })
+    .insert({ token_hash: hashToken(token), edit_token_enc: encryptToken(token), ip_hash: ipHash, data: initial })
     .select(PROJECT_COLUMNS)
     .single();
   if (error) throw error;
@@ -110,6 +120,9 @@ export async function registerAsset(projectId: string, path: string, kind: 'phot
   const db = getSupabase();
   if (!db) throw new Error('Supabase non configuré');
   if (!path.startsWith(`${projectId}/`)) throw new Error('Chemin invalide');
+  const { data: owner } = await db.from('site_projects').select('status').eq('id', projectId).maybeSingle();
+  if (!owner || (owner.status !== 'draft' && owner.status !== 'live')) throw new Error('Projet non modifiable');
+  if (kind === 'photo' && (await listAssets(projectId)).filter((a) => a.kind === 'photo').length >= MAX_PHOTOS) throw new Error('Trop de photos');
   const folder = projectId;
   const name = path.slice(folder.length + 1);
   const { data: found, error: listError } = await db.storage.from(SITE_MEDIA_BUCKET).list(folder, { search: name, limit: 1 });
@@ -150,6 +163,15 @@ export async function reorderPhotos(projectId: string, ids: string[]) {
     const { error } = await db.from('site_assets').update({ position }).eq('id', id).eq('project_id', projectId).eq('kind', 'photo');
     if (error) throw error;
   }
+}
+
+/** Nombre de fichiers déjà envoyés dans le dossier du projet (y compris ceux jamais confirmés) */
+export async function countProjectFiles(projectId: string) {
+  const db = getSupabase();
+  if (!db) return 0;
+  const { data, error } = await db.storage.from(SITE_MEDIA_BUCKET).list(projectId, { limit: 100 });
+  if (error) throw error;
+  return data?.length ?? 0;
 }
 
 /** URL d'envoi signée : le navigateur envoie la photo directement à Supabase. */

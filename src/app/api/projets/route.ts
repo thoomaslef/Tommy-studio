@@ -1,5 +1,6 @@
 import { isTradeId } from '@/site-engine/trades';
-import { createProject, getSupabase } from '@/lib/supabase-server';
+import { countRecentProjects, createProject, getSupabase } from '@/lib/supabase-server';
+import { PROJECTS_PER_DAY, PROJECTS_PER_HOUR, clientIpHash } from '@/lib/rate-limit';
 import { json, readJson } from '@/lib/projects-api';
 
 export async function POST(request: Request) {
@@ -11,7 +12,14 @@ export async function POST(request: Request) {
   if (!isTradeId(body.trade)) return json({ error: 'Choisissez un métier.' }, 400);
 
   try {
-    const { token } = await createProject({ trade: body.trade, style: { template: 'classique' } });
+    const ipHash = clientIpHash(request);
+    if (ipHash) {
+      const [hour, day] = await Promise.all([countRecentProjects(ipHash, 3600e3), countRecentProjects(ipHash, 86400e3)]);
+      if (hour >= PROJECTS_PER_HOUR || day >= PROJECTS_PER_DAY) {
+        return json({ error: 'Trop de sites créés depuis votre connexion. Reprenez votre site existant ou réessayez plus tard.' }, 429);
+      }
+    }
+    const { token } = await createProject({ trade: body.trade, style: { template: 'classique' } }, ipHash);
     return json({ token }, 201);
   } catch (error) {
     console.error('createProject', error);
