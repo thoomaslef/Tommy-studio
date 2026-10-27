@@ -95,12 +95,25 @@ function LivePreview({ token, version, compact = false }: { token: string; versi
   );
 }
 
-function PublishBox({ token, missing }: { token: string; missing: string[] }) {
+function PublishBox({ token, missing, defaultEmail, businessName }: { token: string; missing: string[]; defaultEmail?: string; businessName?: string }) {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(defaultEmail ?? '');
+  const [address, setAddress] = useState<string | null>(null);
   const [accept, setAccept] = useState(false);
   const [state, setState] = useState<'idle' | 'sending'>('idle');
   const [error, setError] = useState('');
+
+  // Adresse prévue du site, recalculée quand le nom de l'entreprise change
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/projets/${token}/adresse`)
+      .then((r) => r.json())
+      .then((d) => !cancelled && setAddress(d.url ?? null))
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [token, businessName]);
 
   const send = async () => {
     setError('');
@@ -128,12 +141,17 @@ function PublishBox({ token, missing }: { token: string; missing: string[] }) {
     <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5 sm:p-6">
       <p className="text-lg font-bold text-foreground">Votre site vous plaît ? Publiez-le</p>
       <p className="mt-1 text-sm text-muted">
-        <strong className="text-foreground">{formatEuro(SITE_PRICE)}</strong> une seule fois, hébergement inclus la première année, puis {formatEuro(HOSTING_RENEWAL_PRICE)}/an.
+        <strong className="text-foreground">{formatEuro(SITE_PRICE)}</strong> à la publication, hébergement inclus la première année, puis {formatEuro(HOSTING_RENEWAL_PRICE)}/an sans engagement.
         Paiement sécurisé par carte bancaire, votre site est en ligne aussitôt.
       </p>
+      {address && (
+        <p className="mt-3 rounded-xl bg-background/60 px-4 py-3 text-sm text-muted">
+          Adresse de votre site : <strong className="break-all text-foreground">{address.replace('https://', '')}</strong>
+        </p>
+      )}
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Votre nom" autoComplete="name" className={inputClass} />
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Votre email" autoComplete="email" className={inputClass} />
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Votre nom" aria-label="Votre nom" autoComplete="name" className={inputClass} />
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Votre email" aria-label="Votre email" autoComplete="email" className={inputClass} />
       </div>
       <label className="mt-4 flex cursor-pointer items-start gap-3 text-xs leading-relaxed text-muted">
         <input type="checkbox" checked={accept} onChange={(e) => setAccept(e.target.checked)} className="mt-0.5 h-4 w-4 flex-shrink-0 accent-[#6366f1]" />
@@ -723,7 +741,7 @@ export default function Configurator({
                     </button>
                   </div>
                 </div>
-                {liveUrl ? <LiveBox url={liveUrl} /> : status === 'draft' && <PublishBox token={token} missing={missing} />}
+                {liveUrl ? <LiveBox url={liveUrl} /> : status === 'draft' && <PublishBox token={token} missing={missing} defaultEmail={draft.email} businessName={draft.businessName} />}
               </>
             )}
 

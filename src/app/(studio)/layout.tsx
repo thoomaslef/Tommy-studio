@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     default: 'Tommy Studio — Le site de votre entreprise du bâtiment en 10 minutes',
     template: '%s | Tommy Studio',
   },
-  description: `Plombier, électricien, maçon, couvreur… Créez le site de votre entreprise en 10 minutes : aperçu gratuit, ${formatEuro(SITE_PRICE)} une seule fois à la publication, hébergement compris la première année.`,
+  description: `Plombier, électricien, maçon, couvreur… Créez le site de votre entreprise en 10 minutes : aperçu gratuit, ${formatEuro(SITE_PRICE)} à la publication, hébergement compris la première année.`,
   keywords: [
     'site internet artisan',
     'site web artisan du bâtiment',
@@ -29,13 +29,13 @@ export const metadata: Metadata = {
     url: 'https://www.tommy-studio.pro',
     siteName: 'Tommy Studio',
     title: 'Le site de votre entreprise du bâtiment, prêt en 10 minutes',
-    description: `Aperçu gratuit, ${formatEuro(SITE_PRICE)} une seule fois à la publication. Pour plombiers, électriciens, maçons, couvreurs et tous les artisans du bâtiment.`,
+    description: `Aperçu gratuit, ${formatEuro(SITE_PRICE)} à la publication, hébergement compris la 1re année. Pour plombiers, électriciens, maçons, couvreurs et tous les artisans du bâtiment.`,
     images: [{ url: '/home/demo-plombier.webp', width: 1280, height: 800, alt: 'Exemple de site créé avec Tommy Studio' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Le site de votre entreprise du bâtiment, prêt en 10 minutes',
-    description: `Aperçu gratuit, ${formatEuro(SITE_PRICE)} une seule fois à la publication.`,
+    description: `Aperçu gratuit, ${formatEuro(SITE_PRICE)} à la publication, hébergement compris la 1re année.`,
     images: ['/home/demo-plombier.webp'],
   },
   robots: {

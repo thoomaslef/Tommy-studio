@@ -179,6 +179,17 @@ function slugCandidates(draft: SiteDraft) {
   return [...new Set(list)].filter((s) => s.length >= 3 && !RESERVED_SLUGS.has(s));
 }
 
+/** Adresse que recevrait le site s'il était publié maintenant (indicatif : attribuée pour de bon au paiement) */
+export async function availableSlug(draft: SiteDraft) {
+  const db = getSupabase();
+  if (!db) throw new Error('Supabase non configuré');
+  const candidates = slugCandidates(draft);
+  const { data, error } = await db.from('site_projects').select('slug').in('slug', candidates);
+  if (error) throw error;
+  const taken = new Set((data ?? []).map((r) => r.slug as string));
+  return candidates.find((c) => !taken.has(c)) ?? null;
+}
+
 type Payment = { sessionId: string; amountCents: number | null; email: string | null; name: string | null };
 
 /**

@@ -10,7 +10,7 @@ const steps = [
   { title: 'Choisissez votre métier', text: 'Plombier, électricien, maçon, couvreur, peintre, paysagiste… Vos services sont déjà pré-remplis.' },
   { title: 'Ajoutez vos infos et vos photos', text: 'Nom, ville, zone d’intervention, téléphone, photos de chantiers depuis votre téléphone.' },
   { title: 'Regardez l’aperçu et ajustez', text: 'Votre site se construit sous vos yeux. Changez le modèle, les couleurs, les textes, autant que vous voulez.' },
-  { title: 'Publiez quand il vous plaît', text: `${formatEuro(SITE_PRICE)} une seule fois. Votre site est mis en ligne, hébergement de la première année compris.` },
+  { title: 'Publiez quand il vous plaît', text: `${formatEuro(SITE_PRICE)} la première année, hébergement compris. Votre site est en ligne aussitôt, à l’adresse votre-entreprise.tommy-studio.pro.` },
 ];
 
 const included = [
@@ -29,7 +29,7 @@ const demos = [
 ];
 
 const faq = [
-  { q: 'Combien ça coûte ?', a: `${formatEuro(SITE_PRICE)} une seule fois, à la publication. L’hébergement est compris la première année, puis ${formatEuro(HOSTING_RENEWAL_PRICE)} par an. Pas d’abonnement mensuel.` },
+  { q: 'Combien ça coûte ?', a: `${formatEuro(SITE_PRICE)} à la publication, hébergement compris la première année. Ensuite, ${formatEuro(HOSTING_RENEWAL_PRICE)} par an pour garder votre site en ligne, sans engagement : vous êtes prévenu avant chaque échéance et vous arrêtez quand vous voulez.` },
   { q: 'C’est pour qui ?', a: 'Pour les professionnels : artisans, entrepreneurs et sociétés du bâtiment. Votre numéro SIRET vous sera demandé avant la publication.' },
   { q: 'Je dois payer pour essayer ?', a: 'Non. Vous créez votre site et vous voyez l’aperçu gratuitement. Vous ne payez que si vous décidez de le publier.' },
   { q: 'Combien de temps ça prend ?', a: 'Une dizaine de minutes pour remplir vos infos et ajouter vos photos. Dès le paiement confirmé, votre site est en ligne automatiquement.' },
@@ -57,7 +57,7 @@ export default function Home() {
               <span className="gradient-text">prêt en 10 minutes.</span>
             </h1>
             <p className="mx-auto mt-7 max-w-xl text-base leading-relaxed text-muted sm:text-lg lg:mx-0">
-              Entrez vos infos, ajoutez vos photos : votre site se construit sous vos yeux. Aucun rendez-vous, aucun abonnement.
+              Entrez vos infos, ajoutez vos photos : votre site se construit sous vos yeux. Aucun rendez-vous, aucun engagement.
               Vous ne payez que s’il vous plaît.
             </p>
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
@@ -69,7 +69,7 @@ export default function Home() {
               </Button>
             </div>
             <p className="mt-5 text-xs tracking-wide text-muted/70">
-              Aperçu gratuit · {formatEuro(SITE_PRICE)} à la publication · Hébergement 1re année compris
+              Aperçu gratuit · {formatEuro(SITE_PRICE)} la 1re année, hébergement compris · puis {formatEuro(HOSTING_RENEWAL_PRICE)}/an
             </p>
           </div>
 
@@ -148,10 +148,10 @@ export default function Home() {
             <AnimatedSection direction="left">
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Tarif</span>
               <h2 className="mt-5 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-                Un prix simple, <span className="gradient-text">payé une seule fois</span>
+                Un prix simple, <span className="gradient-text">sans surprise</span>
               </h2>
               <p className="mt-6 text-base leading-relaxed text-muted">
-                Pas d’abonnement mensuel, pas de frais cachés. Vous créez et vous essayez gratuitement, vous payez uniquement pour publier.
+                Pas d’abonnement mensuel, pas de frais cachés, sans engagement. Vous créez et vous essayez gratuitement, vous payez uniquement pour publier.
               </p>
               <ul className="mt-8 space-y-4">
                 {included.map((item) => (
@@ -168,10 +168,10 @@ export default function Home() {
               <div className="gradient-border rounded-[2rem] bg-surface-light p-10 text-center glow sm:p-14">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted">Votre site</p>
                 <p className="mt-6 text-7xl font-black gradient-text">{formatEuro(SITE_PRICE)}</p>
-                <p className="mt-2 text-sm text-muted">une seule fois, à la publication</p>
+                <p className="mt-2 text-sm text-muted">la première année, à la publication</p>
                 <div className="mx-auto mt-8 max-w-xs space-y-2 border-t border-border/40 pt-6 text-sm text-muted">
                   <p>Hébergement compris la 1re année</p>
-                  <p>Puis {formatEuro(HOSTING_RENEWAL_PRICE)} par an</p>
+                  <p>Puis {formatEuro(HOSTING_RENEWAL_PRICE)} par an, sans engagement</p>
                   <p>Création et aperçu gratuits</p>
                   <p className="text-xs text-muted/70">Réservé aux professionnels (SIRET demandé)</p>
                 </div>

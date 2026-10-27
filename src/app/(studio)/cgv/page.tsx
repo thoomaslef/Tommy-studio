@@ -51,8 +51,8 @@ const sections = [
     body: (
       <>
         <p>
-          La publication du site coûte <strong>{formatEuro(SITE_PRICE)}</strong>, payés une seule fois. Ce prix comprend l’hébergement pendant les douze mois
-          qui suivent la mise en ligne. L’hébergement se renouvelle ensuite pour <strong>{formatEuro(HOSTING_RENEWAL_PRICE)} par an</strong>.
+          La publication du site coûte <strong>{formatEuro(SITE_PRICE)}</strong>, payés à la publication. Ce prix comprend l’hébergement pendant les douze mois
+          qui suivent la mise en ligne. L’hébergement se renouvelle ensuite pour <strong>{formatEuro(HOSTING_RENEWAL_PRICE)} par an</strong>, sans engagement.
         </p>
         <p>Les prix sont indiqués en euros et correspondent au montant total à payer. TVA non applicable, article 293 B du Code général des impôts. Un nom de domaine personnalisé, s’il est souhaité, est acheté et payé par le Client auprès du fournisseur de son choix.</p>
       </>
@@ -91,8 +91,9 @@ const sections = [
     title: '8. Hébergement et renouvellement',
     body: (
       <p>
-        L’hébergement est renouvelé chaque année au tarif indiqué à l’article 3, après information du Client. À défaut de renouvellement, le site est mis hors
-        ligne à l’échéance ; ses contenus peuvent être supprimés trois mois plus tard.
+        L’hébergement est renouvelé chaque année au tarif indiqué à l’article 4. Il est sans engagement : le Client est prévenu par email avant chaque
+        échéance et choisit de renouveler ou non. À défaut de renouvellement, le site est mis hors ligne à l’échéance ; ses contenus peuvent être supprimés
+        trois mois plus tard.
       </p>
     ),
   },

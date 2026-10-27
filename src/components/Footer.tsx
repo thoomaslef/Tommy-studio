@@ -45,7 +45,7 @@ export default function Footer() {
 
             {/* Engagements mini */}
             <div className="mt-8 flex flex-wrap gap-3">
-              {['99 € une fois', 'Aperçu gratuit', 'Sans abonnement'].map((item) => (
+              {['99 € la 1re année', 'Aperçu gratuit', 'Sans engagement'].map((item) => (
                 <span key={item} className="inline-flex items-center gap-1.5 rounded-full border border-border/40 bg-surface-elevated px-3 py-1 text-[11px] text-muted">
                   <svg className="h-2.5 w-2.5 text-accent flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />

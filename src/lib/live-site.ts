@@ -1,10 +1,9 @@
 /**
- * Adresse publique des sites clients.
- * Tant que les DNS du domaine ne sont pas chez Vercel, pas de sous-domaines :
- * les sites sont servis sur www.tommy-studio.pro/s/<slug>.
+ * Adresse publique des sites clients : <slug>.tommy-studio.pro (DNS chez Vercel, sous-domaine générique).
+ * Avec SUBDOMAINS_ENABLED à false, les sites restent servis sur www.tommy-studio.pro/s/<slug>.
  */
 export const SITES_DOMAIN = 'tommy-studio.pro';
-export const SUBDOMAINS_ENABLED = false;
+export const SUBDOMAINS_ENABLED = true;
 
 export const liveSiteUrl = (slug: string) =>
   SUBDOMAINS_ENABLED ? `https://${slug}.${SITES_DOMAIN}` : `https://www.${SITES_DOMAIN}/s/${slug}`;
