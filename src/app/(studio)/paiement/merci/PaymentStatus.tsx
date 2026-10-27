@@ -3,36 +3,52 @@
 import { useEffect, useState } from 'react';
 import { DRAFT_STORAGE_KEY } from '../../creer/CreerStart';
 import { liveSiteUrl } from '@/lib/live-site';
+import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_HREF } from '@/lib/contact';
 
-type State = { kind: 'waiting' } | { kind: 'live'; url: string; token: string } | { kind: 'unknown'; token: string | null };
+type State = { kind: 'waiting' } | { kind: 'live'; url: string; editToken: string | null } | { kind: 'unknown' };
 
-/** Après le paiement : on attend la confirmation de Stripe (quelques secondes) puis on affiche l'adresse du site */
+/**
+ * Après le paiement : on attend la confirmation de Stripe (quelques secondes) puis on affiche l'adresse du site.
+ * Le site est retrouvé par la session Stripe de l'URL, ou à défaut par le lien privé gardé sur cet appareil.
+ */
 export default function PaymentStatus() {
   const [state, setState] = useState<State>({ kind: 'waiting' });
 
   useEffect(() => {
+    const session = new URLSearchParams(window.location.search).get('session');
     let token: string | null = null;
     try {
       token = localStorage.getItem(DRAFT_STORAGE_KEY);
     } catch {}
-    if (!token) {
-      setState({ kind: 'unknown', token: null });
-      return;
-    }
+
+    // Lien de modification proposé seulement si le projet de cet appareil est bien celui qui vient d'être publié
+    const ownProject = async () => {
+      if (!token) return null;
+      const res = await fetch(`/api/projets/${token}`, { cache: 'no-store' });
+      const data = await res.json();
+      return res.ok && data.status === 'live' && data.slug ? { url: liveSiteUrl(data.slug), token } : null;
+    };
+
     let tries = 0;
     let timer: ReturnType<typeof setTimeout>;
     const check = async () => {
       tries++;
       try {
-        const res = await fetch(`/api/projets/${token}`, { cache: 'no-store' });
-        const data = await res.json();
-        if (res.ok && data.status === 'live' && data.slug) {
-          setState({ kind: 'live', url: liveSiteUrl(data.slug), token: token! });
+        const mine = await ownProject();
+        if (session) {
+          const res = await fetch(`/api/paiement/statut?session=${encodeURIComponent(session)}`, { cache: 'no-store' });
+          const data = await res.json();
+          if (res.ok && data.status === 'live') {
+            setState({ kind: 'live', url: data.url, editToken: mine && mine.url === data.url ? mine.token : null });
+            return;
+          }
+        } else if (mine) {
+          setState({ kind: 'live', url: mine.url, editToken: mine.token });
           return;
         }
       } catch {}
-      if (tries < 20) timer = setTimeout(check, 3000);
-      else setState({ kind: 'unknown', token });
+      if ((session || token) && tries < 20) timer = setTimeout(check, 3000);
+      else setState({ kind: 'unknown' });
     };
     check();
     return () => clearTimeout(timer);
@@ -56,36 +72,43 @@ export default function PaymentStatus() {
       {state.kind === 'live' && (
         <>
           <p className="mt-4 text-sm leading-relaxed text-muted">Voici son adresse, à partager à vos clients et à ajouter sur votre fiche Google :</p>
-          <a href={state.url} target="_blank" rel="noopener" className="mt-5 block break-all rounded-xl bg-background/60 px-4 py-4 text-base font-bold text-accent underline">
-            {state.url}
+          <a href={state.url} target="_blank" rel="noopener" className="mt-5 block break-all rounded-xl bg-background/60 px-4 py-4 text-base font-bold text-accent-light underline">
+            {state.url.replace('https://', '')}
           </a>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <a href={state.url} target="_blank" rel="noopener" className="rounded-xl bg-accent px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-accent/20">
+            <a href={state.url} target="_blank" rel="noopener" className="rounded-xl bg-accent-dark px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-accent/20">
               Voir mon site
             </a>
-            <a href={`/creer/${state.token}`} className="rounded-xl border border-border/50 px-6 py-3.5 text-sm font-semibold text-foreground">
-              Modifier mon site
-            </a>
+            {state.editToken && (
+              <a href={`/creer/${state.editToken}`} className="rounded-xl border border-border/50 px-6 py-3.5 text-sm font-semibold text-foreground">
+                Modifier mon site
+              </a>
+            )}
           </div>
-          <p className="mt-6 text-xs text-muted">Vous pouvez modifier votre site à tout moment depuis votre lien privé : les changements sont en ligne aussitôt.</p>
+          <p className="mt-6 text-xs leading-relaxed text-muted">
+            Vous venez de recevoir un email avec l’adresse de votre site et votre lien privé pour le modifier à tout moment. Pensez à vérifier vos spams.
+          </p>
         </>
       )}
 
       {state.kind === 'unknown' && (
-        <>
-          <p className="mt-4 text-sm leading-relaxed text-muted">
-            Votre paiement est bien enregistré. La mise en ligne prend parfois quelques minutes : vous recevrez l’adresse de votre site par email.
-          </p>
-          {state.token && (
-            <a href={`/creer/${state.token}`} className="mt-6 inline-block rounded-xl border border-border/50 px-6 py-3.5 text-sm font-semibold text-foreground">
-              Revenir à mon site
-            </a>
-          )}
-          <p className="mt-6 text-xs text-muted">
-            Une question ? <a href="mailto:thomas@tommy-studio.pro" className="text-accent underline">thomas@tommy-studio.pro</a>
-          </p>
-        </>
+        <p className="mt-4 text-sm leading-relaxed text-muted">
+          Votre paiement est bien enregistré. La mise en ligne prend parfois quelques minutes : vous allez recevoir par email l’adresse de votre site et votre
+          lien pour le modifier.
+        </p>
       )}
+
+      <p className="mt-8 border-t border-border/40 pt-6 text-sm text-muted">
+        Une question ? Appelez-moi au{' '}
+        <a href={CONTACT_PHONE_HREF} className="font-semibold text-accent-light underline">
+          {CONTACT_PHONE}
+        </a>{' '}
+        ou écrivez à{' '}
+        <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-accent-light underline">
+          {CONTACT_EMAIL}
+        </a>
+        .
+      </p>
     </div>
   );
 }

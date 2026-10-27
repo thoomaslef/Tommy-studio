@@ -1,14 +1,14 @@
 import { createHmac, timingSafeEqual } from 'crypto';
-import { Resend } from 'resend';
 import { TRADES } from '@/site-engine/trades';
 import { STRIPE_PAYMENT_LINK_ID } from '@/lib/offer';
 import { liveSiteUrl } from '@/lib/live-site';
-import { publishPaidProject } from '@/lib/supabase-server';
+import { getEditTokenEnc, publishPaidProject, type ProjectRow } from '@/lib/supabase-server';
+import { decryptToken } from '@/lib/token-crypto';
+import { esc, notifyOwner, sendEmail } from '@/lib/emails';
+import { CONTACT_EMAIL, CONTACT_PHONE } from '@/lib/contact';
 
-const OWNER_EMAIL = 'thomaslefevre1197@gmail.com';
 const TOLERANCE_SECONDS = 300;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const esc = (v: string) => v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 /** Vérifie l'en-tête Stripe-Signature (t=…,v1=…) : HMAC SHA-256 de « t.corps » */
 function verifySignature(payload: string, header: string | null, secret: string) {
@@ -80,12 +80,13 @@ export async function POST(request: Request) {
       const url = liveSiteUrl(project.slug);
       const trade = d.trade ? TRADES[d.trade].label : 'Artisan';
       const amount = session.amount_total != null ? `${(session.amount_total / 100).toFixed(2).replace('.', ',')} €` : '?';
+      const clientNotified = await emailClient(project, url, new URL(request.url).origin);
       await notifyOwner(
         `💶 Site vendu — ${d.businessName ?? 'Sans nom'} (${trade}, ${d.city ?? '?'})`,
         `<p><strong>${esc(d.businessName ?? '')}</strong> vient de payer ${amount}. Le site est en ligne :</p>
-         <p><a href="${url}" style="color:#6366f1;font-weight:bold;">${url}</a></p>
+         <p><a href="${url}" style="color:#4f46e5;font-weight:bold;">${url}</a></p>
          <p>Client : ${esc(project.contact_name ?? '')} — <a href="mailto:${esc(project.contact_email ?? '')}">${esc(project.contact_email ?? '')}</a> — SIRET ${esc(d.siret ?? '?')}</p>
-         <p style="color:#9090b0;font-size:12px;">Pensez à lui envoyer l’adresse de son site (les emails automatiques aux clients arriveront avec la vérification du domaine).</p>`,
+         <p>${clientNotified ? '✅ Le client a reçu l’adresse de son site et son lien de modification.' : '⚠ <strong>L’email au client n’a pas pu partir</strong> : envoyez-lui l’adresse de son site à la main.'}</p>`,
       );
     } else if (alreadyDone && project.stripe_session_id !== session.id) {
       // Deuxième paiement pour un site déjà en ligne : à rembourser
@@ -93,23 +94,39 @@ export async function POST(request: Request) {
     }
     return Response.json({ received: true });
   } catch (error) {
-    // Erreur temporaire : Stripe réessaiera automatiquement
     console.error('stripe webhook', error);
+    if (error instanceof Error && error.message === 'Aucune adresse disponible') {
+      // Erreur définitive : inutile que Stripe réessaie, Thomas doit intervenir
+      await notifyOwner('⚠ Site payé mais non publié', `<p>Projet ${esc(projectId)}, session ${esc(session.id)} : aucune adresse disponible. À publier à la main.</p>`);
+      return Response.json({ received: true });
+    }
+    // Erreur temporaire : Stripe réessaiera automatiquement (et prévient Thomas si ça dure)
     return new Response('Erreur serveur', { status: 500 });
   }
 }
 
-async function notifyOwner(subject: string, body: string) {
-  if (!process.env.RESEND_API_KEY) return;
-  try {
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from: 'Tommy Studio <onboarding@resend.dev>',
-      to: OWNER_EMAIL,
-      subject,
-      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:32px;background:#0f0f17;color:#e2e2f0;border-radius:12px;">${body}</div>`,
-    });
-  } catch (error) {
-    console.error('notifyOwner', error);
-  }
+/** Email au client : adresse du site, lien privé de modification, prochaines étapes */
+async function emailClient(project: ProjectRow, url: string, origin: string) {
+  if (!project.contact_email) return false;
+  const token = decryptToken(await getEditTokenEnc(project.id).catch(() => null));
+  const editUrl = token ? `${origin}/creer/${token}` : null;
+  const d = project.data;
+  return sendEmail({
+    to: project.contact_email,
+    subject: `Votre site est en ligne — ${d.businessName ?? 'Tommy Studio'}`,
+    html: `
+      <p>Bonjour${project.contact_name ? ` ${esc(project.contact_name)}` : ''},</p>
+      <p>Merci pour votre confiance : le site de <strong>${esc(d.businessName ?? 'votre entreprise')}</strong> est en ligne.</p>
+      <p style="margin:24px 0;"><a href="${url}" style="display:inline-block;background:#4f46e5;color:#fff;padding:14px 24px;border-radius:8px;text-decoration:none;font-weight:bold;">Voir mon site</a></p>
+      <p>Son adresse : <a href="${url}" style="color:#4f46e5;">${url.replace('https://', '')}</a><br/>Partagez-la à vos clients, sur vos devis, votre camion, vos cartes de visite…</p>
+      ${
+        editUrl
+          ? `<p><strong>Pour modifier votre site</strong> (textes, services, photos), utilisez votre lien privé : <a href="${editUrl}" style="color:#4f46e5;">modifier mon site</a>. Gardez cet email : ce lien est personnel, ne le partagez pas. Les changements sont en ligne aussitôt.</p>`
+          : `<p>Pour modifier votre site, reprenez-le depuis l’appareil qui a servi à le créer, ou répondez à cet email.</p>`
+      }
+      <p><strong>Prochaine étape conseillée :</strong> ajoutez cette adresse sur votre fiche Google (Google Business Profile), rubrique « Site Web ». C’est ce qui vous rendra visible dans Google Maps.</p>
+      <p>Votre facture vous est envoyée séparément par notre prestataire de paiement, Stripe.</p>
+      <p>Une question ? Répondez simplement à cet email, ou appelez-moi au ${CONTACT_PHONE}.</p>
+      <p>Thomas — Tommy Studio<br/><span style="color:#6b6b8a;font-size:12px;">${CONTACT_EMAIL}</span></p>`,
+  });
 }

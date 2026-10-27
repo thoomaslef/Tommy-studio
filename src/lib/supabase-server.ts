@@ -3,6 +3,7 @@ import { createHash, randomBytes } from 'crypto';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { SiteDraft } from '@/site-engine/sanitize';
 import { RESERVED_SLUGS, slugify } from './live-site';
+import { encryptToken } from './token-crypto';
 
 export const SITE_MEDIA_BUCKET = 'site-media';
 
@@ -49,7 +50,7 @@ export async function createProject(initial: SiteDraft = {}) {
   const token = randomBytes(24).toString('base64url');
   const { data, error } = await db
     .from('site_projects')
-    .insert({ token_hash: hashToken(token), data: initial })
+    .insert({ token_hash: hashToken(token), edit_token_enc: encryptToken(token), data: initial })
     .select(PROJECT_COLUMNS)
     .single();
   if (error) throw error;
@@ -157,6 +158,33 @@ export function publicMediaUrl(path: string) {
   const db = getSupabase();
   if (!db) return '';
   return db.storage.from(SITE_MEDIA_BUCKET).getPublicUrl(path).data.publicUrl;
+}
+
+/** Copie chiffrée du lien privé, pour les projets créés avant son enregistrement */
+export async function ensureEditToken(id: string, token: string) {
+  const db = getSupabase();
+  if (!db) throw new Error('Supabase non configuré');
+  const enc = encryptToken(token);
+  if (!enc) return;
+  const { error } = await db.from('site_projects').update({ edit_token_enc: enc }).eq('id', id).is('edit_token_enc', null);
+  if (error) throw error;
+}
+
+export async function getEditTokenEnc(id: string): Promise<string | null> {
+  const db = getSupabase();
+  if (!db) return null;
+  const { data, error } = await db.from('site_projects').select('edit_token_enc').eq('id', id).maybeSingle();
+  if (error) throw error;
+  return (data?.edit_token_enc as string | null) ?? null;
+}
+
+/** Projet payé par cette session Stripe (page de remerciement) */
+export async function getProjectByStripeSession(sessionId: string): Promise<ProjectRow | null> {
+  const db = getSupabase();
+  if (!db) return null;
+  const { data, error } = await db.from('site_projects').select(PROJECT_COLUMNS).eq('stripe_session_id', sessionId).maybeSingle();
+  if (error) throw error;
+  return (data as ProjectRow) ?? null;
 }
 
 /** Le client demande la publication : on garde ses coordonnées pour lui envoyer le paiement */

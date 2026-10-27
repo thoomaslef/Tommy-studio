@@ -1,6 +1,6 @@
 import { STRIPE_PAYMENT_LINK } from '@/lib/offer';
 import { isValidSiret } from '@/lib/siret';
-import { requestPublication } from '@/lib/supabase-server';
+import { ensureEditToken, requestPublication } from '@/lib/supabase-server';
 import { json, loadProject, readJson } from '@/lib/projects-api';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,6 +28,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
 
   try {
     await requestPublication(project.id, name, email);
+    await ensureEditToken(project.id, token);
     const url = new URL(STRIPE_PAYMENT_LINK);
     url.searchParams.set('client_reference_id', project.id);
     url.searchParams.set('prefilled_email', email);
