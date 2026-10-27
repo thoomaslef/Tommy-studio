@@ -44,7 +44,10 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: 
   );
 }
 
-function LivePreview({ token, version, compact = false }: { token: string; version: number; compact?: boolean }) {
+/** Aperçu par l'identifiant du projet (lecture seule) : le lien privé de modification n'est jamais partagé avec l'aperçu */
+function LivePreview({ previewId, version, compact = false }: { previewId: string; version: number; compact?: boolean }) {
+  // Double tampon : l'ancienne version reste affichée jusqu'au chargement complet de la nouvelle
+  const [shown, setShown] = useState(version);
   const [device, setDevice] = useState<'mobile' | 'desktop'>('mobile');
   const box = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(400);
@@ -73,22 +76,27 @@ function LivePreview({ token, version, compact = false }: { token: string; versi
             </button>
           ))}
         </div>
-        <a href={`/apercu/${token}`} target="_blank" rel="noreferrer" className="text-xs font-semibold text-accent underline">
+        <a href={`/apercu/${previewId}`} target="_blank" rel="noreferrer" className="text-xs font-semibold text-accent underline">
           Ouvrir en grand
         </a>
       </div>
       <div ref={box} className="w-full">
       <div
-        className="mx-auto overflow-hidden rounded-2xl border border-border/50 bg-white"
+        className="relative mx-auto overflow-hidden rounded-2xl border border-border/50 bg-white"
         style={{ height: (compact ? 0.75 : 1) * frameH * scale, width: frameW * scale }}
       >
-        <iframe
-          key={`${version}-${device}`}
-          src={`/apercu/${token}?v=${version}`}
-          title="Aperçu de votre site"
-          className="origin-top-left border-0"
-          style={{ width: frameW, height: frameH, transform: `scale(${scale})` }}
-        />
+        {[...new Set([shown, version])].map((v) => (
+          <iframe
+            key={`${v}-${device}`}
+            src={`/apercu/${previewId}?v=${v}`}
+            title="Aperçu de votre site"
+            aria-hidden={v !== shown}
+            tabIndex={v !== shown ? -1 : undefined}
+            onLoad={() => v === version && setShown(v)}
+            className={`absolute left-0 top-0 origin-top-left border-0 ${v === shown ? '' : 'pointer-events-none opacity-0'}`}
+            style={{ width: frameW, height: frameH, transform: `scale(${scale})` }}
+          />
+        ))}
       </div>
       </div>
     </div>
@@ -198,8 +206,10 @@ export default function Configurator({
   initialAssets,
   status,
   slug,
+  projectId,
 }: {
   token: string;
+  projectId: string;
   initialDraft: SiteDraft;
   initialAssets: AssetView[];
   status: string;
@@ -265,9 +275,9 @@ export default function Configurator({
 
   // Textes proposés automatiquement, affichés en exemple dans les champs facultatifs
   const auto = useMemo(() => {
-    const d = resolveDesign(draftToSiteData(token, { ...draft, tagline: undefined, about: undefined }, []));
+    const d = resolveDesign(draftToSiteData(projectId, { ...draft, tagline: undefined, about: undefined }, []));
     return { tagline: d.tagline, about: d.about, palette: d.palette.name };
-  }, [draft, token]);
+  }, [draft, projectId]);
 
   const goTo = (s: number) => {
     setStep(s);
@@ -719,7 +729,7 @@ export default function Configurator({
             {/* ===== APERÇU ===== */}
             {step === 4 && (
               <>
-                <LivePreview token={token} version={version} />
+                <LivePreview previewId={projectId} version={version} />
                 {missing.length > 0 && (
                   <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200">
                     Il manque encore : {missing.join(', ')}.
@@ -769,7 +779,7 @@ export default function Configurator({
                 <p className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-muted">
                   <Icon name="sun" className="h-3.5 w-3.5 text-accent" /> Aperçu en direct
                 </p>
-                <LivePreview token={token} version={version} compact />
+                <LivePreview previewId={projectId} version={version} compact />
               </div>
             </aside>
           )}

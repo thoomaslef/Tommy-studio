@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
 import { TRADES, TRADE_IDS } from '@/site-engine/trades';
 import { Icon } from '@/site-engine/icons';
@@ -8,20 +8,22 @@ import type { TradeId } from '@/site-engine/types';
 
 export const DRAFT_STORAGE_KEY = 'ts-draft-token';
 
+const noSubscribe = () => () => {};
+const readSavedToken = () => {
+  try {
+    return localStorage.getItem(DRAFT_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+};
+
 export default function CreerStart() {
   const router = useRouter();
   const [loading, setLoading] = useState<TradeId | null>(null);
   const [error, setError] = useState('');
-  const [resume, setResume] = useState<string | null>(null);
+  // Lien privé gardé sur cet appareil (null côté serveur et en navigation privée)
+  const resume = useSyncExternalStore(noSubscribe, readSavedToken, () => null);
   const [website, setWebsite] = useState('');
-
-  useEffect(() => {
-    try {
-      setResume(localStorage.getItem(DRAFT_STORAGE_KEY));
-    } catch {
-      // stockage indisponible (navigation privée) : pas de reprise automatique
-    }
-  }, []);
 
   const start = async (trade: TradeId) => {
     setLoading(trade);

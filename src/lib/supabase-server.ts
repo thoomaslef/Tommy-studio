@@ -65,6 +65,14 @@ export async function getProjectByToken(token: string): Promise<ProjectRow | nul
   return (data as ProjectRow) ?? null;
 }
 
+export async function getProjectById(id: string): Promise<ProjectRow | null> {
+  const db = getSupabase();
+  if (!db) return null;
+  const { data, error } = await db.from('site_projects').select(PROJECT_COLUMNS).eq('id', id).maybeSingle();
+  if (error) throw error;
+  return (data as ProjectRow) ?? null;
+}
+
 export async function getLiveProjectBySlug(slug: string): Promise<ProjectRow | null> {
   const db = getSupabase();
   if (!db) return null;
