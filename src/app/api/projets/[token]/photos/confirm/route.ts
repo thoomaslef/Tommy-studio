@@ -1,4 +1,5 @@
 import { registerAsset } from '@/lib/supabase-server';
+import { revalidateSite } from '@/lib/revalidate';
 import { assetView, json, loadProject, readJson } from '@/lib/projects-api';
 
 /** Confirme une photo envoyée : vérifiée dans le stockage puis ajoutée au site */
@@ -12,6 +13,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
 
   try {
     const asset = await registerAsset(project.id, body.path, kind, { width: num(body.width), height: num(body.height) });
+    revalidateSite(project);
     return json({ asset: assetView(asset) }, 201);
   } catch (error) {
     console.error('registerAsset', error);

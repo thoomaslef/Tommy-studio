@@ -1,5 +1,6 @@
 import { parseDomain } from '@/lib/domain';
 import { setCustomDomain } from '@/lib/supabase-server';
+import { revalidateSite } from '@/lib/revalidate';
 import { json, loadProject, readJson } from '@/lib/projects-api';
 
 /** Domaine personnalisé du client : état actuel */
@@ -19,6 +20,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
   if (!parsed.ok) return json({ error: parsed.error }, 400);
   try {
     if (!(await setCustomDomain(project.id, parsed.domain))) return json({ error: 'Ce nom de domaine est déjà utilisé par un autre site. Écrivez-moi si c’est le vôtre.' }, 409);
+    revalidateSite(project);
     return json({ domain: parsed.domain, status: 'pending' });
   } catch (error) {
     console.error('domaine', error);
@@ -32,6 +34,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
   if (project instanceof Response) return project;
   try {
     await setCustomDomain(project.id, null);
+    revalidateSite(project);
     return json({ domain: null, status: null });
   } catch (error) {
     console.error('domaine', error);

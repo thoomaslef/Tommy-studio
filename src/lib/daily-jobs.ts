@@ -5,6 +5,7 @@ import { liveSiteUrl } from './live-site';
 import { HOSTING_RENEWAL_PRICE, STRIPE_RENEWAL_LINK, formatEuro } from './offer';
 import { CONTACT_EMAIL, CONTACT_PHONE } from './contact';
 import { checkServing } from './domain-check';
+import { revalidateSite } from './revalidate';
 
 const DAY = 86400e3;
 const COLUMNS = 'id, slug, status, data, contact_name, contact_email, hosting_until, offline_at, last_reminder_at, published_at, updated_at';
@@ -38,6 +39,7 @@ export async function runRenewals(now = Date.now()) {
 
     if (r.status === 'live' && until <= now) {
       await db().from('site_projects').update({ status: 'offline', offline_at: new Date(now).toISOString() }).eq('id', r.id);
+      revalidateSite({ slug: r.slug, status: 'offline' });
       if (r.contact_email) {
         await sendEmail({
           to: r.contact_email,
@@ -56,6 +58,7 @@ export async function runRenewals(now = Date.now()) {
 
     if (r.status === 'offline' && r.offline_at && new Date(r.offline_at).getTime() < now - 92 * DAY) {
       await deleteProject(r.id);
+      revalidateSite({ slug: r.slug, status: 'offline' });
       report.push(`Supprimé (hors ligne depuis plus de 3 mois) : ${siteName(r)}`);
       continue;
     }

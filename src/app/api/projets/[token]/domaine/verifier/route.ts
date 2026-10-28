@@ -1,6 +1,7 @@
 import { checkDns, checkServing } from '@/lib/domain-check';
 import { liveSiteUrl } from '@/lib/live-site';
 import { markCustomDomain } from '@/lib/supabase-server';
+import { revalidateSite } from '@/lib/revalidate';
 import { esc, notifyOwner } from '@/lib/emails';
 import { json, loadProject } from '@/lib/projects-api';
 
@@ -21,6 +22,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ to
     const [dns, serving] = await Promise.all([checkDns(domain), checkServing(domain, project.slug)]);
     if (serving) {
       await markCustomDomain(project.id, { status: 'active' });
+      revalidateSite(project);
       await notifyOwner(`🌐 Domaine actif — ${domain}`, `<p><strong>${esc(project.data.businessName ?? '')}</strong> est maintenant servi sur <a href="https://${esc(domain)}">${esc(domain)}</a>.</p>`);
       return json({ domain, status: 'active', dns, serving: true });
     }

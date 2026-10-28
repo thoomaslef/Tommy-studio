@@ -1,4 +1,5 @@
 import { reorderPhotos } from '@/lib/supabase-server';
+import { revalidateSite } from '@/lib/revalidate';
 import { json, loadProject, readJson } from '@/lib/projects-api';
 
 export async function POST(request: Request, { params }: { params: Promise<{ token: string }> }) {
@@ -9,6 +10,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
   if (!ids) return json({ error: 'Requête invalide.' }, 400);
   try {
     await reorderPhotos(project.id, ids);
+    revalidateSite(project);
     return json({ ok: true });
   } catch (error) {
     console.error('reorderPhotos', error);

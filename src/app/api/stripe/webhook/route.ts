@@ -2,6 +2,7 @@ import { TRADES } from '@/site-engine/trades';
 import { verifySignature } from '@/lib/stripe-signature';
 import { GUARANTEE_DAYS, STRIPE_PAYMENT_LINK_ID, STRIPE_RENEWAL_LINK_ID } from '@/lib/offer';
 import { liveSiteUrl } from '@/lib/live-site';
+import { revalidateSite } from '@/lib/revalidate';
 import { getEditTokenEnc, publishPaidProject, renewHosting, type ProjectRow } from '@/lib/supabase-server';
 import { decryptToken } from '@/lib/token-crypto';
 import { esc, notifyOwner, sendEmail } from '@/lib/emails';
@@ -59,6 +60,7 @@ export async function POST(request: Request) {
       return Response.json({ received: true });
     }
     const { project, alreadyDone } = result;
+    if (!alreadyDone) revalidateSite(project);
     if (!alreadyDone && project.slug) {
       const d = project.data;
       const url = liveSiteUrl(project.slug);
@@ -142,6 +144,7 @@ async function handleRenewal(projectId: string, session: CheckoutSession) {
     }
     const { project, alreadyDone } = result;
     if (alreadyDone) return Response.json({ received: true });
+    revalidateSite(project);
     const url = liveSiteUrl(project.slug!);
     const until = new Date(project.hosting_until!).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
     const to = project.contact_email ?? session.customer_details?.email;

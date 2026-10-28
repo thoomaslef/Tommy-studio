@@ -8,7 +8,14 @@ import { siteFromProject } from '@/lib/site-from-project';
 import { SLUG_FORMAT, liveSiteUrl } from '@/lib/live-site';
 import { customDomainUrl } from '@/lib/domain';
 
-// Site client publié : servi sur <slug>.tommy-studio.pro (ou www.tommy-studio.pro/s/<slug>)
+// Site client publié : servi sur <slug>.tommy-studio.pro (ou www.tommy-studio.pro/s/<slug>).
+// Mis en cache : la page ne lit la base qu'une fois toutes les 5 minutes au plus, et elle est invalidée à chaque
+// modification du site (voir lib/revalidate.ts). Si la base est indisponible, la version en cache reste servie.
+export const revalidate = 300;
+export function generateStaticParams() {
+  return [];
+}
+
 const loadSite = cache(async (slug: string) => {
   if (!SLUG_FORMAT.test(slug)) return null;
   const project = await getLiveProjectBySlug(slug);
