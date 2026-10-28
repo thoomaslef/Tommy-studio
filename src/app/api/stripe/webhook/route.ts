@@ -1,6 +1,6 @@
 import { TRADES } from '@/site-engine/trades';
 import { verifySignature } from '@/lib/stripe-signature';
-import { STRIPE_PAYMENT_LINK_ID, STRIPE_RENEWAL_LINK_ID } from '@/lib/offer';
+import { GUARANTEE_DAYS, STRIPE_PAYMENT_LINK_ID, STRIPE_RENEWAL_LINK_ID } from '@/lib/offer';
 import { liveSiteUrl } from '@/lib/live-site';
 import { getEditTokenEnc, publishPaidProject, renewHosting, type ProjectRow } from '@/lib/supabase-server';
 import { decryptToken } from '@/lib/token-crypto';
@@ -71,6 +71,7 @@ export async function POST(request: Request) {
          <p><a href="${url}" style="color:#4f46e5;font-weight:bold;">${url}</a></p>
          <p>Client : ${esc(project.contact_name ?? '')} — <a href="mailto:${esc(project.contact_email ?? '')}">${esc(project.contact_email ?? '')}</a> — SIRET ${esc(d.siret ?? '?')}</p>
          <p>Registre des entreprises : ${siretLine(project)}</p>
+         <p style="color:#6b6b8a;font-size:13px;">Garantie satisfait ou remboursé jusqu’au ${new Date(Date.now() + GUARANTEE_DAYS * 86400e3).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} : en cas de demande, remboursez depuis Stripe (Paiements → le paiement → Rembourser) puis demandez-moi de mettre le site hors ligne.</p>
          <p>${clientNotified ? '✅ Le client a reçu l’adresse de son site et son lien de modification.' : '⚠ <strong>L’email au client n’a pas pu partir</strong> : envoyez-lui l’adresse de son site à la main.'}</p>`,
       );
     } else if (alreadyDone && project.stripe_session_id !== session.id) {
@@ -111,6 +112,7 @@ async function emailClient(project: ProjectRow, url: string, origin: string) {
       }
       <p><strong>Prochaine étape conseillée :</strong> ajoutez cette adresse sur votre fiche Google (Google Business Profile), rubrique « Site Web ». C’est ce qui vous rendra visible dans Google Maps.</p>
       <p>Votre facture vous est envoyée séparément par notre prestataire de paiement, Stripe.</p>
+      <p><strong>Garantie satisfait ou remboursé :</strong> si le site ne vous convient pas, répondez à cet email dans les ${GUARANTEE_DAYS} jours qui suivent, vous êtes remboursé sans justification.</p>
       <p>Une question ? Répondez simplement à cet email, ou appelez-moi au ${CONTACT_PHONE}.</p>
       <p>Thomas — Tommy Studio<br/><span style="color:#6b6b8a;font-size:12px;">${CONTACT_EMAIL}</span></p>`,
   });

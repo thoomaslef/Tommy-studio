@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Button from '@/components/Button';
 import SectionHeading from '@/components/SectionHeading';
 import AnimatedSection from '@/components/AnimatedSection';
-import { HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
+import { GUARANTEE_DAYS, HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
 import { pageMetadata } from '@/lib/seo';
 import { whatsappUrl } from '@/lib/contact';
 
@@ -39,6 +39,7 @@ const demos = [
 const faq = [
   { q: 'Combien ça coûte ?', a: `${formatEuro(SITE_PRICE)} à la publication, hébergement compris la première année. Ensuite, ${formatEuro(HOSTING_RENEWAL_PRICE)} par an pour garder votre site en ligne, sans engagement : vous êtes prévenu avant chaque échéance et vous arrêtez quand vous voulez.` },
   { q: 'C’est pour qui ?', a: 'Pour les professionnels : artisans, entrepreneurs et sociétés du bâtiment. Votre numéro SIRET vous sera demandé avant la publication.' },
+  { q: 'Et si le site ne me convient pas après publication ?', a: `Vous êtes remboursé : satisfait ou remboursé ${GUARANTEE_DAYS} jours après la mise en ligne. Écrivez-moi un message, par email ou sur WhatsApp, sans avoir à vous justifier.` },
   { q: 'Je dois payer pour essayer ?', a: 'Non. Vous créez votre site et vous voyez l’aperçu gratuitement. Vous ne payez que si vous décidez de le publier.' },
   { q: 'Combien de temps ça prend ?', a: 'Une dizaine de minutes pour remplir vos infos et ajouter vos photos. Dès le paiement confirmé, votre site est en ligne automatiquement.' },
   { q: 'Je n’ai pas encore de photos ou de logo.', a: 'Ce n’est pas bloquant : le site affiche des visuels aux couleurs de votre entreprise et le nom de votre société à la place du logo. Vous pourrez ajouter vos photos plus tard.' },
@@ -77,7 +78,7 @@ export default function Home() {
               </Button>
             </div>
             <p className="mt-5 text-xs tracking-wide text-muted">
-              Aperçu gratuit · {formatEuro(SITE_PRICE)} la 1re année, hébergement compris · puis {formatEuro(HOSTING_RENEWAL_PRICE)}/an
+              Aperçu gratuit · {formatEuro(SITE_PRICE)} la 1re année, hébergement compris · satisfait ou remboursé {GUARANTEE_DAYS} jours
             </p>
           </div>
 
@@ -181,6 +182,7 @@ export default function Home() {
                   <p>Hébergement compris la 1re année</p>
                   <p>Puis {formatEuro(HOSTING_RENEWAL_PRICE)} par an, sans engagement</p>
                   <p>Création et aperçu gratuits</p>
+                  <p className="font-semibold text-foreground">Satisfait ou remboursé {GUARANTEE_DAYS} jours</p>
                   <p className="text-xs text-muted">Réservé aux professionnels (SIRET demandé)</p>
                 </div>
                 <div className="mt-10">

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { pageMetadata } from '@/lib/seo';
 import LegalPage from '@/components/LegalPage';
-import { HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
+import { GUARANTEE_DAYS, HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
 
 export const metadata: Metadata = pageMetadata({
   title: 'Conditions générales de vente',
@@ -108,12 +108,20 @@ const sections = [
     ),
   },
   {
-    title: '10. Exécution immédiate',
+    title: '10. Exécution immédiate et garantie « satisfait ou remboursé »',
     body: (
-      <p>
-        Le Client demande la mise en ligne immédiate de son site dès le paiement. Le service étant réservé aux professionnels, aucun délai de rétractation ne
-        s’applique. Tant que le site n’est pas publié, le Client peut abandonner sa création à tout moment, sans frais.
-      </p>
+      <>
+        <p>
+          Le Client demande la mise en ligne immédiate de son site dès le paiement. Le service étant réservé aux professionnels, aucun délai légal de
+          rétractation ne s’applique. Tant que le site n’est pas publié, le Client peut abandonner sa création à tout moment, sans frais.
+        </p>
+        <p>
+          À titre commercial, le Prestataire offre une garantie <strong>« satisfait ou remboursé » de {GUARANTEE_DAYS} jours</strong> à compter de la mise
+          en ligne : si le site ne convient pas au Client, il peut demander le remboursement intégral du prix de la publication ({formatEuro(SITE_PRICE)}) en
+          écrivant à thomas@tommy-studio.pro, sans avoir à se justifier. Le remboursement est effectué sur le moyen de paiement utilisé, sous quelques
+          jours, et le site est alors mis hors ligne. Cette garantie ne s’applique pas au renouvellement de l’hébergement.
+        </p>
+      </>
     ),
   },
   {

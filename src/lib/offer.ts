@@ -1,5 +1,7 @@
 export const SITE_PRICE = 99; // € TTC, paiement unique à la publication
 export const HOSTING_RENEWAL_PRICE = 39; // €/an, à partir de la 2e année
+/** Garantie commerciale « satisfait ou remboursé », en jours après la mise en ligne */
+export const GUARANTEE_DAYS = 14;
 export const formatEuro = (amount: number) => `${amount} €`;
 
 /** Lien de paiement Stripe (99 €) ; le webhook met le site en ligne dès le paiement confirmé */

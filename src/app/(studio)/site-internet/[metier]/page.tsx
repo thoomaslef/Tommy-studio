@@ -6,7 +6,7 @@ import { DEMOS } from '@/site-engine/demos';
 import { Icon } from '@/site-engine/icons';
 import { TRADES, TRADE_IDS, isTradeId } from '@/site-engine/trades';
 import type { TradeId } from '@/site-engine/types';
-import { HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
+import { GUARANTEE_DAYS, HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
 import { pageMetadata } from '@/lib/seo';
 
 export const dynamicParams = false;
@@ -40,7 +40,7 @@ export default async function TradePage({ params }: { params: Promise<{ metier: 
     },
     {
       q: `Combien coûte un site internet de ${name} ?`,
-      a: `${formatEuro(SITE_PRICE)} à la publication, hébergement compris la première année, puis ${formatEuro(HOSTING_RENEWAL_PRICE)} par an sans engagement. La création et l’aperçu sont gratuits : vous ne payez que si le site vous plaît.`,
+      a: `${formatEuro(SITE_PRICE)} à la publication, hébergement compris la première année, puis ${formatEuro(HOSTING_RENEWAL_PRICE)} par an sans engagement. La création et l’aperçu sont gratuits : vous ne payez que si le site vous plaît, et vous êtes remboursé si besoin pendant ${GUARANTEE_DAYS} jours après la mise en ligne.`,
     },
     {
       q: 'Combien de temps faut-il ?',

@@ -183,3 +183,7 @@ Reste à faire (lots suivants) : anti-abus (limite d'envois de photos, pare-feu)
 - Qualité : 18 tests automatiques (`npm test` : SIRET, adresses, signature Stripe, chiffrement du lien, nettoyage des saisies) et vérifications GitHub à chaque envoi (types, lint, tests, build).
 
 Reste : Sentry (alertes d'erreurs), vraies références clients, bouton WhatsApp, garantie, Vercel Pro (décisions de Thomas).
+
+## 12. Garantie « satisfait ou remboursé » (28 octobre 2026)
+
+14 jours après la mise en ligne (`GUARANTEE_DAYS` dans `src/lib/offer.ts`), remboursement intégral des 99 € sur simple demande par email ou WhatsApp. Affichée sur l'accueil, la FAQ, les pages métier, le configurateur (avant le paiement), l'email au client et l'article 10 des CGV. Hors renouvellement. Procédure : rembourser depuis Stripe (Paiements → paiement → Rembourser, les frais Stripe ~1,75 € ne sont pas restitués), puis passer le site en `offline` (le demander à Claude). Pas de bouton automatique : à ajouter si les demandes deviennent fréquentes.

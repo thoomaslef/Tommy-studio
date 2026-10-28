@@ -7,7 +7,7 @@ import { CERTIFICATIONS, MAX_PHOTOS, MAX_REVIEWS, MAX_SERVICES, draftToSiteData,
 import { TRADES, TRADE_IDS } from '@/site-engine/trades';
 import type { SiteReview, SiteService, TemplateId, TradeId } from '@/site-engine/types';
 import { DRAFT_STORAGE_KEY } from '../CreerStart';
-import { HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
+import { GUARANTEE_DAYS, HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
 import { liveSiteUrl } from '@/lib/live-site';
 import { whatsappUrl } from '@/lib/contact';
 import { isValidSiret, siretDigits } from '@/lib/siret';
@@ -153,6 +153,9 @@ function PublishBox({ token, missing, defaultEmail, businessName }: { token: str
       <p className="mt-1 text-sm text-muted">
         <strong className="text-foreground">{formatEuro(SITE_PRICE)}</strong> à la publication, hébergement inclus la première année, puis {formatEuro(HOSTING_RENEWAL_PRICE)}/an sans engagement.
         Paiement sécurisé par carte bancaire, votre site est en ligne aussitôt.
+      </p>
+      <p className="mt-3 rounded-xl border border-accent/25 bg-accent/10 px-4 py-3 text-sm font-semibold text-foreground">
+        ✓ Satisfait ou remboursé {GUARANTEE_DAYS} jours après la mise en ligne
       </p>
       {address && (
         <p className="mt-3 rounded-xl bg-background/60 px-4 py-3 text-sm text-muted">
