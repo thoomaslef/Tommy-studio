@@ -103,7 +103,9 @@ const sections = [
     body: (
       <p>
         Le Client reste propriétaire de ses contenus (textes, photos, logo). Les modèles, mises en page et éléments graphiques fournis par Tommy Studio
-        restent la propriété du Prestataire, qui en concède au Client un droit d’utilisation pour toute la durée de l’hébergement.
+        restent la propriété du Prestataire, qui en concède au Client un droit d’utilisation pour son site. Le Client peut à tout moment télécharger une
+        copie complète de son site depuis son lien privé et l’héberger où il le souhaite : le droit d’utiliser la mise en page pour ce site est alors
+        conservé sans limite de durée, sans droit de revente ni de réutilisation pour d’autres sites.
       </p>
     ),
   },

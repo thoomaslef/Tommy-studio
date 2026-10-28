@@ -99,7 +99,7 @@ export function Btn({
 }
 
 export function SiteBanner({ mode, trade }: { mode: SiteMode; trade: SiteData['trade'] }) {
-  if (mode === 'live') return null;
+  if (mode === 'live' || mode === 'export') return null;
   if (mode === 'preview') {
     return <div className="bg-neutral-900 px-4 py-2 text-center text-xs font-semibold text-white">Aperçu de votre site — non publié</div>;
   }

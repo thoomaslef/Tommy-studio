@@ -54,4 +54,5 @@ export type SiteData = {
   };
 };
 
-export type SiteMode = 'live' | 'preview' | 'demo';
+/** export : copie statique du site téléchargée par le client (pas de formulaire en ligne, pas de bandeau) */
+export type SiteMode = 'live' | 'preview' | 'demo' | 'export';

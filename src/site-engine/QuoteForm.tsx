@@ -14,6 +14,29 @@ export default function QuoteForm({ data, mode }: { data: SiteData; mode: SiteMo
   const [error, setError] = useState('');
   if (!data.email) return null;
 
+  // Copie téléchargée par le client : pas de serveur pour recevoir le formulaire, on propose l'email
+  if (mode === 'export') {
+    return (
+      <section id="devis" className="scroll-mt-20 px-5 py-16">
+        <div className="mx-auto max-w-2xl rounded-(--s-radius) border border-(--s-border) bg-(--s-surface) p-6 text-center sm:p-10">
+          <h2 className="s-heading text-3xl">{data.freeQuote !== false ? 'Demandez votre devis gratuit' : 'Écrivez-nous'}</h2>
+          <p className="mt-2 text-(--s-muted)">Décrivez votre besoin, {data.businessName} vous recontacte rapidement.</p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <a
+              href={`mailto:${data.email}?subject=${encodeURIComponent(`Demande de devis — ${data.businessName}`)}`}
+              className="rounded-(--s-btn-radius) bg-(--s-primary) px-6 py-4 font-bold text-(--s-primary-ink)"
+            >
+              Envoyer un email
+            </a>
+            <a href={telHref(data.phone)} className="rounded-(--s-btn-radius) border border-(--s-border) px-6 py-4 font-bold">
+              Appeler {data.phone}
+            </a>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');

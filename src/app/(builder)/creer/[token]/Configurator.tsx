@@ -232,6 +232,13 @@ function LiveBox({ url, token }: { url: string; token: string }) {
           <span className="mt-1 block text-xs text-muted">Votre site sur votre-entreprise.fr (facultatif).</span>
         </a>
       </div>
+      <p className="mt-4 text-xs text-muted">
+        Votre site vous appartient :{' '}
+        <a href={`/creer/${token}/heberger`} className="font-semibold text-accent-light underline">
+          télécharger une copie et l’héberger moi-même
+        </a>
+        .
+      </p>
     </div>
   );
 }

@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
       // Pages portant le lien privé dans l'adresse : jamais transmis aux sites externes (Stripe, Google…)
       { source: '/creer/:token', headers: [{ key: 'Referrer-Policy', value: 'no-referrer' }] },
       { source: '/apercu/:id', headers: [{ key: 'Referrer-Policy', value: 'no-referrer' }] },
+      // Source de l'export ZIP : jamais indexée (la copie du client l'est, pas cette page)
+      { source: '/export/:id', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] },
     ];
   },
   // Anciennes pages de l'offre précédente : on renvoie vers leur équivalent actuel
