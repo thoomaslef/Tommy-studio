@@ -57,15 +57,15 @@ export default function Footer() {
 
           {/* Services — 2 cols */}
           <div className="lg:col-span-2">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/60">
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/60">
               Services
-            </h3>
+            </h2>
             <ul className="mt-6 space-y-4">
               {footerLinks.services.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="hover-underline text-sm text-muted transition-colors duration-300 hover:text-foreground"
+                    className="inline-block py-1.5 hover-underline text-sm text-muted transition-colors duration-300 hover:text-foreground"
                   >
                     {link.label}
                   </Link>
@@ -76,15 +76,15 @@ export default function Footer() {
 
           {/* Navigation — 2 cols */}
           <div className="lg:col-span-2">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/60">
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/60">
               Navigation
-            </h3>
+            </h2>
             <ul className="mt-6 space-y-4">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="hover-underline text-sm text-muted transition-colors duration-300 hover:text-foreground"
+                    className="inline-block py-1.5 hover-underline text-sm text-muted transition-colors duration-300 hover:text-foreground"
                   >
                     {link.label}
                   </Link>
@@ -95,22 +95,22 @@ export default function Footer() {
 
           {/* Légal — 2 cols */}
           <div className="lg:col-span-2">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/60">
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/60">
               Légal
-            </h3>
+            </h2>
             <ul className="mt-6 space-y-4">
               <li>
-                <Link href="/mentions-legales" className="hover-underline text-sm text-muted transition-colors duration-300 hover:text-foreground">
+                <Link href="/mentions-legales" className="inline-block py-1.5 hover-underline text-sm text-muted transition-colors duration-300 hover:text-foreground">
                   Mentions légales
                 </Link>
               </li>
               <li>
-                <Link href="/politique-de-confidentialite" className="hover-underline text-sm text-muted transition-colors duration-300 hover:text-foreground">
+                <Link href="/politique-de-confidentialite" className="inline-block py-1.5 hover-underline text-sm text-muted transition-colors duration-300 hover:text-foreground">
                   Politique de confidentialité
                 </Link>
               </li>
               <li>
-                <Link href="/cgv" className="hover-underline text-sm text-muted transition-colors duration-300 hover:text-foreground">
+                <Link href="/cgv" className="inline-block py-1.5 hover-underline text-sm text-muted transition-colors duration-300 hover:text-foreground">
                   Conditions de vente
                 </Link>
               </li>
@@ -119,22 +119,22 @@ export default function Footer() {
 
           {/* Contact — 2 cols */}
           <div className="lg:col-span-2">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/60">
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/60">
               Contact
-            </h3>
+            </h2>
             <ul className="mt-6 space-y-4">
               <li>
-                <a href="mailto:thomas@tommy-studio.pro" className="text-sm text-muted transition-colors hover:text-foreground hover-underline">
+                <a href="mailto:thomas@tommy-studio.pro" className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-foreground hover-underline">
                   thomas@tommy-studio.pro
                 </a>
               </li>
               <li>
-                <a href="tel:+33612941125" className="text-sm text-muted transition-colors hover:text-foreground hover-underline">
+                <a href="tel:+33612941125" className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-foreground hover-underline">
                   +33 6 12 94 11 25
                 </a>
               </li>
               <li>
-                <a href={whatsappUrl()} target="_blank" rel="noopener" className="text-sm text-muted transition-colors hover:text-foreground hover-underline">
+                <a href={whatsappUrl()} target="_blank" rel="noopener" className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-foreground hover-underline">
                   WhatsApp
                 </a>
               </li>

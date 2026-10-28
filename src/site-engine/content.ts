@@ -27,7 +27,8 @@ export function stats(d: SiteData): Stat[] {
   if (d.radiusKm) out.push({ value: `${d.radiusKm} km`, label: 'de rayon d’intervention' });
   else if (d.zone.length > 1) out.push({ value: `${d.zone.length}`, label: 'communes desservies' });
   const rated = d.reviews.filter((r) => r.rating);
-  if (rated.length) {
+  // Une note affichée sur un ou deux avis dessert plus qu'elle ne sert : à partir de 3 avis
+  if (rated.length >= 3) {
     const avg = rated.reduce((s, r) => s + (r.rating ?? 0), 0) / rated.length;
     out.push({ value: avg.toFixed(1).replace('.', ','), label: `note moyenne (${rated.length} avis)` });
   }

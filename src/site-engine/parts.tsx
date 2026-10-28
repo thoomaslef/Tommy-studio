@@ -63,7 +63,7 @@ export function Photo({
 
 export function Stars({ rating = 5 }: { rating?: number }) {
   return (
-    <div className="flex gap-0.5 text-(--s-accent)" aria-label={`${rating} sur 5`}>
+    <div role="img" className="flex gap-0.5 text-(--s-accent)" aria-label={`${rating} sur 5`}>
       {Array.from({ length: 5 }, (_, i) => (
         <Icon key={i} name="star" fill className={`h-4 w-4 ${i < Math.round(rating) ? '' : 'opacity-25'}`} />
       ))}

@@ -8,7 +8,18 @@ import type { TradeId } from '@/site-engine/types';
 import { DRAFT_STORAGE_KEY } from '@/lib/draft-storage';
 
 
-const noSubscribe = () => () => {};
+const subscribe = (notify: () => void) => {
+  window.addEventListener('ts-draft', notify);
+  return () => window.removeEventListener('ts-draft', notify);
+};
+const forgetSavedToken = () => {
+  try {
+    localStorage.removeItem(DRAFT_STORAGE_KEY);
+  } catch {
+    // stockage indisponible
+  }
+  window.dispatchEvent(new Event('ts-draft'));
+};
 const readSavedToken = () => {
   try {
     return localStorage.getItem(DRAFT_STORAGE_KEY);
@@ -22,7 +33,7 @@ export default function CreerStart({ suggested }: { suggested?: TradeId }) {
   const [loading, setLoading] = useState<TradeId | null>(null);
   const [error, setError] = useState('');
   // Lien privé gardé sur cet appareil (null côté serveur et en navigation privée)
-  const resume = useSyncExternalStore(noSubscribe, readSavedToken, () => null);
+  const resume = useSyncExternalStore(subscribe, readSavedToken, () => null);
   const [website, setWebsite] = useState('');
 
   const start = async (trade: TradeId) => {
@@ -62,9 +73,14 @@ export default function CreerStart({ suggested }: { suggested?: TradeId }) {
         {resume && (
           <div className="mx-auto mt-10 flex max-w-2xl flex-col items-center justify-between gap-3 rounded-2xl border border-accent/25 bg-accent/5 px-5 py-4 text-sm sm:flex-row">
             <span className="text-foreground">Vous avez déjà commencé un site sur cet appareil.</span>
-            <a href={`/creer/${resume}`} className="rounded-xl bg-accent-dark px-5 py-2.5 font-bold text-white">
-              Reprendre mon site
-            </a>
+            <div className="flex items-center gap-3">
+              <a href={`/creer/${resume}`} className="rounded-xl bg-accent-dark px-5 py-2.5 font-bold text-white">
+                Reprendre mon site
+              </a>
+              <button type="button" onClick={forgetSavedToken} className="text-xs font-semibold text-muted underline hover:text-foreground">
+                Oublier ce site
+              </button>
+            </div>
           </div>
         )}
 

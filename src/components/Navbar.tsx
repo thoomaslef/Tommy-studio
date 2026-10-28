@@ -111,6 +111,7 @@ export default function Navbar() {
             onClick={() => setIsOpen(!isOpen)}
             className="relative z-50 flex h-10 w-10 items-center justify-center rounded-lg border border-border/50 bg-surface/50 backdrop-blur-sm md:hidden"
             aria-label={isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+            aria-expanded={isOpen}
           >
             <div className="flex flex-col items-center justify-center gap-[5px]">
               <motion.span
