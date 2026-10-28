@@ -33,3 +33,17 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
 
 export const notifyOwner = (subject: string, html: string, attachments?: { filename: string; content: string }[]) =>
   sendEmail({ to: OWNER_EMAIL, subject, html, attachments });
+
+const lastSent = new Map<string, number>();
+
+/**
+ * Alerte à Thomas, au plus une fois par heure pour une même clé (une panne répétée ne doit pas inonder la boîte mail).
+ * Le compteur vit en mémoire de l'instance : suffisant pour limiter le bruit, sans garantie absolue.
+ */
+export async function notifyOwnerOnce(key: string, subject: string, html: string, ttlMs = 3600e3) {
+  const now = Date.now();
+  if ((lastSent.get(key) ?? 0) > now - ttlMs) return false;
+  lastSent.set(key, now);
+  if (lastSent.size > 200) for (const [k, t] of lastSent) if (t < now - ttlMs) lastSent.delete(k);
+  return notifyOwner(subject, html);
+}

@@ -5,7 +5,7 @@ import { liveSiteUrl } from '@/lib/live-site';
 import { revalidateSite } from '@/lib/revalidate';
 import { getEditTokenEnc, publishPaidProject, renewHosting, type ProjectRow } from '@/lib/supabase-server';
 import { decryptToken } from '@/lib/token-crypto';
-import { esc, notifyOwner, sendEmail } from '@/lib/emails';
+import { esc, notifyOwner, notifyOwnerOnce, sendEmail } from '@/lib/emails';
 import { CONTACT_EMAIL, CONTACT_PHONE } from '@/lib/contact';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -88,7 +88,13 @@ export async function POST(request: Request) {
       await notifyOwner('⚠ Site payé mais non publié', `<p>Projet ${esc(projectId)}, session ${esc(session.id)} : aucune adresse disponible. À publier à la main.</p>`);
       return Response.json({ received: true });
     }
-    // Erreur temporaire : Stripe réessaiera automatiquement (et prévient Thomas si ça dure)
+    // Erreur temporaire : Stripe réessaiera automatiquement ; Thomas est prévenu (une fois par heure) pour ne pas laisser un paiement sans site
+    await notifyOwnerOnce(
+      'webhook-error',
+      '⚠ Un paiement n’a pas pu être traité',
+      `<p>Le webhook Stripe a échoué pour le projet ${esc(projectId)} (session ${esc(session.id)}) : ${esc(error instanceof Error ? error.message : String(error))}.</p>
+       <p>Stripe réessaie automatiquement pendant plusieurs jours. Si le site n’est pas en ligne d’ici peu, demandez à Claude de regarder.</p>`,
+    );
     return new Response('Erreur serveur', { status: 500 });
   }
 }
