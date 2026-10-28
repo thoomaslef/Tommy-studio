@@ -27,6 +27,7 @@ const nextConfig: NextConfig = {
       { source: '/start-project', destination: '/creer', permanent: true },
       { source: '/commande/:path*', destination: '/creer', permanent: true },
       { source: '/envoi-fichiers', destination: '/creer', permanent: true },
+      { source: '/portfolio', destination: '/', permanent: true },
       { source: '/services', destination: '/#tarif', permanent: true },
       { source: '/creation-site-web-caen', destination: '/', permanent: true },
       { source: '/creation-site-web-normandie', destination: '/', permanent: true },

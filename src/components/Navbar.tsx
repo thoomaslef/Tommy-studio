@@ -9,7 +9,6 @@ const navLinks = [
   { href: '/', label: 'Accueil' },
   { href: '/modeles', label: 'Exemples' },
   { href: '/#tarif', label: 'Tarif' },
-  { href: '/portfolio', label: 'Réalisations' },
 ];
 
 export default function Navbar() {

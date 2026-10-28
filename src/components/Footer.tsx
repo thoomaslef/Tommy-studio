@@ -11,7 +11,6 @@ const footerLinks = {
   company: [
     { href: '/', label: 'Accueil' },
     { href: '/#comment', label: 'Comment ça marche' },
-    { href: '/portfolio', label: 'Réalisations sur mesure' },
   ],
 };
 

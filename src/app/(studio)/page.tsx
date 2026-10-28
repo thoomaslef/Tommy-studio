@@ -221,9 +221,6 @@ export default function Home() {
                 <a href="mailto:thomas@tommy-studio.pro" className="rounded-full border border-border/50 px-5 py-2.5 text-muted hover:text-foreground">
                   thomas@tommy-studio.pro
                 </a>
-                <Link href="/portfolio" className="rounded-full border border-border/50 px-5 py-2.5 text-muted hover:text-foreground">
-                  Mes réalisations sur mesure
-                </Link>
               </div>
             </AnimatedSection>
           </div>
