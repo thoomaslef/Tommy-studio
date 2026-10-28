@@ -1,5 +1,5 @@
 import { getSupabase } from '@/lib/supabase-server';
-import { modifiedLiveSites, runCleanup, runRenewals, sendDailyReport } from '@/lib/daily-jobs';
+import { customDomainsReport, modifiedLiveSites, runCleanup, runRenewals, sendDailyReport } from '@/lib/daily-jobs';
 import { esc, notifyOwner } from '@/lib/emails';
 
 export const maxDuration = 60;
@@ -20,6 +20,7 @@ export async function GET(request: Request) {
     ['renouvellements', runRenewals],
     ['nettoyage', runCleanup],
     ['sites modifiés', modifiedLiveSites],
+    ['domaines', customDomainsReport],
   ] as const) {
     try {
       events.push(...(await job()));

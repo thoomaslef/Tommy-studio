@@ -6,23 +6,26 @@ import { siteMetadata } from '@/site-engine/seo';
 import { getLiveProjectBySlug } from '@/lib/supabase-server';
 import { siteFromProject } from '@/lib/site-from-project';
 import { SLUG_FORMAT, liveSiteUrl } from '@/lib/live-site';
+import { customDomainUrl } from '@/lib/domain';
 
-// Site client publié : servi sur www.tommy-studio.pro/s/<slug> ou <slug>.tommy-studio.pro
+// Site client publié : servi sur <slug>.tommy-studio.pro (ou www.tommy-studio.pro/s/<slug>)
 const loadSite = cache(async (slug: string) => {
   if (!SLUG_FORMAT.test(slug)) return null;
   const project = await getLiveProjectBySlug(slug);
-  return project ? siteFromProject(project) : null;
+  return project ? { project, data: await siteFromProject(project) } : null;
 });
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const data = await loadSite(slug);
-  if (!data) return {};
-  return { ...siteMetadata(data, 'live'), alternates: { canonical: liveSiteUrl(slug) } };
+  const found = await loadSite(slug);
+  if (!found) return {};
+  // Une fois le domaine du client actif, c'est lui l'adresse de référence pour Google
+  const canonical = found.project.custom_domain && found.project.custom_domain_status === 'active' ? customDomainUrl(found.project.custom_domain) : liveSiteUrl(slug);
+  return { ...siteMetadata(found.data, 'live'), alternates: { canonical }, other: { 'ts-site': slug } };
 }
 
 export default async function LiveSitePage({ params }: { params: Promise<{ slug: string }> }) {
-  const data = await loadSite((await params).slug);
-  if (!data) notFound();
-  return <SiteRenderer data={data} mode="live" />;
+  const found = await loadSite((await params).slug);
+  if (!found) notFound();
+  return <SiteRenderer data={found.data} mode="live" />;
 }

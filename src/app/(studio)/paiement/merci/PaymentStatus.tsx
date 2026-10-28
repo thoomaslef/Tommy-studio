@@ -85,6 +85,18 @@ export default function PaymentStatus() {
               </a>
             )}
           </div>
+          {state.editToken && (
+            <div className="mt-6 grid gap-3 text-left sm:grid-cols-2">
+              <a href={`/creer/${state.editToken}/google`} className="rounded-xl border border-border/50 p-4 hover:border-accent/50">
+                <span className="block text-sm font-bold text-foreground">Étape suivante : ma fiche Google →</span>
+                <span className="mt-1 block text-xs text-muted">Apparaître sur Google Maps, en 15 minutes.</span>
+              </a>
+              <a href={`/creer/${state.editToken}/domaine`} className="rounded-xl border border-border/50 p-4 hover:border-accent/50">
+                <span className="block text-sm font-bold text-foreground">Mon nom de domaine →</span>
+                <span className="mt-1 block text-xs text-muted">Facultatif : votre-entreprise.fr</span>
+              </a>
+            </div>
+          )}
           <p className="mt-6 text-xs leading-relaxed text-muted">
             Vous venez de recevoir un email avec l’adresse de votre site et votre lien privé pour le modifier à tout moment. Pensez à vérifier vos spams.
           </p>

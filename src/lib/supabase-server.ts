@@ -33,6 +33,9 @@ export type ProjectRow = {
   stripe_session_id: string | null;
   siret_check: SiretCheck | null;
   hosting_until: string | null;
+  custom_domain: string | null;
+  custom_domain_status: 'pending' | 'active' | null;
+  custom_domain_notified_at: string | null;
   paid_at: string | null;
   publish_requested_at: string | null;
   published_at: string | null;
@@ -40,7 +43,7 @@ export type ProjectRow = {
   updated_at: string;
 };
 
-const PROJECT_COLUMNS = 'id, slug, status, plan, options, data, contact_name, contact_email, stripe_session_id, siret_check, hosting_until, paid_at, publish_requested_at, published_at, created_at, updated_at';
+const PROJECT_COLUMNS = 'id, slug, status, plan, options, data, contact_name, contact_email, stripe_session_id, siret_check, hosting_until, custom_domain, custom_domain_status, custom_domain_notified_at, paid_at, publish_requested_at, published_at, created_at, updated_at';
 
 /** Le lien privé du client contient un jeton ; seule son empreinte est stockée. */
 export const hashToken = (token: string) => createHash('sha256').update(token).digest('hex');
@@ -355,4 +358,42 @@ export function renewalUrl(project: Pick<ProjectRow, 'id' | 'contact_email'>, li
   if (project.contact_email) url.searchParams.set('prefilled_email', project.contact_email);
   url.searchParams.set('locale', 'fr');
   return url.toString();
+}
+
+/** Site publié servi sur le domaine personnalisé du client (actif ou en cours de branchement) */
+export async function getLiveProjectByDomain(domain: string): Promise<ProjectRow | null> {
+  const db = getSupabase();
+  if (!db) return null;
+  const { data, error } = await db.from('site_projects').select(PROJECT_COLUMNS).eq('custom_domain', domain).eq('status', 'live').maybeSingle();
+  if (error) throw error;
+  return (data as ProjectRow) ?? null;
+}
+
+/** Enregistre le domaine du client ; renvoie false s'il est déjà utilisé par un autre site */
+export async function setCustomDomain(id: string, domain: string | null): Promise<boolean> {
+  const db = getSupabase();
+  if (!db) throw new Error('Supabase non configuré');
+  const { error } = await db
+    .from('site_projects')
+    .update({
+      custom_domain: domain,
+      custom_domain_status: domain ? 'pending' : null,
+      custom_domain_requested_at: domain ? new Date().toISOString() : null,
+      custom_domain_notified_at: null,
+    })
+    .eq('id', id)
+    .eq('status', 'live');
+  if (error?.code === '23505') return false;
+  if (error) throw error;
+  return true;
+}
+
+export async function markCustomDomain(id: string, patch: { status?: 'pending' | 'active'; notified?: boolean }) {
+  const db = getSupabase();
+  if (!db) throw new Error('Supabase non configuré');
+  const update: Record<string, unknown> = {};
+  if (patch.status) update.custom_domain_status = patch.status;
+  if (patch.notified) update.custom_domain_notified_at = new Date().toISOString();
+  const { error } = await db.from('site_projects').update(update).eq('id', id);
+  if (error) throw error;
 }

@@ -4,6 +4,7 @@ import { esc, notifyOwner, sendEmail } from './emails';
 import { liveSiteUrl } from './live-site';
 import { HOSTING_RENEWAL_PRICE, STRIPE_RENEWAL_LINK, formatEuro } from './offer';
 import { CONTACT_EMAIL, CONTACT_PHONE } from './contact';
+import { checkServing } from './domain-check';
 
 const DAY = 86400e3;
 const COLUMNS = 'id, slug, status, data, contact_name, contact_email, hosting_until, offline_at, last_reminder_at, published_at, updated_at';
@@ -122,6 +123,30 @@ export async function modifiedLiveSites(now = Date.now()) {
     // Les rappels envoyés par cette tâche modifient aussi la ligne : ce n'est pas une modification du site
     .filter((r) => !r.last_reminder_at || new Date(r.updated_at).getTime() - new Date(r.last_reminder_at).getTime() > 60e3)
     .map((r) => `Modifié : ${siteName(r)} — <a href="${liveSiteUrl(r.slug!)}">${liveSiteUrl(r.slug!)}</a> (tél. affiché : ${esc(r.data.phone ?? '?')})`);
+}
+
+/** Domaines personnalisés : à brancher (DNS prêts), en attente des DNS du client, et contrôle de ceux déjà actifs */
+export async function customDomainsReport() {
+  const { data, error } = await db()
+    .from('site_projects')
+    .select('id, slug, data, custom_domain, custom_domain_status, custom_domain_requested_at, custom_domain_notified_at')
+    .eq('status', 'live')
+    .not('custom_domain', 'is', null);
+  if (error) throw error;
+  const report: string[] = [];
+  for (const r of data ?? []) {
+    const name = esc(r.data?.businessName ?? r.slug);
+    if (r.custom_domain_status === 'pending') {
+      report.push(
+        r.custom_domain_notified_at
+          ? `🌐 Domaine à brancher dans Vercel : <strong>${esc(r.custom_domain)}</strong> (${name}) — DNS prêts, à demander à Claude : « branche les domaines en attente »`
+          : `Domaine en attente des DNS du client : ${esc(r.custom_domain)} (${name}), demandé le ${frDate(r.custom_domain_requested_at)}`,
+      );
+    } else if (r.custom_domain_status === 'active' && !(await checkServing(r.custom_domain, r.slug))) {
+      report.push(`⚠ Le site ne répond plus sur son domaine : ${esc(r.custom_domain)} (${name}) — DNS modifiés ou domaine expiré ?`);
+    }
+  }
+  return report;
 }
 
 const PAGE = 1000;

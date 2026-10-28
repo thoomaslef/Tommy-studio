@@ -23,12 +23,19 @@ create table public.site_projects (
   hosting_until timestamptz,                    -- fin de la période d'hébergement payée
   offline_at timestamptz,                       -- date de mise hors ligne (non-renouvellement)
   siret_check jsonb,                            -- résultat de la vérification du SIRET
+  custom_domain text,                           -- domaine du client sans www (ex. durand-plomberie.fr)
+  custom_domain_status text,                    -- pending : demandé ; active : le site répond sur ce domaine
+  custom_domain_requested_at timestamptz,
+  custom_domain_notified_at timestamptz,        -- Thomas prévenu que les DNS sont prêts
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 create index site_projects_status_created_idx on public.site_projects (status, created_at);
 create index site_projects_ip_created_idx on public.site_projects (ip_hash, created_at);
 create index site_projects_hosting_idx on public.site_projects (status, hosting_until);
+create unique index site_projects_custom_domain_key on public.site_projects (custom_domain) where custom_domain is not null;
+alter table public.site_projects add constraint site_projects_custom_domain_check check (custom_domain is null or custom_domain ~ '^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.[a-z]{2,24}$');
+alter table public.site_projects add constraint site_projects_custom_domain_status_check check (custom_domain_status is null or custom_domain_status in ('pending', 'active'));
 
 create table public.site_assets (
   id uuid primary key default gen_random_uuid(),
@@ -62,3 +69,26 @@ alter table public.site_assets enable row level security;
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('site-media', 'site-media', true, 4194304, array['image/jpeg', 'image/png', 'image/webp'])
 on conflict (id) do update set file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
+
+-- Paiements Stripe (publication et renouvellements) ; un par session, sert d'anti-doublon au webhook
+create table public.site_payments (
+  id uuid primary key default gen_random_uuid(),
+  stripe_session_id text not null unique,
+  project_id uuid references public.site_projects (id) on delete set null,
+  kind text not null check (kind in ('publication', 'renouvellement')),
+  amount_cents integer,
+  created_at timestamptz not null default now()
+);
+alter table public.site_payments enable row level security;
+
+-- Demandes de devis reçues par les sites clients : métadonnées seulement (le message part par email, jamais stocké)
+create table public.site_quote_requests (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references public.site_projects (id) on delete cascade,
+  ip_hash text,
+  delivered boolean not null default false,
+  created_at timestamptz not null default now()
+);
+create index site_quote_requests_project_idx on public.site_quote_requests (project_id, created_at);
+create index site_quote_requests_ip_idx on public.site_quote_requests (ip_hash, created_at);
+alter table public.site_quote_requests enable row level security;

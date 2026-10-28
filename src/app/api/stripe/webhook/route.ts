@@ -110,7 +110,9 @@ async function emailClient(project: ProjectRow, url: string, origin: string) {
           ? `<p><strong>Pour modifier votre site</strong> (textes, services, photos), utilisez votre lien privé : <a href="${editUrl}" style="color:#4f46e5;">modifier mon site</a>. Gardez cet email : ce lien est personnel, ne le partagez pas. Les changements sont en ligne aussitôt.</p>`
           : `<p>Pour modifier votre site, reprenez-le depuis l’appareil qui a servi à le créer, ou répondez à cet email.</p>`
       }
-      <p><strong>Prochaine étape conseillée :</strong> ajoutez cette adresse sur votre fiche Google (Google Business Profile), rubrique « Site Web ». C’est ce qui vous rendra visible dans Google Maps.</p>
+      <p><strong>Prochaine étape conseillée : votre fiche Google.</strong> C’est elle qui vous rend visible sur Google Maps quand quelqu’un cherche un artisan près de chez lui.
+      ${editUrl ? `J’ai préparé tous les textes à copier-coller : <a href="${editUrl}/google" style="color:#4f46e5;">mon guide pour créer ma fiche Google</a> (15 minutes).` : 'Ajoutez l’adresse de votre site à votre fiche Google Business Profile.'}</p>
+      ${editUrl ? `<p>Si vous le souhaitez, vous pouvez aussi <a href="${editUrl}/domaine" style="color:#4f46e5;">brancher votre propre nom de domaine</a> (par exemple votre-entreprise.fr, environ 10 € par an chez le fournisseur de votre choix).</p>` : ''}
       <p>Votre facture vous est envoyée séparément par notre prestataire de paiement, Stripe.</p>
       <p><strong>Garantie satisfait ou remboursé :</strong> si le site ne vous convient pas, répondez à cet email dans les ${GUARANTEE_DAYS} jours qui suivent, vous êtes remboursé sans justification.</p>
       <p>Une question ? Répondez simplement à cet email, ou appelez-moi au ${CONTACT_PHONE}.</p>

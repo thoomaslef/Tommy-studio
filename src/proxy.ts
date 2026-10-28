@@ -12,7 +12,14 @@ export function proxy(request: NextRequest) {
     const old = SUBDOMAINS_ENABLED && pathname.match(/^\/s\/([a-z0-9-]+)\/?$/);
     return old ? NextResponse.redirect(`https://${old[1]}.${SITES_DOMAIN}/`, 308) : NextResponse.next();
   }
-  if (!host.endsWith(`.${SITES_DOMAIN}`)) return NextResponse.next();
+  // Adresses techniques de Vercel et développement local : comportement normal
+  if (host.endsWith('.vercel.app') || host === 'localhost') return NextResponse.next();
+  // Nom de domaine personnalisé d'un client : la page /domaine/<host> retrouve son site
+  if (!host.endsWith(`.${SITES_DOMAIN}`)) {
+    if (!/^[a-z0-9.-]+$/.test(host)) return NextResponse.next();
+    // Une seule page : le reste renvoie vers le studio
+    return pathname === '/' ? NextResponse.rewrite(new URL(`/domaine/${host}`, request.url)) : NextResponse.redirect(new URL(pathname, `https://www.${SITES_DOMAIN}`));
+  }
   const slug = host.slice(0, -SITES_DOMAIN.length - 1);
   if (!/^[a-z0-9-]+$/.test(slug)) return NextResponse.next();
   if (pathname === '/') return NextResponse.rewrite(new URL(`/s/${slug}`, request.url));

@@ -213,14 +213,25 @@ function PublishBox({ token, missing, defaultEmail, businessName }: { token: str
   );
 }
 
-function LiveBox({ url }: { url: string }) {
+function LiveBox({ url, token }: { url: string; token: string }) {
   return (
     <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5 sm:p-6">
       <p className="text-lg font-bold text-foreground">Votre site est en ligne ✓</p>
       <p className="mt-1 text-sm text-muted">Chaque modification enregistrée est visible aussitôt sur votre site.</p>
-      <a href={url} target="_blank" rel="noopener" className="mt-4 block break-all rounded-xl bg-background/60 px-4 py-3 text-sm font-bold text-accent underline">
+      <a href={url} target="_blank" rel="noopener" className="mt-4 block break-all rounded-xl bg-background/60 px-4 py-3 text-sm font-bold text-accent-light underline">
         {url}
       </a>
+      <p className="mt-6 text-sm font-bold text-foreground">Pour être trouvé plus facilement</p>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <a href={`/creer/${token}/google`} className="rounded-xl border border-border/50 bg-background/40 p-4 text-left hover:border-accent/50">
+          <span className="block text-sm font-bold text-foreground">Ma fiche Google →</span>
+          <span className="mt-1 block text-xs text-muted">Apparaître sur Google Maps. Textes prêts à copier.</span>
+        </a>
+        <a href={`/creer/${token}/domaine`} className="rounded-xl border border-border/50 bg-background/40 p-4 text-left hover:border-accent/50">
+          <span className="block text-sm font-bold text-foreground">Mon nom de domaine →</span>
+          <span className="mt-1 block text-xs text-muted">Votre site sur votre-entreprise.fr (facultatif).</span>
+        </a>
+      </div>
     </div>
   );
 }
@@ -415,7 +426,7 @@ export default function Configurator({
           </button>
         </div>
       </div>
-      {liveUrl ? <LiveBox url={liveUrl} /> : status === 'draft' && <PublishBox token={token} missing={missing} defaultEmail={draft.email} businessName={draft.businessName} />}
+      {liveUrl ? <LiveBox url={liveUrl} token={token} /> : status === 'draft' && <PublishBox token={token} missing={missing} defaultEmail={draft.email} businessName={draft.businessName} />}
     </>
   );
 
