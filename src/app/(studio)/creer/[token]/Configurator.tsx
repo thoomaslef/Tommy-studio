@@ -9,6 +9,7 @@ import type { SiteReview, SiteService, TemplateId, TradeId } from '@/site-engine
 import { DRAFT_STORAGE_KEY } from '../CreerStart';
 import { HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
 import { liveSiteUrl } from '@/lib/live-site';
+import { whatsappUrl } from '@/lib/contact';
 import { isValidSiret, siretDigits } from '@/lib/siret';
 import { uploadPhoto, type AssetView } from './photo-upload';
 
@@ -185,6 +186,13 @@ function PublishBox({ token, missing, defaultEmail, businessName }: { token: str
       >
         {state === 'sending' ? 'Redirection vers le paiement…' : `Payer et publier mon site — ${formatEuro(SITE_PRICE)}`}
       </button>
+      <p className="mt-3 text-center text-xs text-muted">
+        Une question avant de payer ?{' '}
+        <a href={whatsappUrl('Bonjour Thomas, j’ai une question avant de publier mon site.')} target="_blank" rel="noopener" className="font-semibold text-accent-light underline">
+          WhatsApp
+        </a>{' '}
+        ou <a href="tel:+33612941125" className="font-semibold text-accent-light underline">06 12 94 11 25</a>
+      </p>
     </div>
   );
 }
@@ -352,19 +360,24 @@ export default function Configurator({
             </p>
             <h1 className="mt-2 text-2xl font-extrabold text-foreground sm:text-3xl">{draft.businessName || 'Votre site'}</h1>
           </div>
-          <p className="text-xs font-medium text-muted" aria-live="polite">
-            {locked
-              ? 'Site hors ligne : modifications désactivées'
-              : save === 'idle' && liveUrl
-                ? 'En ligne · vos modifications sont publiées aussitôt'
-              : save === 'saving'
-                ? 'Enregistrement…'
-                : save === 'saved'
-                  ? '✓ Enregistré automatiquement'
-                  : save === 'error'
-                    ? '⚠ Non enregistré, vérifiez votre connexion'
-                    : 'Sauvegarde automatique'}
-          </p>
+          <div className="flex flex-col gap-1 sm:items-end">
+            <p className="text-xs font-medium text-muted" aria-live="polite">
+              {locked
+                ? 'Site hors ligne : modifications désactivées'
+                : save === 'idle' && liveUrl
+                  ? 'En ligne · vos modifications sont publiées aussitôt'
+                : save === 'saving'
+                  ? 'Enregistrement…'
+                  : save === 'saved'
+                    ? '✓ Enregistré automatiquement'
+                    : save === 'error'
+                      ? '⚠ Non enregistré, vérifiez votre connexion'
+                      : 'Sauvegarde automatique'}
+            </p>
+            <a href={whatsappUrl('Bonjour Thomas, j’ai une question sur la création de mon site.')} target="_blank" rel="noopener" className="text-xs font-semibold text-accent-light underline">
+              Besoin d’aide ? Écrivez-moi sur WhatsApp
+            </a>
+          </div>
         </div>
         <ol className="mt-6 grid grid-cols-5 gap-2">
           {STEPS.map((s, i) => (

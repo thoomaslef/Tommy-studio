@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { TRADES, TRADE_IDS } from '@/site-engine/trades';
+import { whatsappUrl } from '@/lib/contact';
 
 const footerLinks = {
   services: [
@@ -130,6 +131,11 @@ export default function Footer() {
               <li>
                 <a href="tel:+33612941125" className="text-sm text-muted transition-colors hover:text-foreground hover-underline">
                   +33 6 12 94 11 25
+                </a>
+              </li>
+              <li>
+                <a href={whatsappUrl()} target="_blank" rel="noopener" className="text-sm text-muted transition-colors hover:text-foreground hover-underline">
+                  WhatsApp
                 </a>
               </li>
               <li className="text-sm text-muted">Caen, Normandie</li>

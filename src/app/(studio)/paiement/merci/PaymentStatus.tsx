@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { DRAFT_STORAGE_KEY } from '../../creer/CreerStart';
 import { liveSiteUrl } from '@/lib/live-site';
-import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_HREF } from '@/lib/contact';
+import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_HREF, whatsappUrl } from '@/lib/contact';
 
 type State = { kind: 'waiting' } | { kind: 'live'; url: string; editToken: string | null } | { kind: 'unknown' };
 
@@ -102,8 +102,12 @@ export default function PaymentStatus() {
         Une question ? Appelez-moi au{' '}
         <a href={CONTACT_PHONE_HREF} className="font-semibold text-accent-light underline">
           {CONTACT_PHONE}
+        </a>
+        , sur{' '}
+        <a href={whatsappUrl()} target="_blank" rel="noopener" className="font-semibold text-accent-light underline">
+          WhatsApp
         </a>{' '}
-        ou écrivez à{' '}
+        ou à{' '}
         <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-accent-light underline">
           {CONTACT_EMAIL}
         </a>

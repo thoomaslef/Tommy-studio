@@ -6,6 +6,7 @@ import SectionHeading from '@/components/SectionHeading';
 import AnimatedSection from '@/components/AnimatedSection';
 import { HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
 import { pageMetadata } from '@/lib/seo';
+import { whatsappUrl } from '@/lib/contact';
 
 export const metadata = pageMetadata({
   description: `Création de site internet pour artisans du bâtiment : plombier, électricien, maçon, couvreur… Votre site pro en 10 minutes, aperçu gratuit, ${formatEuro(SITE_PRICE)} la première année hébergement compris.`,
@@ -208,6 +209,12 @@ export default function Home() {
                 site professionnel sans rendez-vous et à petit prix. Une question ? C’est moi qui vous réponds.
               </p>
               <div className="mt-6 flex flex-wrap gap-3 text-sm">
+                <a href={whatsappUrl()} target="_blank" rel="noopener" className="rounded-full bg-[#1f8f4e] px-5 py-2.5 font-semibold text-white hover:bg-[#187a42]">
+                  Écrire sur WhatsApp
+                </a>
+                <a href="tel:+33612941125" className="rounded-full border border-border/50 px-5 py-2.5 text-muted hover:text-foreground">
+                  06 12 94 11 25
+                </a>
                 <a href="mailto:thomas@tommy-studio.pro" className="rounded-full border border-border/50 px-5 py-2.5 text-muted hover:text-foreground">
                   thomas@tommy-studio.pro
                 </a>
