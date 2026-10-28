@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { DRAFT_STORAGE_KEY } from '../../creer/CreerStart';
+import { DRAFT_STORAGE_KEY } from '@/lib/draft-storage';
 import { liveSiteUrl } from '@/lib/live-site';
 import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_HREF, whatsappUrl } from '@/lib/contact';
 

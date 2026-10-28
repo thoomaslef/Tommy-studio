@@ -55,21 +55,22 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grid-pattern" />
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent" />
-        <div className="relative section-container grid items-center gap-14 pt-32 pb-20 sm:pt-40 lg:grid-cols-2 lg:gap-10">
+        <div className="relative section-container grid items-center gap-8 pt-24 pb-16 sm:gap-14 sm:pt-40 sm:pb-20 lg:grid-cols-2 lg:gap-10">
           <div className="text-center lg:text-left">
-            <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-5 py-2 text-xs font-semibold tracking-wide text-accent">
-              Création de site internet pour artisans du bâtiment
+            <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 py-1.5 text-[11px] font-semibold tracking-wide text-accent-light sm:px-5 sm:py-2 sm:text-xs">
+              Site internet pour artisans du bâtiment
             </span>
-            <h1 className="mt-8 text-[2.6rem] font-extrabold leading-[1.08] tracking-tight text-foreground sm:text-6xl">
+            <h1 className="mt-5 text-[2.25rem] font-extrabold leading-[1.08] tracking-tight text-foreground sm:mt-8 sm:text-6xl">
               Le site de votre entreprise,
               <br />
               <span className="gradient-text">prêt en 10 minutes.</span>
             </h1>
-            <p className="mx-auto mt-7 max-w-xl text-base leading-relaxed text-muted sm:text-lg lg:mx-0">
-              Un site internet professionnel et pas cher pour votre entreprise : entrez vos infos, ajoutez vos photos, votre site se construit sous vos
-              yeux. Aucun rendez-vous, aucun engagement. Vous ne payez que s’il vous plaît.
+            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted sm:mt-7 sm:text-lg lg:mx-0">
+              Un site internet professionnel et pas cher pour votre entreprise.
+              <span className="hidden sm:inline"> Entrez vos infos, ajoutez vos photos : votre site se construit sous vos yeux. Aucun rendez-vous, aucun engagement.</span>{' '}
+              Vous ne payez que s’il vous plaît.
             </p>
-            <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
+            <div className="mt-6 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:justify-center sm:gap-4 lg:justify-start">
               <Button href="/creer" size="lg" className="cta-pulse">
                 Créer mon site
               </Button>
@@ -77,16 +78,16 @@ export default function Home() {
                 Voir des exemples
               </Button>
             </div>
-            <p className="mt-5 text-xs tracking-wide text-muted">
-              Aperçu gratuit · {formatEuro(SITE_PRICE)} la 1re année, hébergement compris · satisfait ou remboursé {GUARANTEE_DAYS} jours
+            <p className="mt-4 text-xs tracking-wide text-muted sm:mt-5">
+              <strong className="text-foreground">Aperçu gratuit</strong> · {formatEuro(SITE_PRICE)} la 1re année, hébergement compris · satisfait ou remboursé {GUARANTEE_DAYS} jours
             </p>
           </div>
 
-          <div className="relative mx-auto flex w-full max-w-md justify-center gap-4 lg:max-w-none">
+          <div className="relative mx-auto flex w-full max-w-[18rem] justify-center gap-3 sm:max-w-md sm:gap-4 lg:max-w-none">
             {demos.map((d, i) => (
               <div
                 key={d.slug}
-                className={`w-1/3 overflow-hidden rounded-[1.6rem] border border-white/10 bg-surface shadow-2xl shadow-black/50 ${i === 1 ? '-translate-y-6' : 'translate-y-6'}`}
+                className={`w-1/3 overflow-hidden rounded-[1.6rem] border border-white/10 bg-surface shadow-2xl shadow-black/50 ${i === 1 ? '-translate-y-3 sm:-translate-y-6' : 'translate-y-3 sm:translate-y-6'}`}
               >
                 <img src={`/home/mobile-${d.slug}.webp`} alt={`Exemple de site : ${d.name}`} className="block w-full" width={390} height={844} />
               </div>

@@ -187,3 +187,10 @@ Reste : Sentry (alertes d'erreurs), vraies références clients, bouton WhatsApp
 ## 12. Garantie « satisfait ou remboursé » (28 octobre 2026)
 
 14 jours après la mise en ligne (`GUARANTEE_DAYS` dans `src/lib/offer.ts`), remboursement intégral des 99 € sur simple demande par email ou WhatsApp. Affichée sur l'accueil, la FAQ, les pages métier, le configurateur (avant le paiement), l'email au client et l'article 10 des CGV. Hors renouvellement. Procédure : rembourser depuis Stripe (Paiements → paiement → Rembourser, les frais Stripe ~1,75 € ne sont pas restitués), puis passer le site en `offline` (le demander à Claude). Pas de bouton automatique : à ajouter si les demandes deviennent fréquentes.
+
+## 13. Première impression (28 octobre 2026)
+
+- Accueil sur téléphone : titre et espaces réduits, prix et maquettes visibles dès le premier écran (iPhone 390×844 et SE 375×667).
+- Configurateur : en-tête et pied de page réduits (groupe de routes `(builder)`, WhatsApp et téléphone en haut), compteur « Étape n sur 5 — nom de l'étape », « Continuer » exige nom, ville et téléphone, liste des manques avec bouton « Corriger » vers la bonne étape, photo traitée comme un conseil (non bloquante), message d'erreur du SIRET distinct (faute de frappe / trop de chiffres), colonne de paiement à droite de l'aperçu sur ordinateur.
+- Page de paiement Stripe : rappel 99 € la 1re année, puis 39 €/an sans engagement, garantie 14 jours, service réservé aux professionnels.
+- Tommy Prospector : son webhook ignore désormais les paiements `tommy-studio-sites` (plus d'email de bienvenue Prospector aux clients Tommy Studio). Facturo n'était pas concerné (il ignore les paiements sans `companyId`).

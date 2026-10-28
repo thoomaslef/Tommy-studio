@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { FONT_PAIRS, PALETTES, resolveDesign } from '@/site-engine/design';
 import { Icon } from '@/site-engine/icons';
 import { CERTIFICATIONS, MAX_PHOTOS, MAX_REVIEWS, MAX_SERVICES, draftToSiteData, type SiteDraft } from '@/site-engine/sanitize';
 import { TRADES, TRADE_IDS } from '@/site-engine/trades';
 import type { SiteReview, SiteService, TemplateId, TradeId } from '@/site-engine/types';
-import { DRAFT_STORAGE_KEY } from '../CreerStart';
+import { DRAFT_STORAGE_KEY } from '@/lib/draft-storage';
 import { GUARANTEE_DAYS, HOSTING_RENEWAL_PRICE, SITE_PRICE, formatEuro } from '@/lib/offer';
 import { liveSiteUrl } from '@/lib/live-site';
 import { whatsappUrl } from '@/lib/contact';
@@ -14,6 +14,19 @@ import { isValidSiret, siretDigits } from '@/lib/siret';
 import { uploadPhoto, type AssetView } from './photo-upload';
 
 const STEPS = ['Entreprise', 'Services', 'Photos', 'Style', 'Aperçu'] as const;
+
+/** Vrai sur ordinateur (≥ 1024 px) ; faux côté serveur et sur téléphone */
+function useDesktop() {
+  return useSyncExternalStore(
+    (notify) => {
+      const mq = window.matchMedia('(min-width: 1024px)');
+      mq.addEventListener('change', notify);
+      return () => mq.removeEventListener('change', notify);
+    },
+    () => window.matchMedia('(min-width: 1024px)').matches,
+    () => false,
+  );
+}
 
 // Vignette : capture d'une démo réalisée avec ce modèle (public/modeles)
 const TEMPLATES: { id: TemplateId; name: string; desc: string; thumb: string }[] = [
@@ -127,7 +140,7 @@ function PublishBox({ token, missing, defaultEmail, businessName }: { token: str
 
   const send = async () => {
     setError('');
-    if (missing.some((m) => m !== 'au moins une photo')) return setError(`Complétez d’abord : ${missing.join(', ')}.`);
+    if (missing.length) return setError(`Complétez d’abord : ${missing.join(', ')}.`);
     if (!name.trim()) return setError('Indiquez votre nom.');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return setError('Indiquez un email valide.');
     if (!accept) return setError('Vous devez accepter les conditions générales de vente.');
@@ -299,14 +312,22 @@ export default function Configurator({
   };
 
   // On signale l'erreur une fois les 14 chiffres saisis, pas pendant la frappe
-  const siretError = siretDigits(draft.siret ?? '').length >= 14 && !isValidSiret(draft.siret);
-  const missing = [
-    !draft.businessName && 'le nom de votre entreprise',
-    !draft.city && 'votre ville',
-    !draft.phone && 'votre téléphone',
-    !isValidSiret(draft.siret) && 'votre SIRET',
-    photos.length === 0 && 'au moins une photo',
-  ].filter(Boolean) as string[];
+  const siretLength = siretDigits(draft.siret ?? '').length;
+  const siretError = siretLength >= 14 && !isValidSiret(draft.siret);
+  // Ce qui bloque la publication, avec l'étape où le corriger ; la photo n'est qu'un conseil
+  const blockers = (
+    [
+      !draft.businessName && { label: 'le nom de votre entreprise', step: 0 },
+      !draft.city && { label: 'votre ville', step: 0 },
+      !draft.phone && { label: 'votre téléphone', step: 0 },
+      !isValidSiret(draft.siret) && { label: 'votre SIRET', step: 0 },
+    ] as const
+  ).filter(Boolean) as { label: string; step: number }[];
+  const missing = blockers.map((b) => b.label);
+  const noPhoto = photos.length === 0;
+  const desktop = useDesktop();
+  const [tried, setTried] = useState(false);
+  const firstStepMissing = blockers.filter((b) => b.label !== 'votre SIRET').map((b) => b.label);
 
   const onFiles = async (files: FileList | null, kind: 'photo' | 'logo') => {
     if (!files?.length) return;
@@ -352,14 +373,60 @@ export default function Configurator({
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/creer/${token}` : `/creer/${token}`;
   const liveUrl = status === 'live' && slug ? liveSiteUrl(slug) : null;
 
+  // Colonne « publier » : sous l'aperçu sur téléphone, à droite de l'aperçu sur ordinateur
+  const side = (
+    <>
+      {blockers.length > 0 && (
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200">
+          <p className="font-semibold">Il manque encore :</p>
+          <ul className="mt-2 space-y-1.5">
+            {blockers.map((b) => (
+              <li key={b.label} className="flex items-center justify-between gap-3">
+                <span>{b.label}</span>
+                <button type="button" onClick={() => goTo(b.step)} className="rounded-lg border border-amber-500/40 px-3 py-1.5 text-xs font-semibold text-amber-100">
+                  Corriger
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {noPhoto && (
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/40 bg-surface-light p-4 text-sm text-muted">
+          <span>Conseil : une photo de chantier rend votre site bien plus convaincant.</span>
+          <button type="button" onClick={() => goTo(2)} className="flex-shrink-0 rounded-lg border border-border/60 px-3 py-1.5 text-xs font-semibold text-foreground">
+            Ajouter
+          </button>
+        </div>
+      )}
+      <div className="rounded-2xl border border-border/40 bg-surface-light p-5">
+        <p className="text-sm font-bold text-foreground">Gardez ce lien pour revenir plus tard</p>
+        <p className="mt-1 text-xs text-muted">Il donne accès à votre site en création : ne le partagez pas.</p>
+        <div className="mt-3 flex gap-2">
+          <input readOnly value={shareUrl} aria-label="Votre lien privé" className={`${inputClass} text-xs`} onFocus={(e) => e.target.select()} />
+          <button
+            type="button"
+            onClick={() => {
+              navigator.clipboard?.writeText(shareUrl).then(() => setCopied(true));
+            }}
+            className="rounded-xl border border-border/50 px-4 text-xs font-semibold text-foreground"
+          >
+            {copied ? 'Copié' : 'Copier'}
+          </button>
+        </div>
+      </div>
+      {liveUrl ? <LiveBox url={liveUrl} /> : status === 'draft' && <PublishBox token={token} missing={missing} defaultEmail={draft.email} businessName={draft.businessName} />}
+    </>
+  );
+
   return (
-    <section className="pt-28 pb-24 sm:pt-32">
+    <section className="pt-6 pb-24 sm:pt-10">
       <div ref={top} className="section-container scroll-mt-24">
         {/* Progression */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
-              {trade.label} · Étape {step + 2} sur 6
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent-light">
+              {trade.label} · Étape {step + 1} sur {STEPS.length} — {STEPS[step]}
             </p>
             <h1 className="mt-2 text-2xl font-extrabold text-foreground sm:text-3xl">{draft.businessName || 'Votre site'}</h1>
           </div>
@@ -377,9 +444,6 @@ export default function Configurator({
                       ? '⚠ Non enregistré, vérifiez votre connexion'
                       : 'Sauvegarde automatique'}
             </p>
-            <a href={whatsappUrl('Bonjour Thomas, j’ai une question sur la création de mon site.')} target="_blank" rel="noopener" className="text-xs font-semibold text-accent-light underline">
-              Besoin d’aide ? Écrivez-moi sur WhatsApp
-            </a>
           </div>
         </div>
         <ol className="mt-6 grid grid-cols-5 gap-2">
@@ -473,7 +537,13 @@ export default function Configurator({
                       aria-invalid={siretError}
                       className={inputClass}
                     />
-                    {siretError && <p className="mt-1.5 text-xs text-red-400">Ce numéro ne ressemble pas à un SIRET (14 chiffres). Vérifiez-le sur votre avis de situation ou annuaire-entreprises.data.gouv.fr.</p>}
+                    {siretError && (
+                      <p role="alert" className="mt-1.5 text-xs text-red-400">
+                        {siretLength > 14
+                          ? 'Trop de chiffres : un SIRET en compte 14.'
+                          : 'Il y a une erreur de frappe dans ce numéro. Vérifiez-le sur votre avis de situation Insee ou sur annuaire-entreprises.data.gouv.fr.'}
+                      </p>
+                    )}
                   </Field>
                 </div>
                 <div className="space-y-3">
@@ -756,28 +826,7 @@ export default function Configurator({
             {step === 4 && (
               <>
                 <LivePreview previewId={projectId} version={version} />
-                {missing.length > 0 && (
-                  <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200">
-                    Il manque encore : {missing.join(', ')}.
-                  </div>
-                )}
-                <div className="rounded-2xl border border-border/40 bg-surface-light p-5">
-                  <p className="text-sm font-bold text-foreground">Gardez ce lien pour revenir plus tard</p>
-                  <p className="mt-1 text-xs text-muted">Il donne accès à votre site en création : ne le partagez pas.</p>
-                  <div className="mt-3 flex gap-2">
-                    <input readOnly value={shareUrl} className={`${inputClass} text-xs`} onFocus={(e) => e.target.select()} />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard?.writeText(shareUrl).then(() => setCopied(true));
-                      }}
-                      className="rounded-xl border border-border/50 px-4 text-xs font-semibold text-foreground"
-                    >
-                      {copied ? 'Copié' : 'Copier'}
-                    </button>
-                  </div>
-                </div>
-                {liveUrl ? <LiveBox url={liveUrl} /> : status === 'draft' && <PublishBox token={token} missing={missing} defaultEmail={draft.email} businessName={draft.businessName} />}
+                {!desktop && side}
               </>
             )}
 
@@ -791,12 +840,26 @@ export default function Configurator({
                 <span />
               )}
               {step < STEPS.length - 1 && (
-                <button type="button" onClick={() => goTo(step + 1)} className="rounded-xl bg-accent-dark px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-accent/20">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (step === 0 && firstStepMissing.length) return setTried(true);
+                    goTo(step + 1);
+                  }}
+                  className="rounded-xl bg-accent-dark px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-accent/20"
+                >
                   {step === STEPS.length - 2 ? 'Voir mon site' : 'Continuer'}
                 </button>
               )}
             </div>
+            {step === 0 && tried && firstStepMissing.length > 0 && (
+              <p role="alert" className="text-sm text-amber-300">
+                Avant de continuer, indiquez : {firstStepMissing.join(', ')}.
+              </p>
+            )}
           </div>
+
+          {step === 4 && desktop && <aside className="space-y-6 lg:col-span-5">{side}</aside>}
 
           {/* Aperçu en direct (ordinateur) */}
           {step < 4 && (

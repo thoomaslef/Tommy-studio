@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { TRADES, TRADE_IDS } from '@/site-engine/trades';
 import { Icon } from '@/site-engine/icons';
 import type { TradeId } from '@/site-engine/types';
+import { DRAFT_STORAGE_KEY } from '@/lib/draft-storage';
 
-export const DRAFT_STORAGE_KEY = 'ts-draft-token';
 
 const noSubscribe = () => () => {};
 const readSavedToken = () => {
