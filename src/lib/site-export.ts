@@ -27,7 +27,22 @@ export function keepUsedFonts(css: string, used: Set<string>): string {
   });
 }
 
-export type ExportAssets = { fonts: string[]; images: string[] };
+const FONT_URL = /url\((\.\.\/media\/([^)?]+\.woff2)[^)]*)\)/g;
+
+/**
+ * Adresse complète de chaque police, calculée depuis la feuille de style qui la déclare : l'emplacement
+ * des fichiers change d'une version de Next à l'autre (/_next/static/media ou /_next/static/immutable/media).
+ */
+export function fontUrlMap(sheets: { url: string; text: string }[]): Map<string, string> {
+  const map = new Map<string, string>();
+  for (const sheet of sheets) for (const m of sheet.text.matchAll(FONT_URL)) map.set(m[2], new URL(m[1].replace(/\?.*$/, ''), sheet.url).toString());
+  return map;
+}
+
+export const usedFontNames = (css: string) => [...new Set([...css.matchAll(FONT_URL)].map((m) => m[2]))];
+
+/** Les polices sont jointes dans le dossier fonts/ */
+export const rewriteFontUrls = (css: string) => css.replace(FONT_URL, 'url(fonts/$2)');
 
 /** Réécrit le HTML pour qu'il fonctionne hors ligne ; renvoie aussi la liste des fichiers à joindre */
 export function transformExportHtml(html: string): { html: string; images: string[] } {

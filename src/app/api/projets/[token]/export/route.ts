@@ -1,4 +1,4 @@
-import { buildZip, keepUsedFonts, transformExportHtml, usedFontFamilies } from '@/lib/site-export';
+import { buildZip, fontUrlMap, keepUsedFonts, rewriteFontUrls, transformExportHtml, usedFontFamilies, usedFontNames } from '@/lib/site-export';
 import { CONTACT_EMAIL, CONTACT_PHONE } from '@/lib/contact';
 import { json, loadProject } from '@/lib/projects-api';
 
@@ -20,13 +20,20 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
   try {
     const page = await (await get(`${origin}/export/${project.id}`)).text();
 
-    // Feuilles de style → un seul fichier, polices inutilisées retirées
+    // Feuilles de style → un seul fichier, polices inutilisées retirées. Les chemins des polices sont relatifs à
+    // chaque feuille (ils changent d'une version de Next à l'autre : /_next/static/media ou /_next/static/immutable/media).
     const hrefs = [...page.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*href="([^"]+)"/g)].map((m) => m[1]);
-    const rawCss = (await Promise.all(hrefs.map(async (h) => (await get(new URL(h, origin).toString())).text()))).join('\n');
+    const sheets = await Promise.all(
+      hrefs.map(async (h) => {
+        const url = new URL(h, origin).toString();
+        return { url, text: await (await get(url)).text() };
+      }),
+    );
+    const rawCss = sheets.map((sheet) => sheet.text).join('\n');
     const css = keepUsedFonts(rawCss, usedFontFamilies(page, rawCss));
 
-    const fontNames = [...new Set([...css.matchAll(/url\(\.\.\/media\/([^)]+\.woff2)\)/g)].map((m) => m[1]))];
-    const fonts = await Promise.all(fontNames.map(async (name) => ({ name, data: new Uint8Array(await (await get(`${origin}/_next/static/media/${name}`)).arrayBuffer()) })));
+    const fontUrls = fontUrlMap(sheets);
+    const fonts = await Promise.all(usedFontNames(css).map(async (name) => ({ name, data: new Uint8Array(await (await get(fontUrls.get(name)!)).arrayBuffer()) })));
 
     const { html, images: urls } = transformExportHtml(page);
     const images = await Promise.all(
@@ -35,7 +42,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
 
     const zip = buildZip({
       html,
-      css: css.replace(/url\(\.\.\/media\//g, 'url(fonts/'),
+      css: rewriteFontUrls(css),
       fonts,
       images,
       businessName: project.data.businessName ?? 'votre entreprise',

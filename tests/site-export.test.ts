@@ -1,6 +1,6 @@
 import { unzipSync } from 'fflate';
 import { describe, expect, it } from 'vitest';
-import { buildZip, keepUsedFonts, transformExportHtml, usedFontFamilies } from '@/lib/site-export';
+import { buildZip, fontUrlMap, keepUsedFonts, rewriteFontUrls, transformExportHtml, usedFontFamilies, usedFontNames } from '@/lib/site-export';
 
 const IMG = 'https://abc.supabase.co/storage/v1/object/public/site-media/proj/photo1.jpg';
 
@@ -69,5 +69,14 @@ describe('export du site', () => {
     expect(Object.keys(files).sort()).toEqual(['LISEZ-MOI.txt', 'fonts/o.woff2', 'images/01-photo1.jpg', 'index.html', 'style.css']);
     expect(new TextDecoder().decode(files['LISEZ-MOI.txt'])).toContain('Durand Plomberie');
     expect(Array.from(files['fonts/o.woff2'])).toEqual([1, 2, 3]);
+  });
+  it('trouve les polices quel que soit l’emplacement des fichiers (Next local ou Vercel)', () => {
+    const local = { url: 'https://x.fr/_next/static/chunks/a.css', text: '@font-face{src:url(../media/o.woff2)format("woff2")}' };
+    const vercel = { url: 'https://x.fr/_next/static/immutable/chunks/b.css', text: '@font-face{src:url(../media/d.woff2?dpl=1)format("woff2")}' };
+    const urls = fontUrlMap([local, vercel]);
+    expect(urls.get('o.woff2')).toBe('https://x.fr/_next/static/media/o.woff2');
+    expect(urls.get('d.woff2')).toBe('https://x.fr/_next/static/immutable/media/d.woff2');
+    expect(usedFontNames(local.text + vercel.text)).toEqual(['o.woff2', 'd.woff2']);
+    expect(rewriteFontUrls(vercel.text)).toBe('@font-face{src:url(fonts/d.woff2)format("woff2")}');
   });
 });
