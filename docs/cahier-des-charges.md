@@ -168,3 +168,18 @@ Audit complet (vitesse et Google, parcours d'un artisan sur téléphone, sécuri
 
 Reste à faire (lots suivants) : anti-abus (limite d'envois de photos, pare-feu), purge RGPD des brouillons à 12 mois et des fichiers orphelins, renouvellement 39 €/an (rappel, paiement, mise hors ligne), contrôle des sites publiés (SIRET via l'API Recherche d'entreprises, alerte de modification, procédure hors ligne), aperçu sur mobile pendant la saisie et vignettes des modèles, formulaire de devis sur les sites clients, contact téléphone/WhatsApp dans le parcours, vraies références clients, pages par métier pour Google, en-têtes de sécurité, tests automatiques, Sentry.
 À décider par Thomas : Vercel Pro avant la première vente, désactiver l'Adaptive Pricing Stripe (prix affiché en dollars à l'étranger), photo professionnelle, numéro WhatsApp, garantie.
+
+## 11. Lot 2 (28 octobre 2026)
+
+- Anti-abus : 5 sites par heure et 20 par jour depuis une même connexion (empreinte HMAC de l'IP, colonne `ip_hash`), 20 fichiers maximum par site (envois non confirmés compris), photos limitées à 4 Mo.
+- SIRET vérifié dans le répertoire public des entreprises (API Recherche d'entreprises) avant le paiement : refusé s'il n'existe pas ou si l'établissement est fermé ; résultat gardé (`siret_check`) et indiqué dans l'email « Site vendu ». Le SIRET ne peut plus changer après la commande.
+- Renouvellement 39 €/an : lien Stripe `plink_1UVK6W…` (facture automatique), `hosting_until` = paiement + 1 an, rappels J-30 et J-7 avec le lien de paiement, mise hors ligne à l'échéance (le client peut réactiver pendant 3 mois), suppression 3 mois après. Paiements enregistrés dans `site_payments` (anti-doublon).
+- Tâche quotidienne `/api/cron/quotidien` (3 h 30 UTC) : renouvellements, purge des brouillons de plus de 12 mois et des fichiers orphelins, liste des sites en ligne modifiés par leur propriétaire (contrôle du contenu), rapport + sauvegarde envoyés à Thomas les jours où quelque chose a changé.
+- Mise hors ligne d'urgence d'un site (arnaque, contenu illicite) : passer son `status` à `offline` (le demander à Claude).
+- Configurateur : bouton « Aperçu » flottant sur téléphone (aperçu plein écran), vignettes des 3 modèles, couleur « Automatique » exacte.
+- Sites clients : formulaire de demande de devis envoyé par email à l'artisan (anti-spam : champ piège, délai minimum, 5 demandes/heure/connexion) ; contenu jamais stocké, seulement la date (`site_quote_requests`).
+- Google : pages `/site-internet/<métier>` (11 métiers, FAQ en données structurées), liées depuis le pied de page et le sitemap.
+- Sécurité : en-têtes (nosniff, frame-ancestors 'self', Referrer-Policy no-referrer sur les pages à lien privé, Permissions-Policy), `poweredByHeader` désactivé.
+- Qualité : 18 tests automatiques (`npm test` : SIRET, adresses, signature Stripe, chiffrement du lien, nettoyage des saisies) et vérifications GitHub à chaque envoi (types, lint, tests, build).
+
+Reste : Sentry (alertes d'erreurs), vraies références clients, bouton WhatsApp, garantie, Vercel Pro (décisions de Thomas).

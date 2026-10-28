@@ -803,7 +803,7 @@ export default function Configurator({
           onClick={() => setShowPreview(true)}
           className="fixed bottom-5 right-4 z-40 flex items-center gap-2 rounded-full bg-accent-dark px-5 py-3.5 text-sm font-bold text-white shadow-xl shadow-black/40 lg:hidden"
         >
-          <Icon name="sun" className="h-4 w-4" /> Voir mon site
+          <Icon name="sun" className="h-4 w-4" /> Aperçu
         </button>
       )}
       {showPreview && (
