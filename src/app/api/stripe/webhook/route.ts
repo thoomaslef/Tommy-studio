@@ -7,6 +7,7 @@ import { getEditTokenEnc, publishPaidProject, renewHosting, type ProjectRow } fr
 import { decryptToken } from '@/lib/token-crypto';
 import { esc, notifyOwner, notifyOwnerOnce, sendEmail } from '@/lib/emails';
 import { CONTACT_EMAIL, CONTACT_PHONE } from '@/lib/contact';
+import { describeSource } from '@/lib/source';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -73,6 +74,7 @@ export async function POST(request: Request) {
          <p><a href="${url}" style="color:#4f46e5;font-weight:bold;">${url}</a></p>
          <p>Client : ${esc(project.contact_name ?? '')} — <a href="mailto:${esc(project.contact_email ?? '')}">${esc(project.contact_email ?? '')}</a> — SIRET ${esc(d.siret ?? '?')}</p>
          <p>Registre des entreprises : ${siretLine(project)}</p>
+         <p>Origine : ${project.source ? esc(describeSource(project.source)) : 'direct / inconnue'}</p>
          <p style="color:#6b6b8a;font-size:13px;">Garantie satisfait ou remboursé jusqu’au ${new Date(Date.now() + GUARANTEE_DAYS * 86400e3).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} : en cas de demande, remboursez depuis Stripe (Paiements → le paiement → Rembourser) puis demandez-moi de mettre le site hors ligne.</p>
          <p>${clientNotified ? '✅ Le client a reçu l’adresse de son site et son lien de modification.' : '⚠ <strong>L’email au client n’a pas pu partir</strong> : envoyez-lui l’adresse de son site à la main.'}</p>`,
       );

@@ -6,6 +6,7 @@ import { TRADES, TRADE_IDS } from '@/site-engine/trades';
 import { Icon } from '@/site-engine/icons';
 import type { TradeId } from '@/site-engine/types';
 import { DRAFT_STORAGE_KEY } from '@/lib/draft-storage';
+import { SOURCE_STORAGE_KEY, sanitizeSource } from '@/lib/source';
 
 
 const subscribe = (notify: () => void) => {
@@ -19,6 +20,13 @@ const forgetSavedToken = () => {
     // stockage indisponible
   }
   window.dispatchEvent(new Event('ts-draft'));
+};
+const readSource = () => {
+  try {
+    return sanitizeSource(JSON.parse(sessionStorage.getItem(SOURCE_STORAGE_KEY) ?? 'null'));
+  } catch {
+    return null;
+  }
 };
 const readSavedToken = () => {
   try {
@@ -43,7 +51,7 @@ export default function CreerStart({ suggested }: { suggested?: TradeId }) {
       const res = await fetch('/api/projets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ trade, website }),
+        body: JSON.stringify({ trade, website, source: readSource() }),
       });
       const data = await res.json();
       if (!res.ok || !data.token) throw new Error(data.error || 'Une erreur est survenue.');

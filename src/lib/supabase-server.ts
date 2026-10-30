@@ -5,6 +5,7 @@ import { MAX_PHOTOS, type SiteDraft } from '@/site-engine/sanitize';
 import { RESERVED_SLUGS, slugify } from './live-site';
 import { encryptToken } from './token-crypto';
 import type { SiretCheck } from './siret-check';
+import type { Source } from './source';
 
 export const SITE_MEDIA_BUCKET = 'site-media';
 
@@ -36,6 +37,7 @@ export type ProjectRow = {
   custom_domain: string | null;
   custom_domain_status: 'pending' | 'active' | null;
   custom_domain_notified_at: string | null;
+  source: Source | null;
   paid_at: string | null;
   publish_requested_at: string | null;
   published_at: string | null;
@@ -43,7 +45,7 @@ export type ProjectRow = {
   updated_at: string;
 };
 
-const PROJECT_COLUMNS = 'id, slug, status, plan, options, data, contact_name, contact_email, stripe_session_id, siret_check, hosting_until, custom_domain, custom_domain_status, custom_domain_notified_at, paid_at, publish_requested_at, published_at, created_at, updated_at';
+const PROJECT_COLUMNS = 'id, slug, status, plan, options, data, contact_name, contact_email, stripe_session_id, siret_check, hosting_until, custom_domain, custom_domain_status, custom_domain_notified_at, source, paid_at, publish_requested_at, published_at, created_at, updated_at';
 
 /** Le lien privé du client contient un jeton ; seule son empreinte est stockée. */
 export const hashToken = (token: string) => createHash('sha256').update(token).digest('hex');
@@ -60,13 +62,13 @@ export async function countRecentProjects(ipHash: string, sinceMs: number) {
   return count ?? 0;
 }
 
-export async function createProject(initial: SiteDraft = {}, ipHash: string | null = null) {
+export async function createProject(initial: SiteDraft = {}, ipHash: string | null = null, source: Source | null = null) {
   const db = getSupabase();
   if (!db) throw new Error('Supabase non configuré');
   const token = randomBytes(24).toString('base64url');
   const { data, error } = await db
     .from('site_projects')
-    .insert({ token_hash: hashToken(token), edit_token_enc: encryptToken(token), ip_hash: ipHash, data: initial })
+    .insert({ token_hash: hashToken(token), edit_token_enc: encryptToken(token), ip_hash: ipHash, source, data: initial })
     .select(PROJECT_COLUMNS)
     .single();
   if (error) throw error;

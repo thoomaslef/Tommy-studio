@@ -79,7 +79,8 @@ const sections = [
     title: '7. Cookies et stockage local',
     body: (
       <p>
-        Le site n’utilise aucun cookie publicitaire ni outil de suivi. Pour vous permettre de reprendre votre site en création, le lien de votre brouillon
+        Le site n’utilise aucun cookie ni outil publicitaire. Il mesure son audience (pages vues, provenance) avec Vercel Web Analytics, sans cookie et sans donnée personnelle. Si vous arrivez par un lien de campagne
+        (paramètre « utm_source »), cette origine est conservée le temps de votre visite et rattachée au site que vous créez, pour savoir quelles campagnes fonctionnent. Pour vous permettre de reprendre votre site en création, le lien de votre brouillon
         est mémorisé dans le stockage local de votre navigateur. Ce stockage est strictement nécessaire au service et vous pouvez l’effacer à tout moment.
       </p>
     ),

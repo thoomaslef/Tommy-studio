@@ -6,6 +6,7 @@ import { HOSTING_RENEWAL_PRICE, STRIPE_RENEWAL_LINK, formatEuro } from './offer'
 import { CONTACT_EMAIL, CONTACT_PHONE } from './contact';
 import { checkServing } from './domain-check';
 import { revalidateSite } from './revalidate';
+import { summarizeSources } from './source';
 
 const DAY = 86400e3;
 const COLUMNS = 'id, slug, status, data, contact_name, contact_email, hosting_until, offline_at, last_reminder_at, published_at, updated_at';
@@ -175,11 +176,16 @@ export async function sendDailyReport(events: string[], force: boolean, now = Da
   const [projects, assets, payments] = await Promise.all([exportTable('site_projects'), exportTable('site_assets'), exportTable('site_payments')]);
   const live = projects.filter((p) => p.status === 'live').length;
   const date = new Date(now).toISOString().slice(0, 10);
+  const sources = summarizeSources(projects as { created_at: string; paid_at?: string | null; source?: unknown }[], now);
+  const sourcesHtml = sources.length
+    ? `<p><strong>D’où viennent les sites commencés (30 derniers jours) :</strong></p><ul>${sources.map((s) => `<li>${esc(s.label)} : ${s.created} commencé${s.created > 1 ? 's' : ''}, ${s.paid} payé${s.paid > 1 ? 's' : ''}</li>`).join('')}</ul>`
+    : '';
   const backup = JSON.stringify({ exported_at: new Date(now).toISOString(), site_projects: projects, site_assets: assets, site_payments: payments });
   const sent = await notifyOwner(
     `Tommy Studio — rapport du ${date} (${live} site${live > 1 ? 's' : ''} en ligne)`,
     `${events.length ? `<p><strong>Aujourd’hui :</strong></p><ul>${events.map((e) => `<li>${e}</li>`).join('')}</ul>` : '<p>Rien de particulier aujourd’hui.</p>'}
      <p>${projects.length} projet(s) dont ${live} en ligne, ${assets.length} photo(s), ${payments.length} paiement(s).</p>
+     ${sourcesHtml}
      <p style="color:#6b6b8a;font-size:12px;">Le fichier joint est la sauvegarde complète de la base (les photos restent dans le stockage Supabase). Gardez ces emails, par exemple dans un libellé Gmail « Sauvegardes ».
      Pour mettre un site hors ligne en urgence (contenu illicite, arnaque), demandez-le à Claude : passer son statut à « offline » suffit.</p>`,
     [{ filename: `tommy-studio-sauvegarde-${date}.json`, content: Buffer.from(backup).toString('base64') }],

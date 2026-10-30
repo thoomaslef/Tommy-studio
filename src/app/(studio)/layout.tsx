@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import SourceCapture from '@/components/SourceCapture';
+import Script from 'next/script';
 import { SITE_PRICE, formatEuro } from '@/lib/offer';
 
 export const metadata: Metadata = {
@@ -61,6 +63,9 @@ export default function StudioLayout({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <SourceCapture />
+      {/* Mesure d'audience Vercel : sans cookie, uniquement sur le site Tommy Studio (pas sur les sites des clients) */}
+      <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />
       <Navbar />
       <main className="w-full">{children}</main>
       <Footer />

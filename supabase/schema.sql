@@ -27,6 +27,7 @@ create table public.site_projects (
   custom_domain_status text,                    -- pending : demandé ; active : le site répond sur ce domaine
   custom_domain_requested_at timestamptz,
   custom_domain_notified_at timestamptz,        -- Thomas prévenu que les DNS sont prêts
+  source jsonb,                                 -- origine du lien de campagne (utm_source/medium/campaign), null si accès direct
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
